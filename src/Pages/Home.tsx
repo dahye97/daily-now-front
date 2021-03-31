@@ -1,6 +1,5 @@
 /** @format */
 
-import React, { Component } from "react";
 import Profile from "../Components/Profile";
 import FundList from "../Components/FundList";
 import FundDetail from "../Components/FundDetail";
