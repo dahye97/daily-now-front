@@ -11,3 +11,5 @@
 - makeStyles
 
 ### Typescript 
+* `typescript import image cannot find module`
+- `index.d.ts` 파일을 생성하여 `declare module '*.png'`를 추가해준다.

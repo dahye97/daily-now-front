@@ -11,7 +11,7 @@ import FAQ from "./Pages/FAQ";
 import Registration from "./Pages/Registration";
 
 export default function AppRouter(props: any) {
-	const [isLoggedIn, setisLoggedIn] = useState(false);
+	const [isLoggedIn, setisLoggedIn] = useState(true);
 
 	const handleLogOut = () => {
 		setisLoggedIn(false);
