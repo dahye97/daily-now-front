@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Home from "./Pages/Home";
-import Board from "./Pages/Board";
-import Randing from "./Pages/Randing";
-import Auth from "./Pages/Auth";
+import Home from "./Pages/Home/Home";
+import Board from "./Pages/Board/Board";
+import Randing from "./Pages/Randing/Randing";
+import Auth from "./Pages/Auth/Auth";
+import FAQ from "./Pages/FAQ/FAQ";
+import Registration from "./Pages/Auth/Registration";
+import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
-import FAQ from "./Pages/FAQ";
-import Registration from "./Pages/Registration";
 
 export default function AppRouter(props: any) {
 	const [isLoggedIn, setisLoggedIn] = useState(true);
@@ -26,10 +27,11 @@ export default function AppRouter(props: any) {
 					{isLoggedIn ?
 						<>
 							<Route exact path="/" component={Randing} />
-							<Route exact path="/mypage" render=
+							<Route exact path="/home" render=
 								{() => <Home handleLogOut={handleLogOut} />}
 							/>
 							<Route exact path="/board" component={Board} />
+							<Route exact path="/mypage" component={MyPage} />
 						</>
 					: <Route exact path="/" component={Randing} />}
 					
