@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import Board from "./Pages/Board/Board";
@@ -11,14 +11,15 @@ import Registration from "./Pages/Auth/Registration";
 import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
 
-export default function AppRouter(props: any) {
-	const [isLoggedIn, setisLoggedIn] = useState(true);
-
+interface AppRouterProps {
+	isLoggedIn: boolean
+}
+export default function AppRouter(props: AppRouterProps) {
+	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const handleLogOut = () => {
 		setisLoggedIn(false);
 		document.location.href="/";
 	}
-
 	return (
 		<BrowserRouter>
 			<Navigation isLoggedIn={isLoggedIn} />
