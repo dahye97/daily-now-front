@@ -9,7 +9,7 @@ function App() {
     <>
       {isInit? (	
             <>
-              <AppRouter/>
+              <AppRouter isLoggedIn={false}/>
             </>
           )
           : (
