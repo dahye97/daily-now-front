@@ -1,16 +1,18 @@
-import {Card,CardHeader,CardContent,IconButton,Button,CardActions,} from "@material-ui/core";
+import {Card,CardHeader,CardContent,IconButton,Button,CardActions,Typography} from "@material-ui/core";
 import {  makeStyles } from "@material-ui/core/styles";
-import AddIcon from '@material-ui/icons/Add';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
 
+// TODO: 프로필 
 const useStyles = makeStyles({
 	card: {
 		background: "#198BFB",
 		color: "white",
-		fontWeight: "bold",
 		borderRadius: "20px",
+	},
+	headerContent: {
+		padding: "0 16px"
 	},
 	button: {
 		color: "#e0e0e0",
@@ -36,24 +38,18 @@ export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 
 	const clickSetting = () => {
-		
+		history.push('/user');
 	}
 
 	const classes = useStyles()
 		return (
-			<div className="my-page">
+			<div className="profile">
 				<Card className={classes.card} elevation={3}>
-					<CardHeader title="마이페이지" component="span"/>
+					<CardHeader title="장다혜님의" component="span"/>
+					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
-						<IconButton className={classes.addAccount}>
-							<AddIcon />
-						</IconButton>
-						<IconButton className={classes.setting} onClick={clickSetting}>
-							<SettingsIcon />
-						</IconButton>
-						<IconButton className={classes.logout} onClick={props.clickLogOut}>
-							<ExitToAppIcon/>
-						</IconButton>
+	{/* 회원 정보 수정 */}	<IconButton className={classes.setting} onClick={clickSetting}><SettingsIcon /></IconButton>
+		{/* 로그아웃 */}	<IconButton className={classes.logout} onClick={props.clickLogOut}><ExitToAppIcon/></IconButton>
 					</CardContent>
 					<CardActions>
 						<Button className={classes.button}>회원정보</Button>

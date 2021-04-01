@@ -2,6 +2,7 @@
 
 import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import logo from "../asset/img/logo_white.png";
 const useStyles = makeStyles({
 	appbar: {
@@ -10,6 +11,7 @@ const useStyles = makeStyles({
 	logo: {
 		maxWidth: "185px",
 		position: "absolute",
+		top: "10px",
 		left: "30px",
 	},
 	toolbar: {
@@ -23,9 +25,9 @@ interface NavProps {
 export default function Navigation(props: NavProps) {
 	const history = useHistory();
 	const classes = useStyles();
-	const handleMyPage = () => {
+	const handleHome = () => {
 		history.push({
-			pathname: "/mypage",
+			pathname: "/home",
 		});
 	};
     const handleLogIn = () => {
@@ -40,14 +42,14 @@ export default function Navigation(props: NavProps) {
 	};
 	return (
 		<div>
-			<AppBar position="static" className={classes.appbar}>
+			<AppBar position="fixed" className={classes.appbar}>
 				<Toolbar className={classes.toolbar}>
-					<img src={logo} alt="daily logo" className={classes.logo} />
+					<Link to="/"><img src={logo} alt="daily logo" className={classes.logo} /></Link>
 					<div>
 						<Button color="inherit">커뮤니티</Button>
 						<Button color="inherit">FAQ</Button>
 						{props.isLoggedIn ? (
-							<Button color="inherit" onClick={handleMyPage}>
+							<Button color="inherit" onClick={handleHome}>
 								마이페이지
 							</Button>
 						) : (

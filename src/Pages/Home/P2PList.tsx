@@ -2,11 +2,12 @@
 
 import HomeIcon from "@material-ui/icons/Home";
 import { IconButton, Avatar } from "@material-ui/core";
-import dailyfunding from "../asset/img/dailyfunding.png";
-import naver from "../asset/img/naver.png";
-import terafunding from "../asset/img/terafunding.webp";
+import dailyfunding from "../../asset/img/dailyfunding.png"
+import naver from "../../asset/img/naver.png";
+import terafunding from "../../asset/img/terafunding.webp";
 import { makeStyles } from "@material-ui/core/styles";
 
+// TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({
 	fundList: {
 		marginTop: "10px",

@@ -1,5 +1,5 @@
 import {makeStyles, Card, Typography} from "@material-ui/core";
-import randingImage from '../asset/img/randing_img.jpg'
+import randingImage from '../../asset/img/randing_img.jpg'
 const useStyles = makeStyles({
      randingContainer: {
           padding: "0",
