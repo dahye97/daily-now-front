@@ -38,7 +38,7 @@ export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 
 	const clickSetting = () => {
-		history.push('/user');
+		history.push('/mypage');
 	}
 
 	const classes = useStyles()

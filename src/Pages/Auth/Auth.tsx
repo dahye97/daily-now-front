@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
 import logo from '../../asset/img/logo.webp'
 import { useHistory } from 'react-router';
-import useCookies from 'react-cookies'
 // TODO: 로그인 페이지 
 
 const useStyles = makeStyles({
@@ -27,7 +26,10 @@ const useStyles = makeStyles({
      }
 });
 
-export default function Auth (Props:any) {
+interface AuthProps {
+     handleLogIn : any
+}
+export default function Auth (Props:AuthProps) {
      const classes = useStyles()
      const history = useHistory();
      const [email, setEmail] = useState("")
@@ -46,8 +48,6 @@ export default function Auth (Props:any) {
               "email" : email,
               "password" : password
           }
-          
-          // const [token, setToken, removeToken] = useCookies(["loginToken"]);
 
           fetch('http://192.168.0.69:8000/api/auth/login', {
                method: "POST",
@@ -57,11 +57,13 @@ export default function Auth (Props:any) {
                body: JSON.stringify(loginInfo),	// json 데이터를 전송
           })
                .then(res => {
-                    console.log(res)
-                    if( res.ok ){
+                    if( res.ok ){               
+                         res.json().then( data => {
+                              Props.handleLogIn(data)
+                         })
                          history.push("/")
-                         
                          alert("로그인 완료");
+
                     }else alert('로그인 실패')
                })
                .catch(error =>  console.log(error));

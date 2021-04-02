@@ -44,3 +44,7 @@ POSTMAN 등의 도구를 통하여 백엔드의 서버와 잘 통신이 되고 �
 ### Typescript 
 * `typescript import image cannot find module`
 - `index.d.ts` 파일을 생성하여 `declare module '*.png'`를 추가해준다.
+
+🚀 About Project
+
+- 
