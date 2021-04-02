@@ -12,15 +12,10 @@ import Navigation from "./Components/Navigation";
 import {userInfo} from './Interface/User';
 export default function AppRouter() {
 	const [isLoggedIn, setisLoggedIn] = useState(false);
-	const [userObj, setUserObj] = useState({
-		"email" : "",
-		"id": 0,
-		"first_name": "",
-		"last_name": "",
-		"auth_token" : ""
-	})
+	const [userObj, setUserObj] = useState<userInfo | null>(Object)
 
 	const handleLogIn = ( data: userInfo) => {
+		console.log(data)
 		setisLoggedIn(true);
 		setUserObj( {
 			"email" : data.email,
@@ -36,6 +31,7 @@ export default function AppRouter() {
 
 	const handleLogOut = () => {
 		setisLoggedIn(false);
+		setUserObj(null)
 		document.location.href="/";
 	}
 
@@ -53,7 +49,7 @@ export default function AppRouter() {
 							/>
 							<Route exact path="/board" component={Board} />
 							<Route exact path="/mypage"render=
-								{() => <MyPage userObj={userObj} />}
+								{() => <MyPage handleLogOut={handleLogOut} userObj={userObj} />}
 							/>
 						</>
 					: 

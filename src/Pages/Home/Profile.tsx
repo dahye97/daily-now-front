@@ -21,13 +21,15 @@ const useStyles = makeStyles({
 		},
 	},
 	setting: {
-		color: "white"
+		color: "white",
+		fontSize: "40px"
 	},
 	addAccount: {
 		color: "white"
 	}, 
 	logout: {
-		color: 'white'
+		color: 'white',
+		fontSize: "40px"
 	}
 });
 
@@ -48,8 +50,8 @@ export default function Profile(props:ProfileProps) {
 					<CardHeader title="장다혜님의" component="span"/>
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
-	{/* 회원 정보 수정 */}	<IconButton className={classes.setting} onClick={clickSetting}><SettingsIcon /></IconButton>
-		{/* 로그아웃 */}	<IconButton className={classes.logout} onClick={props.clickLogOut}><ExitToAppIcon/></IconButton>
+	{/* 회원 정보 수정 */}	<IconButton onClick={clickSetting}><SettingsIcon className={classes.setting} /></IconButton>
+		{/* 로그아웃 */}	<IconButton onClick={props.clickLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
 					</CardContent>
 					<CardActions>
 						<Button className={classes.button}>회원정보</Button>
