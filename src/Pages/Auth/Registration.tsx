@@ -2,6 +2,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
 import logo from '../../asset/img/logo.webp'
 import React, {useState} from "react";
+import { useCookies} from 'react-cookie';
+
 // TODO: 회원가입 페이지
 const useStyles = makeStyles({
      authContainer: {
@@ -35,6 +37,8 @@ export default function Registration() {
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
 
+     const [cookies, setCookie, removeCookie] = useCookies([]);
+
      const onSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
 
@@ -56,6 +60,14 @@ export default function Registration() {
                .then(res => {
                     if( res.status === 201 ){
                          alert("회원가입 완료");
+                         res.json().then( data => {
+                              console.log(data)
+                              setCookie(
+                                       data.email, 
+                                       data.auth_token
+                              )
+
+                         })
                     }else alert('회원가입 실패')
                })
                .catch(error =>  console.log(error));

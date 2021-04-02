@@ -1,6 +1,5 @@
 import {makeStyles, Card, Typography} from "@material-ui/core";
 import randingImage from '../../asset/img/randing_img.jpg'
-import cookie from 'react-cookies'
 
 const useStyles = makeStyles({
      randingContainer: {
@@ -38,9 +37,6 @@ const useStyles = makeStyles({
 });
 
 export default function Randing () {
-     let data = {token: cookie.loadAll()}
-
-     console.log(data)
      const classes = useStyles()
           return (
                <div className={classes.randingContainer}>
