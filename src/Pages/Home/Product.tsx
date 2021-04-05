@@ -38,7 +38,7 @@ export default function Product() {
      const classes = useStyles()
      const [expanded, setExpanded] = React.useState(false);
 
-     const handleExpandClick = () => {
+     const onClickExpand = () => {
        setExpanded(!expanded);
      };
      return (
@@ -68,7 +68,7 @@ export default function Product() {
                               className={clsx(classes.expand, {
                               [classes.expandOpen]: expanded,
                               })}
-                              onClick={handleExpandClick}
+                              onClick={onClickExpand}
                               aria-expanded={expanded}
                               aria-label="show more"
                          >

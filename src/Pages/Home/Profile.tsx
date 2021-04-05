@@ -3,6 +3,7 @@ import {  makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
+import { userInfo } from "../../Interface/User";
 
 // TODO: 프로필 
 const useStyles = makeStyles({
@@ -34,12 +35,13 @@ const useStyles = makeStyles({
 });
 
 interface ProfileProps {
-	clickLogOut:any,
+	userObj : userInfo | null,
+	handleLogOut:any,
 }
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 
-	const clickSetting = () => {
+	const onClickSetting = () => {
 		history.push('/mypage');
 	}
 
@@ -47,11 +49,11 @@ export default function Profile(props:ProfileProps) {
 		return (
 			<div className="profile">
 				<Card className={classes.card} elevation={3}>
-					<CardHeader title="장다혜님의" component="span"/>
+					<CardHeader title={props.userObj?.first_name + "님의"} component="span"/>
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
-	{/* 회원 정보 수정 */}	<IconButton onClick={clickSetting}><SettingsIcon className={classes.setting} /></IconButton>
-		{/* 로그아웃 */}	<IconButton onClick={props.clickLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
+	{/* 회원 정보 수정 */}	<IconButton onClick={onClickSetting}><SettingsIcon className={classes.setting} /></IconButton>
+		{/* 로그아웃 */}	<IconButton onClick={props.handleLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
 					</CardContent>
 					<CardActions>
 						<Button className={classes.button}>회원정보</Button>

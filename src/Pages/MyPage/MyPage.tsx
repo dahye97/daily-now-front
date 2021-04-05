@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 
 interface MyPageProps {
      userObj: userInfo | null
-     handleLogOut: any
+     handleWithdrawal: any
 }
 // TODO: 탈퇴, 회원정보 수정
 export default function MyPage( props: MyPageProps) {
@@ -49,7 +49,7 @@ export default function MyPage( props: MyPageProps) {
                     }).then(res => {
                          if( res.ok ){               
                               alert("탈퇴 완료");
-                              props.handleLogOut()
+                              props.handleWithdrawal()
                               history.push("/")
                          }else alert('탈퇴 실패')
                     })
