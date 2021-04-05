@@ -112,7 +112,7 @@ export default function Registration() {
           }
      }
           return (
-               <Container className={classes.authContainer} maxWidth="md">
+               <Container className={classes.authContainer} maxWidth="sm">
                     <div className={classes.authBox}>
                          <img src={logo} width="80px"/>
                          <h2>Daily Check ✔</h2>

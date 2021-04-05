@@ -57,18 +57,19 @@ export default function Auth (Props:AuthProps) {
                body: JSON.stringify(loginInfo),	// json 데이터를 전송
           })
                .then(res => {
-                         res.json().then( data => {
-                              // 존재하지 않는 회원
-                              if(data[0] === "There is no member information.") {
-                                   alert('존재하지 않는 회원입니다.')
-                              }else {
+                    res.json().then( data => {
+                         if(res.ok) {
                                    Props.handleLogIn(data)
                                    alert("로그인 되었습니다.");
                                    history.push("/")
-                              }
-                         })
+                              
+                         }else {
+                              alert('존재하지 않는 회원입니다.')
+                              // setEmail(" ")
+                              // setPassword(" ")                              
+                         }
+                    })
                })
-               //Invalid username/password. Please try again!
                .catch(error =>  console.log(error));
                
           }
