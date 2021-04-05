@@ -1,13 +1,12 @@
 /** @format */
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import HomeIcon from "@material-ui/icons/Home";
 import { IconButton, Avatar,Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import dailyfunding from "../../asset/img/dailyfunding.png"
-import naver from "../../asset/img/naver.png";
-import terafunding from "../../asset/img/terafunding.webp";
+
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from '@material-ui/icons/Add';
-import { userInfo } from '../../Interface/User';
+import { p2pInfo, userInfo } from '../../Interface/User';
 
 // TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({
@@ -27,7 +26,8 @@ const useStyles = makeStyles({
 
 interface FundListProps {
 	handleAddP2P : any,
-	userObj : userInfo | null
+	userObj : userInfo | null,
+	P2PList: Array<p2pInfo>
 }
 
 export default function FundList(props: FundListProps) {
@@ -67,7 +67,7 @@ export default function FundList(props: FundListProps) {
 					if(res.ok) {
 						res.json().then( data => {
 							alert(data)
-							onClose()
+							props.handleAddP2P(data)
 						})
 					}
 				})
@@ -89,6 +89,24 @@ export default function FundList(props: FundListProps) {
                     break
           }
      }
+
+	
+	useEffect(() => {
+		console.log('useEffect')
+		if(props.userObj !== null){
+			fetch('http://192.168.0.69:8000/api/register/registered_company', {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+					"Authorization": "Token " + props.userObj.auth_token
+				},
+			}).then((res) => res.json())
+			.then((res) => {
+				props.handleAddP2P(res)
+			})
+			.catch(error =>  console.log(error));
+		}
+	},[])
 		return (
 			<div className={classes.fundList}>
 				<div>
@@ -99,24 +117,19 @@ export default function FundList(props: FundListProps) {
 						</span>
 					</IconButton>
 
-					<IconButton>
-						<span className={classes.iconBody}>
-							<Avatar src={dailyfunding} />
-							<p>Daily Funding</p>
-						</span>
-					</IconButton>
-					<IconButton>
-						<span className={classes.iconBody}>
-							<Avatar src={naver} />
-							<p>Naver Funding</p>
-						</span>
-					</IconButton>
-					<IconButton>
-						<span className={classes.iconBody}>
-							<Avatar src={terafunding} />
-							<p>Tera Funding</p>
-						</span>
-					</IconButton>
+					{ props.P2PList.length !== 0 ?
+						(props.P2PList.map( (company,index) => {
+							return (
+								<IconButton key={index}>
+									<span className={classes.iconBody}>
+										<Avatar/>
+										<p>{company.company_name}</p>
+									</span>
+								</IconButton>)
+						})) 
+						: null
+					}
+					
 					<IconButton>
 						<AddIcon onClick={onClickAdd} style={{fontSize: "40px"}}/>
 					</IconButton>
