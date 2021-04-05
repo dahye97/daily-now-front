@@ -8,6 +8,7 @@ import { makeStyles, } from "@material-ui/core/styles";
 import { Container,Typography } from "@material-ui/core";
 import Transaction from "./Transaction";
 import Product from "./Product";
+import { userInfo } from "../../Interface/User";
 const useStyles = makeStyles({
 	homeContainer: {
 		padding: "20px",
@@ -23,16 +24,18 @@ const useStyles = makeStyles({
 });
 
 interface HomeProps {
+	userObj: userInfo | null
 	handleLogOut: any,
+	handleAddP2P: any
 }
 export default function Home(props: HomeProps) {
 	const classes = useStyles();
 	return (
 		<Container className={classes.homeContainer} maxWidth="md">
 			{/* Grid */}
-			<Profile clickLogOut={props.handleLogOut}/>
+			<Profile userObj={props.userObj} handleLogOut={props.handleLogOut}/>
 
-{/* 투자 회사 리스트*/}	<P2PList />
+{/* 투자 회사 리스트*/}	<P2PList userObj={props.userObj} handleAddP2P={props.handleAddP2P} />
 {/* 현재 보유 예치금 */} <div> <Typography variant="h5">🔥 현 보유 예치금</Typography> </div>
 {/* 찜한 상품 리스트 */} <div>
 						<Typography variant="h5">🔥 찜한 상품 리스트 </Typography>

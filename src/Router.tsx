@@ -9,10 +9,11 @@ import FAQ from "./Pages/FAQ/FAQ";
 import Registration from "./Pages/Auth/Registration";
 import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
-import {userInfo} from './Interface/User';
+import {p2pInfo, userInfo} from './Interface/User';
 export default function AppRouter() {
 	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [userObj, setUserObj] = useState<userInfo | null>(Object)
+	const [P2PList, setP2PList] = useState<p2pInfo | null>(Object)
 
 	const handleLogIn = ( data: userInfo) => {
 		console.log(data)
@@ -34,7 +35,12 @@ export default function AppRouter() {
 		setUserObj(null)
 		document.location.href="/";
 	}
-
+	
+	const handleAddP2P = ( data: p2pInfo) => {
+		console.log(data)
+		setP2PList(data)
+	}
+	
 	return (
 	
 	<BrowserRouter>
@@ -45,11 +51,11 @@ export default function AppRouter() {
 						<>
 							<Route exact path="/" component={Randing} />
 							<Route exact path="/home" render=
-								{() => <Home handleLogOut={handleLogOut} />}
+								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj}/>}
 							/>
 							<Route exact path="/board" component={Board} />
 							<Route exact path="/mypage"render=
-								{() => <MyPage handleLogOut={handleLogOut} userObj={userObj} />}
+								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
 							/>
 						</>
 					: 
