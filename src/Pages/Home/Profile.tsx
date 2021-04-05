@@ -8,7 +8,7 @@ import { userInfo } from "../../Interface/User";
 // TODO: 프로필 
 const useStyles = makeStyles({
 	card: {
-		background: "#198BFB",
+		background: "linear-gradient(145deg, #177de2, #1b95ff)",
 		color: "white",
 		borderRadius: "20px",
 	},
@@ -58,7 +58,6 @@ export default function Profile(props:ProfileProps) {
 					<CardActions>
 						<Button className={classes.button}>회원정보</Button>
 						<Button className={classes.button}>나의투자</Button>
-						<Button className={classes.button}>포인트</Button>
 						<Button className={classes.button}>활동</Button>
 						<Button className={classes.button}>메세지</Button>
 					</CardActions>
