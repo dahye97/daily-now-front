@@ -4,7 +4,7 @@ import logo from '../../asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
 import { useHistory } from "react-router";
-import {errorInfo} from '../../Interface/Error';
+import {RegisterErrorInfo} from '../../Interface/Error';
 
 // TODO: 회원가입 페이지
 const useStyles = makeStyles({
@@ -41,7 +41,7 @@ export default function Registration() {
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
 
-     const [error, setError] = useState<errorInfo | undefined>(Object);
+     const [error, setError] = useState<RegisterErrorInfo | undefined>(Object);
 
      useEffect(() => {
           console.log(error)
