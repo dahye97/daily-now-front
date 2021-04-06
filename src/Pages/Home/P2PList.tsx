@@ -67,14 +67,14 @@ export default function FundList(props: FundListProps) {
 		end : 5
 	})
 
-	const onClickAdd = () => {
+	const handleClickAdd = () => {
 		setOpen(true);
 	}
-	const onClose = () => {
+	const handleClose = () => {
 		setOpen(false);
 	}
 
-	const onSubmit = (e: React.MouseEvent) => {
+	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
 
           const p2pInfo = {
@@ -117,7 +117,7 @@ export default function FundList(props: FundListProps) {
 		}
      }
 
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
                case "p2pName":
@@ -148,6 +148,7 @@ export default function FundList(props: FundListProps) {
 			}
 	},[P2PUpdated])
 
+	// P2PLIST Stepper
 	const theme = useTheme();
 	const [activeStep, setActiveStep] = React.useState(0);
 
@@ -167,51 +168,76 @@ export default function FundList(props: FundListProps) {
 	})
 	};
 
-	useEffect(() => {
-		console.log(P2PIndex)
-	}, [P2PIndex])
-		return (
-			<div>
-			{ props.P2PList.length !== undefined && 
-				<>
-				<div className={classes.fundListContainer}>
-					<div className={classes.fundList}>
-						<IconButton className={classes.iconBody}><span><HomeIcon/><p>나의 투자</p></span></IconButton>
-						{ props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
-								return (
-									<IconButton key={index}>
-										<span className={classes.iconBody}>
-											<Avatar/>
-											<p>{company.company_name}</p>
-										</span>
-									</IconButton>)
-						})}
-						<IconButton><AddIcon onClick={onClickAdd} style={{fontSize: "40px"}}/></IconButton>
-					</div>
+	const handleP2PClick = (e: React.MouseEvent) => {
 
-					<div className={classes.stepper}>
-							<MobileStepper
-								variant="dots"
-								steps={Math.floor(props.P2PList.length / 5 + 1)}
-								position="static"
-								activeStep={activeStep}
-								className={classes.root}
-								nextButton={
-								<Button size="small" onClick={handleNext} disabled={activeStep === Math.floor(props.P2PList.length / 5)}>
-									{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-								</Button>
-								}
-								backButton={
-								<Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-									{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-								</Button>
-								}
-							/>
-					</div>
+		let p2pName = {
+			'company_name' : e.currentTarget.textContent
+		}
+		if (props.userObj !== null) {
+			fetch('http://192.168.0.69:8000/api/company/account', {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+					"Authorization": "Token " + props.userObj.auth_token,
+				},
+				body: JSON.stringify(p2pName),	// json 데이터를 전송
+			})
+				.then(res => {
+					if( res.ok ){
+						res.json().then( data => {
+							console.log(data)
+						})
+					}else {
+					
+					}
+				})
+				.catch(error =>  console.log(error));
+				
+			}
+		}
+
+	return (
+		<div>
+		{ props.P2PList.length !== undefined && 
+			<>
+			<div className={classes.fundListContainer}>
+				<div className={classes.fundList}>
+					<IconButton className={classes.iconBody}><span><HomeIcon/><p>나의 투자</p></span></IconButton>
+					{ props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
+							return (
+								<IconButton key={index} onClick={handleP2PClick}>
+									<span className={classes.iconBody}>
+										<Avatar/>
+										<p>{company.company_name}</p>
+									</span>
+								</IconButton>)
+					})}
+					<IconButton><AddIcon onClick={handleClickAdd} style={{fontSize: "40px"}}/></IconButton>
 				</div>
-				<P2PRegister open={open} isError={isError} onClose={onClose} onChange={onChange} onSubmit={onSubmit}/>
-				</>
-				}
+
+				<div className={classes.stepper}>
+						<MobileStepper
+							variant="dots"
+							steps={Math.floor(props.P2PList.length / 5 + 1)}
+							position="static"
+							activeStep={activeStep}
+							className={classes.root}
+							nextButton={
+							<Button size="small" onClick={handleNext} disabled={activeStep === Math.floor(props.P2PList.length / 5)}>
+								{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+							</Button>
+							}
+							backButton={
+							<Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+								{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+							</Button>
+							}
+						/>
+				</div>
 			</div>
-			);
+			<P2PRegister open={open} isError={isError} handleClose={handleClose} handleChange={handleChange} handleSubmit={handleSubmit}/>
+			</>
+			}
+		</div>
+		);
 }

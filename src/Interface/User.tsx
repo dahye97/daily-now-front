@@ -10,3 +10,10 @@ export interface p2pInfo {
      uid: number,
      company_name:string
 }
+
+export interface accountInfo {
+     account_holder : string,
+     account_number : string,
+     bank : string,
+     deposit : string
+}

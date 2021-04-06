@@ -27,10 +27,10 @@ const useStyles = makeStyles({
 
 	},
 	asideContainer : {
-		width: "230px",
-		height: "300px",
+		width: "400px",
+		height: "400px",
 		
-		padding: "20px",
+		padding: "30px",
 		marginTop: "80px",
 		borderRadius: "50px",
 		background: "linear-gradient(100deg, #ffffff, #e6e6e6)",
@@ -86,17 +86,12 @@ export default function Home(props: HomeProps) {
 										<div className={classes.productList}><Product /></div>
 									</li>
 				{/* 투자 내역 관리 */}	<li className={classes.contentItem}><Funding /></li>
-			{/* 입출금 내역 : 리스트*/}	<li className={classes.contentItem}><Transaction /></li>
 								</ul>
 						</div>
 				</Grid>
 				<Grid item xs={3}>
 					<aside  className={classes.asideContainer}>
-						<ul>
-							<li>찜한 상품</li>
-							<li>투자 내역</li>
-							<li>입출금 내역</li>
-						</ul>
+						<Transaction />
 					</aside>
 				</Grid>
 			</Grid>
