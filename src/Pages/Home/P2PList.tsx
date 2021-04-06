@@ -2,9 +2,9 @@
 import {useState,useEffect} from 'react'
 import HomeIcon from "@material-ui/icons/Home";
 import { IconButton, Avatar,Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
-import dailyfunding from "../../asset/img/dailyfunding.png"
-
-import { makeStyles } from "@material-ui/core/styles";
+import {Collapse} from '@material-ui/core'
+import { makeStyles, } from "@material-ui/core/styles";
+import { Alert, AlertTitle } from '@material-ui/lab';
 import AddIcon from '@material-ui/icons/Add';
 import { p2pInfo, userInfo } from '../../Interface/User';
 
@@ -34,9 +34,16 @@ export default function FundList(props: FundListProps) {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
+	const [isError, setError] = useState({
+		open: false,
+		isTrue: false,
+		message: ""
+	})
 	const [userName, setUserName] = useState("")
 	const [password, setPassword] = useState("")
 	const [P2PName, setP2PName] = useState("")
+	
+	const [P2PUpdated, setP2PUpdated] = useState(false)
 
 	const onClickAdd = () => {
 		setOpen(true);
@@ -53,7 +60,7 @@ export default function FundList(props: FundListProps) {
 			"user_password":password,
 			"company_name":P2PName
           }
-          console.log(p2pInfo)
+
 		if (props.userObj !== null) {
 			fetch('http://192.168.0.69:8000/api/register/company_register', {
 				method: "POST",
@@ -66,8 +73,21 @@ export default function FundList(props: FundListProps) {
 				.then(res => {
 					if(res.ok) {
 						res.json().then( data => {
-							alert(data)
-							props.handleAddP2P(data)
+							console.log(data)
+							if ( data[0] === "Information registration completed!") {
+								setError({
+									open: false,
+									isTrue : false,
+									message: ""
+								})
+								setP2PUpdated(true)
+							}else {
+								setError({
+									open: true,
+									isTrue : true,
+									message: data
+								})
+							}
 						})
 					}
 				})
@@ -89,24 +109,23 @@ export default function FundList(props: FundListProps) {
                     break
           }
      }
-
 	
 	useEffect(() => {
-		console.log('useEffect')
-		if(props.userObj !== null){
-			fetch('http://192.168.0.69:8000/api/register/registered_company', {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json; charset=utf-8",
-					"Authorization": "Token " + props.userObj.auth_token
-				},
-			}).then((res) => res.json())
-			.then((res) => {
-				props.handleAddP2P(res)
-			})
-			.catch(error =>  console.log(error));
-		}
-	},[])
+			if(props.userObj !== null){
+				fetch('http://192.168.0.69:8000/api/register/registered_company', {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json; charset=utf-8",
+						"Authorization": "Token " + props.userObj.auth_token
+					},
+				}).then((res) => res.json())
+				.then((res) => {
+					props.handleAddP2P(res)
+				})
+				.catch(error =>  console.log(error));
+			}
+	},[P2PUpdated])
+	
 		return (
 			<div className={classes.fundList}>
 				<div>
@@ -117,7 +136,7 @@ export default function FundList(props: FundListProps) {
 						</span>
 					</IconButton>
 
-					{ props.P2PList.length !== 0 ?
+					{ props.P2PList.length !== undefined ?
 						(props.P2PList.map( (company,index) => {
 							return (
 								<IconButton key={index}>
@@ -137,6 +156,13 @@ export default function FundList(props: FundListProps) {
 
 					<Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
 						<DialogTitle id="form-dialog-title">P2P 회사 등록</DialogTitle>
+						<Collapse in={isError.isTrue}>
+							<Alert  
+								severity={ isError.isTrue ? "error":"success"}>
+								<AlertTitle>등록 { isError.isTrue ? "실패" : "성공"}</AlertTitle>
+								<strong>{isError.message}</strong>
+							</Alert>
+						</Collapse>
 						<DialogContent>
 							<DialogContentText>
 							연동할 회사의 이름과 회원 ID, 패스워드를 입력해주세요.
