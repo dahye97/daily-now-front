@@ -15,7 +15,6 @@ const useStyles = makeStyles({
 		justifyContent: "center",
 		margin:" 0 auto",
 		background: "linear-gradient(145deg, #ffffff, #ECF0F3)",
-
 	},
 	homeContainer: {
 		padding: "20px",
@@ -24,6 +23,8 @@ const useStyles = makeStyles({
 		background: "linear-gradient(100deg, #ffffff, #ECF0F3)",
 		boxShadow: "17px 17px 34px #b1b1b1, -17px -17px 34px #ffffff",
 		overflow: "hidden",
+		minWidth : "580px",
+
 	},
 	asideContainer : {
 		width: "230px",
@@ -38,7 +39,7 @@ const useStyles = makeStyles({
 		position: "sticky",
 		top: "80px",
 
-		'@media(max-width: 950px)' : {
+		'@media(max-width: 1270px)' : {
 			display:'none'
 		}
 	},
@@ -78,10 +79,10 @@ export default function Home(props: HomeProps) {
 
 								<ul className={classes.contentList}>
 				{/* 현재 보유 예치금 */} <li className={classes.contentItem}>
-										<Typography  variant="h5">🔥 현 보유 예치금</Typography>	
+										<Typography  variant="h5">💰 현 보유 예치금</Typography>	
 									</li>
 				{/* 찜한 상품 리스트 */} <li  className={classes.contentItem} >
-										<Typography variant="h5">🔥 찜한 상품 리스트 </Typography>
+										<Typography variant="h5">💙 찜한 상품 리스트 </Typography>
 										<div className={classes.productList}><Product /></div>
 									</li>
 				{/* 투자 내역 관리 */}	<li className={classes.contentItem}><Funding /></li>

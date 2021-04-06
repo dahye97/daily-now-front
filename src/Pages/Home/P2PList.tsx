@@ -1,19 +1,32 @@
 /** @format */
-import {useState,useEffect} from 'react'
+import React, {useState,useEffect} from 'react'
 import HomeIcon from "@material-ui/icons/Home";
 import { IconButton, Avatar,Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import {Collapse} from '@material-ui/core'
-import { makeStyles, } from "@material-ui/core/styles";
+import { makeStyles,useTheme  } from "@material-ui/core/styles";
 import { Alert, AlertTitle } from '@material-ui/lab';
 import AddIcon from '@material-ui/icons/Add';
 import { p2pInfo, userInfo } from '../../Interface/User';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import MobileStepper from '@material-ui/core/MobileStepper';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 // TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({
+	root: {
+		maxWidth: 400,
+		flexGrow: 1,
+		background : "none"
+	   },
+	fundListContainer: {
+
+	},
 	fundList: {
 		margin: "10px 0",
 		padding: "10px 0",
-		borderBottom: "1px solid #e0e0e0",
+		display:"flex",
+		// alignItems: "sp"
 	},
 	iconBody: {
 		fontSize: "12px",
@@ -21,7 +34,11 @@ const useStyles = makeStyles({
 		flexDirection: "column",
 		alignItems: "center",
 	},
-
+	stepper : {
+		borderBottom: "1px solid #e0e0e0",
+		display:"flex",
+		justifyContent: "center"
+	}
 });
 
 interface FundListProps {
@@ -33,17 +50,25 @@ interface FundListProps {
 export default function FundList(props: FundListProps) {
 	const classes = useStyles()
 
+	// STATE
 	const [open, setOpen] = useState(false)
 	const [isError, setError] = useState({
 		open: false,
 		isTrue: false,
 		message: ""
 	})
+	const [P2PUpdated, setP2PUpdated] = useState(false)
+
+	// INPUT
 	const [userName, setUserName] = useState("")
 	const [password, setPassword] = useState("")
 	const [P2PName, setP2PName] = useState("")
 	
-	const [P2PUpdated, setP2PUpdated] = useState(false)
+	// INDEX
+	const [P2PIndex, setP2PIndex] = useState({
+		start : 0,
+		end : 5
+	})
 
 	const onClickAdd = () => {
 		setOpen(true);
@@ -125,33 +150,74 @@ export default function FundList(props: FundListProps) {
 				.catch(error =>  console.log(error));
 			}
 	},[P2PUpdated])
-	
-		return (
-			<div className={classes.fundList}>
-				<div>
-					<IconButton>
-						<span className={classes.iconBody}>
-							<HomeIcon fontSize="large" />
-							<p>나의 투자</p>
-						</span>
-					</IconButton>
 
-					{ props.P2PList.length !== undefined ?
-						(props.P2PList.map( (company,index) => {
-							return (
-								<IconButton key={index}>
-									<span className={classes.iconBody}>
-										<Avatar/>
-										<p>{company.company_name}</p>
-									</span>
-								</IconButton>)
-						})) 
-						: null
-					}
-					
-					<IconButton>
-						<AddIcon onClick={onClickAdd} style={{fontSize: "40px"}}/>
-					</IconButton>
+	const theme = useTheme();
+	const [activeStep, setActiveStep] = React.useState(0);
+
+	const handleNext = () => {
+	  setActiveStep((prevActiveStep) => prevActiveStep + 1);
+	  setP2PIndex( {
+		  start : P2PIndex.end,
+		  end : P2PIndex.end + 4
+	  })
+	};
+   
+	const handleBack = () => {
+	  setActiveStep((prevActiveStep) => prevActiveStep - 1);
+	  setP2PIndex( {
+		start : P2PIndex.start - 4,
+		end : P2PIndex.start
+	})
+	};
+
+	useEffect(() => {
+		console.log(P2PIndex)
+	}, [P2PIndex])
+		return (
+			<div>
+			{ props.P2PList.length !== undefined && 
+				<>
+				<div className={classes.fundListContainer}>
+					<div className={classes.fundList}>
+						<IconButton className={classes.iconBody}>
+							<span>
+								<HomeIcon/>
+								<p>나의 투자</p>
+							</span>
+						</IconButton>
+						{ 
+							props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
+									return (
+										<IconButton key={index}>
+											<span className={classes.iconBody}>
+												<Avatar/>
+												<p>{company.company_name}</p>
+											</span>
+										</IconButton>)
+								})}
+						<IconButton>
+							<AddIcon onClick={onClickAdd} style={{fontSize: "40px"}}/>
+						</IconButton>
+					</div>
+					<div className={classes.stepper}>
+							<MobileStepper
+								variant="dots"
+								steps={Math.floor(props.P2PList.length / 5 + 1)}
+								position="static"
+								activeStep={activeStep}
+								className={classes.root}
+								nextButton={
+								<Button size="small" onClick={handleNext} disabled={activeStep === Math.floor(props.P2PList.length / 5)}>
+									{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+								</Button>
+								}
+								backButton={
+								<Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+									{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+								</Button>
+								}
+							/>
+					</div>
 				</div>
 
 					<Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
@@ -180,6 +246,8 @@ export default function FundList(props: FundListProps) {
 							</Button>
 						</DialogActions>
 					</Dialog>
+				</>
+				}
 			</div>
-		);
+			);
 }
