@@ -11,10 +11,10 @@ import yangpyeong from '../../asset/img/yangpyeong.jpg'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     productContainer: {
-
+      
     },
     card: {
-      maxWidth: 300,
+      maxWidth: 350,
       margin: "20px"
     },
     media: {
