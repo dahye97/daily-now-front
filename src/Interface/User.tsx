@@ -17,3 +17,9 @@ export interface accountInfo {
      bank : string,
      deposit : string
 }
+
+export interface fundInfo {
+     total_investment: string, 
+     number_of_investing_products: string, 
+     residual_investment_price: string 
+}
