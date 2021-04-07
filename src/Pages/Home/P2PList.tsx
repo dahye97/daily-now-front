@@ -39,6 +39,7 @@ const useStyles = makeStyles({
 });
 
 interface FundListProps {
+	handleClickP2P : any,
 	handleAddP2P : any,
 	userObj : userInfo | null,
 	P2PList: Array<p2pInfo>
@@ -169,32 +170,10 @@ export default function FundList(props: FundListProps) {
 	};
 
 	const handleP2PClick = (e: React.MouseEvent) => {
-
-		let p2pName = {
-			'company_name' : e.currentTarget.textContent
-		}
-		if (props.userObj !== null) {
-			fetch('http://192.168.0.69:8000/api/company/account', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json; charset=utf-8",
-					"Authorization": "Token " + props.userObj.auth_token,
-				},
-				body: JSON.stringify(p2pName),	// json 데이터를 전송
-			})
-				.then(res => {
-					if( res.ok ){
-						res.json().then( data => {
-							console.log(data)
-						})
-					}else {
-					
-					}
-				})
-				.catch(error =>  console.log(error));
-				
-			}
-		}
+		if( e.currentTarget.textContent === "모든 투자") {
+			props.handleClickP2P("all", undefined)
+		}else props.handleClickP2P(e.currentTarget.textContent)
+	}
 
 	return (
 		<div>
@@ -202,7 +181,7 @@ export default function FundList(props: FundListProps) {
 			<>
 			<div className={classes.fundListContainer}>
 				<div className={classes.fundList}>
-					<IconButton className={classes.iconBody}><span><HomeIcon/><p>나의 투자</p></span></IconButton>
+					<IconButton onClick={handleP2PClick} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
 					{ props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
 							return (
 								<IconButton key={index} onClick={handleP2PClick}>
