@@ -78,44 +78,61 @@ export default function FundList(props: FundListProps) {
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
 
-          const p2pInfo = {
-               "username":userName,
-			"user_password":password,
-			"company_name":P2PName
-          }
-
-		if (props.userObj !== null) {
-			fetch('http://192.168.0.69:8000/api/register/company_register', {
-				method: "POST",
+		let companyId : number;
+			// 회사 id 가져오기
+			fetch('http://192.168.0.69:8000/api/register/company', {
+				method: "GET",
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",
-					"Authorization": "Token " + props.userObj.auth_token
 				},
-				body: JSON.stringify(p2pInfo),
-			})
-				.then(res => {
-					if(res.ok) {
-						res.json().then( data => {
-							console.log(data)
-							if ( data[0] === "Information registration completed!") {
-								setError({
-									open: false,
-									isTrue : false,
-									message: ""
+			}).then(res => {
+					res.json().then( companies => {
+						companyId = companies.filter( 
+							(company : { id : number, company_name: string}) => 
+								company.company_name === P2PName)[0].id
+					}).then( () => {
+						if( props.userObj !== null) {
+							console.log('here')
+							const p2pInfo = {
+								"username":userName,
+								"user_password":password,
+								"company_id": companyId
+							}
+
+							fetch('http://192.168.0.69:8000/api/register/company_register', {
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json; charset=utf-8",
+									"Authorization": "Token " + props.userObj.auth_token
+								},
+								body: JSON.stringify(p2pInfo),
 								})
-								setP2PUpdated(true)
-							}else {
-								setError({
-									open: true,
-									isTrue : true,
-									message: data
+								.then(res => {
+									if(res.ok) {
+										res.json().then( data => {
+											console.log(data)
+											if ( data[0] === "Information registration completed!") {
+												setError({
+													open: false,
+													isTrue : false,
+													message: ""
+												})
+												setP2PUpdated(true)
+											}else {
+												setError({
+													open: true,
+													isTrue : true,
+													message: data
+												})
+											}
+										})
+									}
 								})
+								.catch(error =>  console.log(error));
 							}
 						})
-					}
-				})
-				.catch(error =>  console.log(error));
-		}
+			}).catch(error =>  console.log(error));
+
      }
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,6 +160,7 @@ export default function FundList(props: FundListProps) {
 					},
 				}).then((res) => res.json())
 				.then((res) => {
+					console.log('p2pupdated: ', res)
 					props.handleAddP2P(res)
 				})
 				.catch(error =>  console.log(error));
