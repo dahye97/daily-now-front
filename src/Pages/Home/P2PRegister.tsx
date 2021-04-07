@@ -1,5 +1,5 @@
 import React from 'react'
-import { Collapse, IconButton, Avatar,Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
+import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import { Alert, AlertTitle } from '@material-ui/lab';
 import {P2PRegisterErrorInfo} from '../../Interface/Error'
 

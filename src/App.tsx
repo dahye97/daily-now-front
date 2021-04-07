@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import AppRouter from "./Router";
+import { MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns'
 
 function App() {
 
@@ -9,7 +11,9 @@ function App() {
     <>
       {isInit? (	
             <>
-              <AppRouter/>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <AppRouter/>
+              </MuiPickersUtilsProvider>
             </>
           )
           : (

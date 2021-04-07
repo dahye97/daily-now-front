@@ -27,9 +27,8 @@ const useStyles = makeStyles({
 
 	},
 	asideContainer : {
-		width: "400px",
 		height: "400px",
-		
+		minWidth : "500px",
 		padding: "30px",
 		marginTop: "80px",
 		borderRadius: "50px",

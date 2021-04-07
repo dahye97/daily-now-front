@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 });
 export default function AppRouter() {
 	const classes = useStyles()
-	const [isLoggedIn, setisLoggedIn] = useState(false);
+	const [isLoggedIn, setisLoggedIn] = useState(true);
 	const [userObj, setUserObj] = useState<userInfo | null>(Object)
 	const [P2PList, setP2PList] = useState<Array<p2pInfo>>(Object)
 
