@@ -75,7 +75,7 @@ interface HomeProps {
 	userObj: userInfo | null,
 	P2PList: Array<p2pInfo>
 	handleLogOut: any,
-	handleAddP2P: any
+	handleAddP2P : (data: Array<p2pInfo>) => void
 }
 export default function Home(props: HomeProps) {
 	const classes = useStyles();
@@ -85,10 +85,10 @@ export default function Home(props: HomeProps) {
 	const [fund, setFund] = useState<fundInfo[]>([])
 
 	// p2plist에서 선택한 회사 정보 저장 
-	const handleClickP2P = (name: string, id: number) => {
+	const handleClickP2P = (name: string) => {
 		setCompany(name);
 	}
-	const handleCompanyID =(id: number )=> {
+	const handleCompanyID =(id: number ) => {
 		setCompanyID(id);
 	}
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 

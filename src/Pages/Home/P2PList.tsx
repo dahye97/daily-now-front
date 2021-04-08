@@ -19,19 +19,21 @@ const useStyles = makeStyles({
 		margin: "10px 0",
 		padding: "10px 0",
 		display:"flex",
+	
 	},
 	iconBody: {
 		fontSize: "12px",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
+		width: '80px'
 	},
 });
 
 interface FundListProps {
-	handleCompanyID : any,
-	handleClickP2P : any,
-	handleAddP2P : any,
+	handleCompanyID : (id: number) => void,
+	handleClickP2P : (name: string) => void,
+	handleAddP2P : (data: Array<p2pInfo>) => void,
 	userObj : userInfo | null,
 	P2PList: Array<p2pInfo>
 }
@@ -86,7 +88,7 @@ export default function FundList(props: FundListProps) {
 	const onP2PClick = (name: string | null) => {
 		if(name !== null) {
 			if( name === "모든 투자") {
-				handleClickP2P("all", undefined)
+				handleClickP2P("all")
 			}else{
 				// 회사 id 가져오기
 				fetchP2PID(name)
@@ -114,7 +116,7 @@ export default function FundList(props: FundListProps) {
 			}
 		})
 	}
-	// 📌 setP2PID 가 비동기적이기에 P2PID가 바뀔때 id를 전달하기 위해 useEffect를 이용 
+	// 📌 P2PID가 바뀔때 id를 전달하기 위해 useEffect를 이용 
 	useEffect(() => {
 		handleCompanyID(P2PID)
 				// console.log(P2PID)
@@ -137,10 +139,10 @@ export default function FundList(props: FundListProps) {
 					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
 							return (
 								<IconButton key={index} onClick={(e) => onP2PClick(e.currentTarget.textContent)}>
-									<span className={classes.iconBody}>
+									<div className={classes.iconBody}>
 										<Avatar/>
 										<p>{company.company_name}</p>
-									</span>
+									</div>
 								</IconButton>)
 					})}
 					<IconButton><AddIcon onClick={handleClickAdd} style={{fontSize: "40px"}}/></IconButton>
