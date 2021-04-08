@@ -1,5 +1,5 @@
-import {Card,CardHeader,CardContent,IconButton,Button,CardActions,Typography} from "@material-ui/core";
-import {  makeStyles } from "@material-ui/core/styles";
+import {Card,CardHeader,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar } from "@material-ui/core";
+import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
@@ -34,6 +34,35 @@ const useStyles = makeStyles({
 	}
 });
 
+const StyledBadge = withStyles((theme) => ({
+	badge: {
+	  backgroundColor: '#44b700',
+	  color: '#44b700',
+	  boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+	  '&::after': {
+	    position: 'absolute',
+	    top: 0,
+	    left: 0,
+	    width: '100%',
+	    height: '100%',
+	    borderRadius: '50%',
+	    animation: '$ripple 1.2s infinite ease-in-out',
+	    border: '1px solid currentColor',
+	    content: '""',
+	  },
+	},
+	'@keyframes ripple': {
+	  '0%': {
+	    transform: 'scale(.8)',
+	    opacity: 1,
+	  },
+	  '100%': {
+	    transform: 'scale(2.4)',
+	    opacity: 0,
+	  },
+	},
+   }))(Badge);
+
 interface ProfileProps {
 	userObj : userInfo | null,
 	handleLogOut:any,
@@ -49,7 +78,22 @@ export default function Profile(props:ProfileProps) {
 		return (
 			<div className="profile">
 				<Card className={classes.card} elevation={3}>
-					<CardHeader title={props.userObj?.first_name + "님의"} component="span"/>
+						<CardHeader 
+						title={props.userObj?.first_name + "님의"} 
+						component="span"
+						avatar={
+							<StyledBadge
+								overlap="circle"
+								anchorOrigin={{
+									vertical: 'bottom',
+									horizontal: 'right',
+								}}
+								variant="dot"
+								>
+								<Avatar/>
+							</StyledBadge>
+						}></CardHeader>
+
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
 	{/* 회원 정보 수정 */}	<IconButton onClick={onClickSetting}><SettingsIcon className={classes.setting} /></IconButton>
