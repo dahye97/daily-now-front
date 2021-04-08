@@ -46,7 +46,7 @@ export default function Navigation(props: NavProps) {
 				<Toolbar className={classes.toolbar}>
 					<Link to="/"><img src={logo} alt="daily logo" className={classes.logo} /></Link>
 					<div>
-						<Button color="inherit">커뮤니티</Button>
+						<Button color="inherit" onClick={ () => history.push('/board')}>커뮤니티</Button>
 						<Button color="inherit">FAQ</Button>
 						{props.isLoggedIn ? (
 							<Button color="inherit" onClick={handleHome}>

@@ -8,6 +8,8 @@ import HomeIcon from "@material-ui/icons/Home";
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { p2pInfo, userInfo } from '../../Interface/User';
+import { companyInfo } from '../../Interface/Company';
+
 import P2PRegister from './P2PRegister';
 
 // TODO: 투자 P2P 회사 리스트 
@@ -62,6 +64,7 @@ export default function FundList(props: FundListProps) {
 	const [password, setPassword] = useState("")
 	const [P2PName, setP2PName] = useState("")
 	
+	const [P2PID, setP2PID] = useState(0)
 	// INDEX
 	const [P2PIndex, setP2PIndex] = useState({
 		start : 0,
@@ -75,65 +78,48 @@ export default function FundList(props: FundListProps) {
 		setOpen(false);
 	}
 
+	// TODO: 연동 회사 등록 
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
+		console.log('handleSubmit')
+		const p2pInfo = {
+			"username":userName,
+			"user_password":password,
+			"company_id": P2PID
+		}
 
-		let companyId : number;
-			// 회사 id 가져오기
-			fetch('http://192.168.0.69:8000/api/register/company', {
-				method: "GET",
+		if(props.userObj !== null ) {
+			fetch('http://192.168.0.69:8000/api/register/company_register', {
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",
+					"Authorization": "Token " + props.userObj.auth_token
 				},
-			}).then(res => {
-					res.json().then( companies => {
-						companyId = companies.filter( 
-							(company : { id : number, company_name: string}) => 
-								company.company_name === P2PName)[0].id
-					}).then( () => {
-						if( props.userObj !== null) {
-							console.log('here')
-							const p2pInfo = {
-								"username":userName,
-								"user_password":password,
-								"company_id": companyId
-							}
-
-							fetch('http://192.168.0.69:8000/api/register/company_register', {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json; charset=utf-8",
-									"Authorization": "Token " + props.userObj.auth_token
-								},
-								body: JSON.stringify(p2pInfo),
+				body: JSON.stringify(p2pInfo),
+				})
+				.then(res => {
+					if(res.ok) {
+						res.json().then( data => {
+							if ( data[0] === "Information registration completed!") {
+								setError({
+									open: false,
+									isTrue : false,
+									message: ""
 								})
-								.then(res => {
-									if(res.ok) {
-										res.json().then( data => {
-											console.log(data)
-											if ( data[0] === "Information registration completed!") {
-												setError({
-													open: false,
-													isTrue : false,
-													message: ""
-												})
-												setP2PUpdated(true)
-											}else {
-												setError({
-													open: true,
-													isTrue : true,
-													message: data
-												})
-											}
-										})
-									}
+								setP2PUpdated(true)
+							}else {
+								setError({
+									open: true,
+									isTrue : true,
+									message: data
 								})
-								.catch(error =>  console.log(error));
 							}
 						})
-			}).catch(error =>  console.log(error));
-
-     }
+					}
+				})
+				.catch(error =>  console.log(error));
+		}
+	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
@@ -187,11 +173,33 @@ export default function FundList(props: FundListProps) {
 	})
 	};
 
-	const handleP2PClick = (e: React.MouseEvent) => {
-		if( e.currentTarget.textContent === "모든 투자") {
+	// 클릭시 회사 아이디 가져오기 
+	const onP2PClick = (e: React.MouseEvent) => {
+		let name = e.currentTarget.textContent;
+
+		if( name === "모든 투자") {
 			props.handleClickP2P("all", undefined)
-		}else props.handleClickP2P(e.currentTarget.textContent)
+		}else {
+			// 회사 id 가져오기
+			fetch('http://192.168.0.69:8000/api/register/company', {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+			}).then(res => {
+				if(res.ok) {
+					res.json().then( companies => {
+							let id = ((companies.filter( 
+								(company : companyInfo)=> 
+									company.company_name === name))[0].id)
+							setP2PID(id)
+							props.handleClickP2P(name, id)
+					})
+				}
+			})
+		}
 	}
+
 
 	return (
 		<div>
@@ -199,10 +207,10 @@ export default function FundList(props: FundListProps) {
 			<>
 			<div className={classes.fundListContainer}>
 				<div className={classes.fundList}>
-					<IconButton onClick={handleP2PClick} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
+					<IconButton onClick={onP2PClick} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
 					{ props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
 							return (
-								<IconButton key={index} onClick={handleP2PClick}>
+								<IconButton key={index} onClick={onP2PClick}>
 									<span className={classes.iconBody}>
 										<Avatar/>
 										<p>{company.company_name}</p>

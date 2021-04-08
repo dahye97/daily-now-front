@@ -6,10 +6,11 @@ import Funding from "./Funding";
 import { makeStyles, } from "@material-ui/core/styles";
 
 import { Typography,Grid } from "@material-ui/core";
-import Transaction from "./Transaction";
+import Calendar from "./Calendar";
 import Product from "./Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
 import Account from '../MyPage/Account';
+import Transaction from './Transaction';
 
 const useStyles = makeStyles({
 	home: {
@@ -79,18 +80,20 @@ interface HomeProps {
 export default function Home(props: HomeProps) {
 	const classes = useStyles();
 	const [company, setCompany] = useState("all")
+	const [companyID, setCompanyID] = useState(0)
 	const [account, setAccount] = useState<accountInfo | undefined>(Object);
 	const [fund, setFund] = useState<fundInfo[]>([])
 
 	// p2plist에서 선택한 회사 정보 저장 
-	const handleClickP2P = (name: string) => {
-			setCompany(name);
+	const handleClickP2P = (name: string, id: number) => {
+		setCompany(name);
+		setCompanyID(id);
 	}
 	useEffect(() => {
-		let p2pName = {
-			'company_name' : company
+		let p2pID = {
+			'company_id' : companyID
 		};
-		
+		console.log('회사ID변경: ',companyID)
 		if (props.userObj !== null && company !== "all") {
 			fetch('http://192.168.0.69:8000/api/company/account', {
 						method: "POST",
@@ -98,7 +101,7 @@ export default function Home(props: HomeProps) {
 							"Content-Type": "application/json; charset=utf-8",
 							"Authorization": "Token " + props.userObj.auth_token,
 						},
-						body: JSON.stringify(p2pName),	// json 데이터를 전송
+						body: JSON.stringify(p2pID),	// json 데이터를 전송
 			})
 				.then(res => {
 					if( res.ok ){
@@ -107,7 +110,8 @@ export default function Home(props: HomeProps) {
 							setAccount(data)
 						})
 					}else {
-						alert('계좌 정보가 없습니다.')
+						console.log('계좌 정보가 없습니다.')
+						setAccount(undefined)
 					}
 				})
 				.catch(error =>  console.log(error));
@@ -118,7 +122,7 @@ export default function Home(props: HomeProps) {
 							"Content-Type": "application/json; charset=utf-8",
 							"Authorization": "Token " + props.userObj.auth_token,
 						},
-						body: JSON.stringify(p2pName),	// json 데이터를 전송
+						body: JSON.stringify(p2pID),	// json 데이터를 전송
 			})
 				.then(res => {
 					if( res.ok ){
@@ -127,12 +131,13 @@ export default function Home(props: HomeProps) {
 							setFund(data)
 						})
 					}else {
-						alert('투자 정보가 없습니다.')
+						console.log('투자 정보가 없습니다.')
+						setFund([])
 					}
 				})
 				.catch(error =>  console.log(error));
 		}
-	}, [company])
+	}, [companyID])
 
 	return (
 			<Grid container spacing={3}  className={classes.home}>
@@ -163,7 +168,7 @@ export default function Home(props: HomeProps) {
 							</li>
 							{company !== "all" && 
 								<li className={classes.contentItem}>
-			{/* 입출금 내역 */}			<Typography  variant="h5">📋 입출금 내역</Typography>	
+			{/* 입출금 내역 */}			<Transaction />
 								</li>
 							}
 							
@@ -174,7 +179,7 @@ export default function Home(props: HomeProps) {
 				{ /* TODO 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} direction="column" className={classes.asideContainer}>
 					<div  className={classes.asideItem}>
-						<Transaction />
+						<Calendar />
 					</div>
 					<div  className={classes.asideItem}>
 						<Typography variant="h5">💙 모집 중인 상품 </Typography>

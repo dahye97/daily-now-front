@@ -1,6 +1,6 @@
 /** @format */
 import { useState,useEffect } from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import Board from "./Pages/Board/Board";
 import Randing from "./Pages/Randing/Randing";
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 });
 export default function AppRouter() {
 	const classes = useStyles()
-	const [isLoggedIn, setisLoggedIn] = useState(true);
+	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [userObj, setUserObj] = useState<userInfo | null>(Object)
 	const [P2PList, setP2PList] = useState<Array<p2pInfo>>(Object)
 
