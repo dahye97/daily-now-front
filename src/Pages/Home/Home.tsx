@@ -87,13 +87,16 @@ export default function Home(props: HomeProps) {
 	// p2plist에서 선택한 회사 정보 저장 
 	const handleClickP2P = (name: string, id: number) => {
 		setCompany(name);
+	}
+	const handleCompanyID =(id: number )=> {
 		setCompanyID(id);
 	}
+	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	useEffect(() => {
 		let p2pID = {
 			'company_id' : companyID
 		};
-		console.log('회사ID변경: ',companyID)
+		
 		if (props.userObj !== null && company !== "all") {
 			fetch('http://192.168.0.69:8000/api/company/account', {
 						method: "POST",
@@ -147,7 +150,7 @@ export default function Home(props: HomeProps) {
 					<div className={classes.homeContainer}>
 
 						<Profile userObj={props.userObj} handleLogOut={props.handleLogOut}/>
-						<P2PList P2PList={props.P2PList} userObj={props.userObj} handleClickP2P={handleClickP2P} handleAddP2P={props.handleAddP2P} />
+						<P2PList P2PList={props.P2PList} userObj={props.userObj} handleCompanyID={handleCompanyID} handleClickP2P={handleClickP2P} handleAddP2P={props.handleAddP2P} />
 
 						<ul className={classes.contentList}>
 		{/* 보유 예치금 */} 	<li className={classes.contentItem}>
