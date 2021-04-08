@@ -1,24 +1,17 @@
 /** @format */
 import React, {useState,useEffect} from 'react'
-import { IconButton, Avatar ,Button } from "@material-ui/core";
-import { makeStyles,useTheme  } from "@material-ui/core/styles";
-import MobileStepper from '@material-ui/core/MobileStepper';
+import { IconButton, Avatar  } from "@material-ui/core";
+import { makeStyles  } from "@material-ui/core/styles";
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from "@material-ui/icons/Home";
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { p2pInfo, userInfo } from '../../Interface/User';
 import { companyInfo } from '../../Interface/Company';
 
 import P2PRegister from './P2PRegister';
+import Stepper from '../../Components/Stepper';
 
 // TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({
-	root: {
-		maxWidth: 400,
-		flexGrow: 1,
-		background : "none"
-	   },
 	fundListContainer: {
 
 	},
@@ -33,14 +26,10 @@ const useStyles = makeStyles({
 		flexDirection: "column",
 		alignItems: "center",
 	},
-	stepper : {
-		borderBottom: "1px solid #e0e0e0",
-		display:"flex",
-		justifyContent: "center"
-	}
 });
 
 interface FundListProps {
+	handleCompanyID : any,
 	handleClickP2P : any,
 	handleAddP2P : any,
 	userObj : userInfo | null,
@@ -49,168 +38,105 @@ interface FundListProps {
 
 export default function FundList(props: FundListProps) {
 	const classes = useStyles()
-
+	const {handleCompanyID, handleClickP2P, handleAddP2P, userObj, P2PList} = props;
 	// STATE
 	const [open, setOpen] = useState(false)
-	const [isError, setError] = useState({
-		open: false,
-		isTrue: false,
-		message: ""
-	})
 	const [P2PUpdated, setP2PUpdated] = useState(false)
-
-	// INPUT
-	const [userName, setUserName] = useState("")
-	const [password, setPassword] = useState("")
-	const [P2PName, setP2PName] = useState("")
-	
 	const [P2PID, setP2PID] = useState(0)
+
+     const [isExist, setIsExist] = useState(false)
+
 	// INDEX
 	const [P2PIndex, setP2PIndex] = useState({
 		start : 0,
 		end : 5
 	})
 
+	// 연동 회사 폼 여닫이 핸들러 
 	const handleClickAdd = () => {
 		setOpen(true);
 	}
 	const handleClose = () => {
 		setOpen(false);
+		setIsExist(false)
+	}	
+	const handleP2PUpdated = (result : boolean) => {
+		setP2PUpdated(result)
 	}
 
-	// TODO: 연동 회사 등록 
-	const handleSubmit = (e: React.MouseEvent) => {
-          e.preventDefault();
-		console.log('handleSubmit')
-		const p2pInfo = {
-			"username":userName,
-			"user_password":password,
-			"company_id": P2PID
-		}
-
-		if(props.userObj !== null ) {
-			fetch('http://192.168.0.69:8000/api/register/company_register', {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json; charset=utf-8",
-					"Authorization": "Token " + props.userObj.auth_token
-				},
-				body: JSON.stringify(p2pInfo),
-				})
-				.then(res => {
-					if(res.ok) {
-						res.json().then( data => {
-							if ( data[0] === "Information registration completed!") {
-								setError({
-									open: false,
-									isTrue : false,
-									message: ""
-								})
-								setP2PUpdated(true)
-							}else {
-								setError({
-									open: true,
-									isTrue : true,
-									message: data
-								})
-							}
-						})
-					}
-				})
-				.catch(error =>  console.log(error));
-		}
-	}
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value;
-          switch(e.target.id) {
-               case "p2pName":
-                    setP2PName(value)
-                    break
-               case "email":
-                    setUserName(value)
-                    break
-               case "password":
-                    setPassword(value)
-                    break
-          }
-     }
-	
+	// 연동 회사 추가 시 홈에 알릴 수 있게 하는 핸들러 
 	useEffect(() => {
-			if(props.userObj !== null){
+			if(userObj !== null){
 				fetch('http://192.168.0.69:8000/api/register/registered_company', {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json; charset=utf-8",
-						"Authorization": "Token " + props.userObj.auth_token
+						"Authorization": "Token " + userObj.auth_token
 					},
 				}).then((res) => res.json())
 				.then((res) => {
 					console.log('p2pupdated: ', res)
-					props.handleAddP2P(res)
+					handleAddP2P(res)
 				})
 				.catch(error =>  console.log(error));
 			}
 	},[P2PUpdated])
 
-	// P2PLIST Stepper
-	const theme = useTheme();
-	const [activeStep, setActiveStep] = React.useState(0);
+	// 회사 이름, id 보내기  
+	const onP2PClick = (name: string | null) => {
+		if(name !== null) {
+			if( name === "모든 투자") {
+				handleClickP2P("all", undefined)
+			}else{
+				// 회사 id 가져오기
+				fetchP2PID(name)
+				handleClickP2P(name)
 
-	const handleNext = () => {
-	  setActiveStep((prevActiveStep) => prevActiveStep + 1);
-	  setP2PIndex( {
-		  start : P2PIndex.end,
-		  end : P2PIndex.end + 4
-	  })
-	};
-   
-	const handleBack = () => {
-	  setActiveStep((prevActiveStep) => prevActiveStep - 1);
-	  setP2PIndex( {
-		start : P2PIndex.start - 4,
-		end : P2PIndex.start
-	})
-	};
-
-	// 클릭시 회사 아이디 가져오기 
-	const onP2PClick = (e: React.MouseEvent) => {
-		let name = e.currentTarget.textContent;
-
-		if( name === "모든 투자") {
-			props.handleClickP2P("all", undefined)
-		}else {
-			// 회사 id 가져오기
-			fetch('http://192.168.0.69:8000/api/register/company', {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json; charset=utf-8",
-				},
-			}).then(res => {
-				if(res.ok) {
-					res.json().then( companies => {
-							let id = ((companies.filter( 
-								(company : companyInfo)=> 
-									company.company_name === name))[0].id)
-							setP2PID(id)
-							props.handleClickP2P(name, id)
-					})
-				}
-			})
+			}
 		}
 	}
 
+	// 회사 id 가져오기 
+	const fetchP2PID = (name: string ) => {
+		fetch('http://192.168.0.69:8000/api/register/company', {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+			},
+		}).then(res => {
+			if(res.ok) {
+				res.json().then( companies => {
+					setP2PID((companies.filter( 
+							(company : companyInfo)=> 
+								company.company_name === name))[0].id)
+					setIsExist(true)
+				})
+			}
+		})
+	}
+	// 📌 setP2PID 가 비동기적이기에 P2PID가 바뀔때 id를 전달하기 위해 useEffect를 이용 
+	useEffect(() => {
+		handleCompanyID(P2PID)
+				// console.log(P2PID)
+	}, [P2PID])
+
+	const handleP2PIndex = (startValue:number, endValue: number ) => {
+		setP2PIndex( {
+               start : startValue,
+               end :endValue
+          })
+	}
 
 	return (
 		<div>
-		{ props.P2PList.length !== undefined && 
+		{ P2PList.length !== undefined && 
 			<>
 			<div className={classes.fundListContainer}>
 				<div className={classes.fundList}>
-					<IconButton onClick={onP2PClick} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
-					{ props.P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
+					<IconButton onClick={(e) => onP2PClick(e.currentTarget.textContent)} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
+					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
 							return (
-								<IconButton key={index} onClick={onP2PClick}>
+								<IconButton key={index} onClick={(e) => onP2PClick(e.currentTarget.textContent)}>
 									<span className={classes.iconBody}>
 										<Avatar/>
 										<p>{company.company_name}</p>
@@ -220,27 +146,9 @@ export default function FundList(props: FundListProps) {
 					<IconButton><AddIcon onClick={handleClickAdd} style={{fontSize: "40px"}}/></IconButton>
 				</div>
 
-				<div className={classes.stepper}>
-						<MobileStepper
-							variant="dots"
-							steps={Math.floor(props.P2PList.length / 5 + 1)}
-							position="static"
-							activeStep={activeStep}
-							className={classes.root}
-							nextButton={
-							<Button size="small" onClick={handleNext} disabled={activeStep === Math.floor(props.P2PList.length / 5)}>
-								{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-							</Button>
-							}
-							backButton={
-							<Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-								{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-							</Button>
-							}
-						/>
-				</div>
+			<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
 			</div>
-			<P2PRegister open={open} isError={isError} handleClose={handleClose} handleChange={handleChange} handleSubmit={handleSubmit}/>
+			<P2PRegister P2PID={P2PID} isExist={isExist} handleP2PUpdated={handleP2PUpdated} userObj={userObj} open={open} fetchP2PID={fetchP2PID} handleClose={handleClose}/>
 			</>
 			}
 		</div>
