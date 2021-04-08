@@ -60,8 +60,8 @@ export default function FundList(props: FundListProps) {
 		setOpen(false);
 		setIsExist(false)
 	}	
-	const handleP2PUpdated = (result : boolean) => {
-		setP2PUpdated(result)
+	const handleP2PUpdated = () => {
+		setP2PUpdated(!P2PUpdated)
 	}
 
 	// 연동 회사 추가 시 홈에 알릴 수 있게 하는 핸들러 

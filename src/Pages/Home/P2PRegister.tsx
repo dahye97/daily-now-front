@@ -82,7 +82,9 @@ export default function P2PRegister(props: P2PRegisterProps) {
                                                   isTrue : false,
                                                   message: ""
                                              })
-                                             handleP2PUpdated(true)
+                                             console.log('등록완료!')
+                                             handleP2PUpdated()
+                                             handleClose()
                                         }else {
                                              setError({
                                                   open: true,

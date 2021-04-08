@@ -29,7 +29,7 @@ export default function Stepper(props: {index: indexInfo ,steps: number, handleP
      const handleNext = () => {
      
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
-          props.handleP2PIndex(props.index.end, props.index.end + 4 )
+          props.handleP2PIndex(props.index.end, props.index.end + 5 )
           console.log(props.index)
           
         };
