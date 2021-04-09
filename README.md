@@ -58,7 +58,9 @@ POSTMAN 등의 도구를 통하여 백엔드의 서버와 잘 통신이 되고 �
 
 🚀 About Project
 
-- Front : React, Typescript, 
+- Front : React, Typescript
 - Back : Django, MySQL
 - CSS : Material-UI, useStyles
+
 - 쿠키를 통해 유저 고유키(Token) 저장
+- axios 를 통해 서버와 GET, POST 통신

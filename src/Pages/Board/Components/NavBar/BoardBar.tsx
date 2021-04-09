@@ -4,7 +4,7 @@ import React from 'react'
 export default function BoardBar() {
      return (
           <div>
-               
+               {/* 종목 소통 tab ...  */}
           </div>
      )
 }
