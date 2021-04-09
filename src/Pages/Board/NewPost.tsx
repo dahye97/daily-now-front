@@ -1,9 +1,10 @@
 import React from 'react'
 
+// 제목, 내용, 저장, 취소
 export default function NewPost() {
      return (
           <div>
-               새 글 작성
+               Button
           </div>
      )
 }

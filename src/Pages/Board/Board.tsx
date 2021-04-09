@@ -33,13 +33,13 @@ export default function Board () {
                     <Typography component="div" style={{height: '100vh'}}>
                          <BoardBar />
                          <PostList />
+                         <div className={classes.boardBottom}>
+                              <Button variant="outlined"color="primary">내 글보기</Button>
+                              <Button variant="outlined"color="primary">글쓰기</Button>
+                         </div>
                     </Typography>
 
 
-                    <div className={classes.boardBottom}>
-                         <Button variant="outlined"color="primary">내 글보기</Button>
-                         <Button variant="outlined"color="primary">글쓰기</Button>
-                    </div>
                     
                </Container>
           )

@@ -1,10 +1,14 @@
-import React from 'react'
-import {Container,AppBar, Tabs,Tab,Typography,Box} from '@material-ui/core';
+import React,{useState,useEffect} from 'react'
+import axios from 'axios';
+
+import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import PostBox from './Components/PostBox';
+import { postInfo } from '../../../../Interface/Post';
+
 const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,
@@ -26,6 +30,9 @@ export default function Post() {
      const classes = useStyles()
      const [value, setValue] = React.useState(0);
 
+     const [isLoading, setIsLoading] = useState(true)
+     const [postList, setpostList] = useState<Array<postInfo>>(Object)
+
      // 게시판 Tab change
      const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
        setValue(newValue);
@@ -33,35 +40,40 @@ export default function Post() {
 
      // 모든 글 불러오기 
      const handleClickTab = () => {
-          fetch('http://192.168.0.69:8000/api/notice/post_list', {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json; charset=utf-8",
-			},
-		}).then(res => {
-			if(res.ok) {
-				console.log(res)
-			}
-		})
+          axios.get('http://192.168.0.69:8000/api/notice/post_list')
+          .then(res => {
+               setpostList(res.data)
+               setIsLoading(false)
+          })
+          .catch(function(error) {
+               console.log(error);
+           })
      }
+
+     useEffect(() => {
+          handleClickTab()
+     }, [])
      return (
+         
           <Container maxWidth="md" className={classes.postContainer}>
-               <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    variant="scrollable"
-                    scrollButtons="on"
-                    indicatorColor="primary"
-                    textColor="primary"
-               >
-                    <Tab onClick={handleClickTab} label="종목 토론" icon={<ChatIcon />} {...a11yProps(0)} />
-                    <Tab onClick={handleClickTab} label="공유 해요" icon={<HearingIcon />} {...a11yProps(1)} />
-                    <Tab onClick={handleClickTab} label="뉴스 공시" icon={<AnnouncementIcon />} {...a11yProps(2)} />
-                    
-               </Tabs>
+               {isLoading ? '로딩중' 
+               : 
+               <>
+                    <Tabs
+                         value={value}
+                         onChange={handleChange}
+                         variant="scrollable"
+                         scrollButtons="on"
+                         indicatorColor="primary"
+                         textColor="primary"
+                    >
+                         <Tab onClick={handleClickTab} label="종목 토론" icon={<ChatIcon />} {...a11yProps(0)} />
+                         <Tab onClick={handleClickTab} label="공유 해요" icon={<HearingIcon />} {...a11yProps(1)} />
+                         <Tab onClick={handleClickTab} label="뉴스 공시" icon={<AnnouncementIcon />} {...a11yProps(2)} />
+                    </Tabs>
 
      {/*종목 토론*/}<TabPanel value={value} index={0}>
-                         <PostBox />
+                         <PostBox postList={postList}/>
                     </TabPanel>
      {/*공유 해요*/}<TabPanel value={value} index={1}>
                     
@@ -69,8 +81,10 @@ export default function Post() {
      {/*뉴스 공시*/}<TabPanel value={value} index={2}>
                     
                     </TabPanel>
-               
-          </Container>
+               </>
+               }
+
+               </Container>
      )
 }
 

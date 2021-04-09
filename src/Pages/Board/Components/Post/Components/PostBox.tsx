@@ -8,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import {postInfo} from '../../../../../Interface/Post'
 
 const useStyles = makeStyles({
      root: {
@@ -28,14 +29,18 @@ interface Column {
 interface Data {
      date: string;
      title: string;
-     author: number;
+     user: string;
      visited: number;
      like: number;
      unlike: number
 }
 
-export default function PostBox() {
+interface PostBoxProps {
+     postList : Array<postInfo>
+}
+export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
+     const { postList, } = props;
      const columns: Column[] = [
           { id: 'date', align:'center', label: '날짜', minWidth: 100 },
           { id: 'title', align:'center',label: '제목', minWidth: 200 },
@@ -45,6 +50,18 @@ export default function PostBox() {
           { id: 'unlike', align:'center',label: '비공감', minWidth: 20 },
      ];
      
+     const [page, setPage] = React.useState(0);
+     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+   
+     const handleChangePage = (event: unknown, newPage: number) => {
+       setPage(newPage);
+     };
+   
+     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+       setRowsPerPage(+event.target.value);
+       setPage(0);
+     };
+
      return (
           <Paper className={classes.root}>
                <TableContainer className={classes.container}>
@@ -61,33 +78,32 @@ export default function PostBox() {
                          ))}
                          </TableRow>
                          </TableHead>
-                         {/* <TableBody>
-                         {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                         return (
-                              <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                              {columns.map((column) => {
-                                   const value = row[column.id];
+                         <TableBody>
+                              {postList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                   console.log(row)
                                    return (
-                                   <TableCell key={column.id} align={column.align}>
-                                   {column.format && typeof value === 'number' ? column.format(value) : value}
-                                   </TableCell>
-                                   );
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.post_id}>
+                                             <TableCell>{row.date}</TableCell>
+                                             <TableCell>{row.title}</TableCell>
+                                             <TableCell>{row.user}</TableCell>
+                                             <TableCell>{row.views}</TableCell>
+                                             <TableCell>{row.like}</TableCell>
+                                             <TableCell>{row.dislike}</TableCell>
+                                        </TableRow>
+                              );
                               })}
-                              </TableRow>
-                         );
-                         })}
-                         </TableBody> */}
+                         </TableBody>
                     </Table>
                </TableContainer>
-               {/* <TablePagination
+               <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={rows.length}
+                    count={postList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
-               /> */}
+               />
           </Paper>
      )
 }
