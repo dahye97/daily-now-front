@@ -2,7 +2,7 @@
 
 import { Typography,TableContainer,Table,TableHead, TableRow, TableCell,Paper,TableBody,TableFooter,TablePagination } from "@material-ui/core";
 import { makeStyles,   } from "@material-ui/core/styles";
-import { fundInfo } from "../../Interface/User";
+import { fundInfo } from "../../../Interface/User";
 
 // TODO: 투자 내역 
 function createData( product:string,  price:string, fat:string, carbs:string, protein:number) {
@@ -58,7 +58,6 @@ export default function Funding(props: {company: string, fund: fundInfo[]}) {
 							<p>누적 투자액, 투자 상품 개수, 연결된 p2p 업체 개수, 총 예치금</p>
 						</div>
 					:
-
 						<div className={classes.detailFunding}>
 							<Typography variant="h6">
 								<b>{props.company}</b> 상세 투자 내역</Typography>

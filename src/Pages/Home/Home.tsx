@@ -1,16 +1,16 @@
 /** @format */
 import {useState,useEffect} from 'react';
-import Profile from "../Home/Profile";
-import P2PList from "../Home/P2PList";
-import Funding from "./Funding";
+import Profile from "./Components/Profile";
+import P2PList from "./Components/P2P/P2PList"
+import Funding from "./Components/Funding";
 import { makeStyles, } from "@material-ui/core/styles";
 
 import { Typography,Grid } from "@material-ui/core";
-import Calendar from "./Calendar";
-import Product from "./Product";
+import Calendar from "./Components/Calendar";
+import Product from "./Components/Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
 import Account from '../MyPage/Account';
-import Transaction from './Transaction';
+import Transaction from './Components/Transaction';
 
 const useStyles = makeStyles({
 	home: {

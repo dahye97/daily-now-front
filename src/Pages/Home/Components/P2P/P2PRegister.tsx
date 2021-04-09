@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import { Alert, AlertTitle } from '@material-ui/lab';
-import {userInfo}from '../../Interface/User'
+import {userInfo}from '../../../../Interface/User'
 import { makeStyles } from "@material-ui/core/styles";
 
 interface P2PRegisterProps {

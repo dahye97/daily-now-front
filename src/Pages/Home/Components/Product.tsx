@@ -7,7 +7,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
-import yangpyeong from '../../asset/img/yangpyeong.jpg'
+import yangpyeong from '../../../asset/img/yangpyeong.jpg'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     productContainer: {

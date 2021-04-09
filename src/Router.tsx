@@ -11,6 +11,7 @@ import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
 import {p2pInfo, userInfo} from './Interface/User';
 import { makeStyles, } from "@material-ui/core/styles";
+import NewPost from "./Pages/Board/NewPost";
 
 const useStyles = makeStyles({
 	routeContainer : {
@@ -64,6 +65,7 @@ export default function AppRouter() {
 								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj} P2PList={P2PList}/>}
 							/>
 							<Route exact path="/board" component={Board} />
+							<Route exact path="/board/write" component={NewPost} />
 							<Route exact path="/mypage"render=
 								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
 							/>

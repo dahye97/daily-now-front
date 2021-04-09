@@ -4,11 +4,11 @@ import { IconButton, Avatar  } from "@material-ui/core";
 import { makeStyles  } from "@material-ui/core/styles";
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from "@material-ui/icons/Home";
-import { p2pInfo, userInfo } from '../../Interface/User';
-import { companyInfo } from '../../Interface/Company';
+import { p2pInfo, userInfo } from '../../../../Interface/User';
+import { companyInfo } from '../../../../Interface/Company';
 
 import P2PRegister from './P2PRegister';
-import Stepper from '../../Components/Stepper';
+import Stepper from '../../../../Components/Stepper';
 
 // TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({

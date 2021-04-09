@@ -3,7 +3,7 @@ import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
-import { userInfo } from "../../Interface/User";
+import { userInfo } from "../../../Interface/User";
 
 // TODO: 프로필 
 const useStyles = makeStyles({
