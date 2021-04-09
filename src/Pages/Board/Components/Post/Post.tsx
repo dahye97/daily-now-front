@@ -40,7 +40,7 @@ export default function Post() {
 
      // 모든 글 불러오기 
      const handleClickTab = () => {
-          axios.get('http://192.168.0.69:8000/api/notice/post_list')
+          axios.post('http://192.168.0.69:8000/api/notice/post_list')
           .then(res => {
                setpostList(res.data)
                setIsLoading(false)

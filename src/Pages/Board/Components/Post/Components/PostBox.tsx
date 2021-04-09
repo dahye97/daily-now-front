@@ -1,4 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
+import axios from 'axios';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -8,14 +10,16 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import {postInfo} from '../../../../../Interface/Post'
+import {detailPostInfo, postInfo} from '../../../../../Interface/Post'
+import { useHistory } from 'react-router';
+import DetailPost from './DetailPost';
 
 const useStyles = makeStyles({
      root: {
        width: '100%',
      },
      container: {
-       maxHeight: 440,
+       maxHeight: 600,
      },
    });
 
@@ -26,21 +30,14 @@ interface Column {
      align?: 'center';
 }
 
-interface Data {
-     date: string;
-     title: string;
-     user: string;
-     visited: number;
-     like: number;
-     unlike: number
-}
-
 interface PostBoxProps {
      postList : Array<postInfo>
 }
 export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
-     const { postList, } = props;
+     const history = useHistory();
+     const { postList } = props;
+
      const columns: Column[] = [
           { id: 'date', align:'center', label: '날짜', minWidth: 100 },
           { id: 'title', align:'center',label: '제목', minWidth: 200 },
@@ -50,6 +47,7 @@ export default function PostBox(props: PostBoxProps) {
           { id: 'unlike', align:'center',label: '비공감', minWidth: 20 },
      ];
      
+     // Pagination state & method
      const [page, setPage] = React.useState(0);
      const [rowsPerPage, setRowsPerPage] = React.useState(10);
    
@@ -62,48 +60,71 @@ export default function PostBox(props: PostBoxProps) {
        setPage(0);
      };
 
+     // Detail Post state & method
+     const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
+     const [isClicked, setisClicked] = useState(false)
+     const handleClickPost = (postId : number) : void => {
+          axios.post('http://192.168.0.69:8000/api/notice/detail_post', {
+                    post_id: postId
+               })
+          .then(res => {
+               setDetailPost(res.data)
+               setisClicked(!isClicked)
+          })
+          .catch(function(error) {
+               console.log(error);
+           })
+     }
      return (
-          <Paper className={classes.root}>
-               <TableContainer className={classes.container}>
-                    <Table stickyHeader aria-label="sticky table">
-                         <TableHead>
-                         <TableRow>
-                         {columns.map((column) => (
-                              <TableCell
-                              key={column.id}
-                              style={{ minWidth: column.minWidth }}
-                              >
-                              {column.label}
-                              </TableCell>
-                         ))}
-                         </TableRow>
-                         </TableHead>
-                         <TableBody>
-                              {postList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                   console.log(row)
-                                   return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.post_id}>
-                                             <TableCell>{row.date}</TableCell>
-                                             <TableCell>{row.title}</TableCell>
-                                             <TableCell>{row.user}</TableCell>
-                                             <TableCell>{row.views}</TableCell>
-                                             <TableCell>{row.like}</TableCell>
-                                             <TableCell>{row.dislike}</TableCell>
-                                        </TableRow>
-                              );
-                              })}
-                         </TableBody>
-                    </Table>
-               </TableContainer>
-               <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={postList.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-               />
-          </Paper>
+          <>
+               {isClicked 
+               ? (
+                    <DetailPost postInfo={detailPost}/>
+               )
+               : (<Paper className={classes.root}>
+                    <TableContainer className={classes.container}>
+                         <Table stickyHeader aria-label="sticky table">
+                              <TableHead>
+                                   <TableRow>
+                                   {columns.map((column) => (
+                                        <TableCell
+                                        key={column.id}
+                                        style={{ minWidth: column.minWidth }}
+                                        >
+                                        {column.label}
+                                        </TableCell>
+                                   ))}
+                                   </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                   {postList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                        return (
+                                             <TableRow hover role="checkbox" tabIndex={-1} 
+                                                  key={row.post_id} onClick={() => handleClickPost(row.post_id)}
+                                                  style={{ cursor: "pointer"}}>
+                                                  <TableCell>{row.date}</TableCell>
+                                                  <TableCell>{row.title}</TableCell>
+                                                  <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
+                                                  <TableCell align="center">{row.views}</TableCell>
+                                                  <TableCell align="center">{row.like}</TableCell>
+                                                  <TableCell align="center">{row.dislike}</TableCell>
+                                             </TableRow>
+                                   );
+                                   })}
+                              </TableBody>
+                         </Table>
+                    </TableContainer>
+                    <TablePagination
+                         rowsPerPageOptions={[10, 25, 100]}
+                         component="div"
+                         count={postList.length}
+                         rowsPerPage={rowsPerPage}
+                         page={page}
+                         onChangePage={handleChangePage}
+                         onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                    </Paper>)
+          }
+          </>
      )
 }
