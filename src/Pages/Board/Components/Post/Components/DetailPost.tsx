@@ -46,14 +46,15 @@ export default function DetailPost(props: {postInfo : detailPostInfo}) {
           { id: 'like', align:'right',label: '공감 '+postInfo.like, maxWidth: 30 },
           { id: 'unlike', align:'right',label: '비공감 '+postInfo.dislike, maxWidth: 30 },
           { id: 'author', align:'left',label: postInfo.user.slice(0,4) + '****',maxWidth: 30},
-          { id: 'date', align:'right', label: postInfo.date,maxWidth: 300},
+          { id: 'date', align:'right', label: postInfo.date, maxWidth:100},
      ];
      const createRow = ( start: number, end : number,) => {
-          return (<TableRow>
+          return (<TableRow style={{display:"table-row"}}>
                {columns.slice(start,end).map( column => {
                     return (<TableCell
+                         component="th" scope="row"
                          key={column.id}
-                         style={{ width: column.maxWidth , border: "none", padding: "10px"}}
+                         style={{ maxWidth: column.maxWidth , border: "none", padding: "10px", }}
                          align={column.align}
                          >
                          {column.label}
@@ -75,8 +76,11 @@ export default function DetailPost(props: {postInfo : detailPostInfo}) {
                          </Table>
                     </TableContainer>
 
+                    {/* 글 내용 */}
                     <Paper className={classes.content}>
                          {postInfo.content}
+
+                         {/* 공감,비공감 버튼 */}
                          <Typography component="div" className={classes.handButton}>
                               <IconButton aria-label="like">
                                    <ThumbUpAltIcon />

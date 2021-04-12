@@ -11,13 +11,24 @@ import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
 import {p2pInfo, userInfo} from './Interface/User';
 import { makeStyles, } from "@material-ui/core/styles";
+import { Container,Typography } from "@material-ui/core/";
 import NewPost from "./Pages/Board/NewPost";
-import MyBoard from "./Pages/Board/MyBoard";
 
 const useStyles = makeStyles({
 	routeContainer : {
 		// display:"flex"
-	}
+	},
+	boardContainer : {
+			padding: "20px",
+			marginTop: "80px",
+			marginBottom: "80px",
+			borderRadius: "50px",
+			background: "#ffffff",
+			boxShadow: "0 5px 15px #b1b1b1, 0 5px 15px #ffffff",
+			minWidth : "580px",
+			overflow: "hidden",
+		},
+		
 });
 export default function AppRouter() {
 	const classes = useStyles()
@@ -65,12 +76,14 @@ export default function AppRouter() {
 							<Route exact path="/home" render=
 								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj} P2PList={P2PList}/>}
 							/>
-							<Route exact path="/board" component={Board} />
-							<Route exact path="/myboard" component={MyBoard} />
-							<Route exact path="/board/write" component={NewPost} />
-							<Route exact path="/mypage"render=
-								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
-							/>
+							<Container maxWidth="md" className={classes.boardContainer}>
+								<Typography><h1>💫 Community </h1></Typography>
+								<Route exact path="/board" component={Board} />
+								<Route exact path="/board/write" component={NewPost} />
+								<Route exact path="/mypage"render=
+									{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
+								/>
+							</Container>
 						</>
 					: 
 					<Route exact path="/" component={Randing} />}

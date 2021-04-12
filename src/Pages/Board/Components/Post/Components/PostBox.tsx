@@ -32,11 +32,16 @@ interface Column {
 
 interface PostBoxProps {
      postList : Array<postInfo>
+     rowsPerPage: number
+     page:number
+     handleChangePage: any
+     handleChangeRowsPerPage:any
 }
+// 실제 탭 패널 내용 
 export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
      const history = useHistory();
-     const { postList } = props;
+     const { postList, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;
 
      const columns: Column[] = [
           { id: 'date', align:'center', label: '날짜', minWidth: 100 },
@@ -47,18 +52,6 @@ export default function PostBox(props: PostBoxProps) {
           { id: 'unlike', align:'center',label: '비공감', minWidth: 20 },
      ];
      
-     // Pagination state & method
-     const [page, setPage] = React.useState(0);
-     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-   
-     const handleChangePage = (event: unknown, newPage: number) => {
-       setPage(newPage);
-     };
-   
-     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-       setRowsPerPage(+event.target.value);
-       setPage(0);
-     };
 
      // Detail Post state & method
      const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
@@ -96,22 +89,24 @@ export default function PostBox(props: PostBoxProps) {
                                    ))}
                                    </TableRow>
                               </TableHead>
-                              <TableBody>
-                                   {postList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        return (
-                                             <TableRow hover role="checkbox" tabIndex={-1} 
-                                                  key={row.post_id} onClick={() => handleClickPost(row.post_id)}
-                                                  style={{ cursor: "pointer"}}>
-                                                  <TableCell>{row.date}</TableCell>
-                                                  <TableCell>{row.title}</TableCell>
-                                                  <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
-                                                  <TableCell align="center">{row.views}</TableCell>
-                                                  <TableCell align="center">{row.like}</TableCell>
-                                                  <TableCell align="center">{row.dislike}</TableCell>
-                                             </TableRow>
-                                   );
-                                   })}
-                              </TableBody>
+
+                                   <TableBody>
+                                        {postList.map((row) => {
+                                             return (
+                                                  <TableRow hover role="checkbox" tabIndex={-1} 
+                                                       key={row.post_id} onClick={() => handleClickPost(row.post_id)}
+                                                       style={{ cursor: "pointer"}}>
+                                                       <TableCell>{row.date}</TableCell>
+                                                       <TableCell>{row.title}</TableCell>
+                                                       <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
+                                                       <TableCell align="center">{row.views}</TableCell>
+                                                       <TableCell align="center">{row.like}</TableCell>
+                                                       <TableCell align="center">{row.dislike}</TableCell>
+                                                  </TableRow>
+                                        );
+                                        })}
+                                   </TableBody>
+                              
                          </Table>
                     </TableContainer>
                     <TablePagination
