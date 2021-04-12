@@ -57,6 +57,13 @@ export default function PostBox(props: PostBoxProps) {
      const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
      const [isClicked, setisClicked] = useState(false)
      const handleClickPost = (postId : number) : void => {
+          axios.post('http://192.168.0.69:8000/api/notice/update_view', {
+                    post_id: postId
+               })
+          .catch(function(error) {
+               console.log(error);
+          })
+          
           axios.post('http://192.168.0.69:8000/api/notice/detail_post', {
                     post_id: postId
                })
@@ -67,7 +74,9 @@ export default function PostBox(props: PostBoxProps) {
           .catch(function(error) {
                console.log(error);
            })
+
      }
+     
      return (
           <>
                {isClicked 

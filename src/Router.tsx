@@ -11,8 +11,6 @@ import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
 import {p2pInfo, userInfo} from './Interface/User';
 import { makeStyles, } from "@material-ui/core/styles";
-import { Container,Typography } from "@material-ui/core/";
-import NewPost from "./Pages/Board/NewPost";
 
 const useStyles = makeStyles({
 	routeContainer : {
@@ -32,7 +30,7 @@ const useStyles = makeStyles({
 });
 export default function AppRouter() {
 	const classes = useStyles()
-	const [isLoggedIn, setisLoggedIn] = useState(true);
+	const [isLoggedIn, setisLoggedIn] = useState(false);
 	const [userObj, setUserObj] = useState<userInfo | null>(Object)
 	const [P2PList, setP2PList] = useState<Array<p2pInfo>>(Object)
 
@@ -84,13 +82,13 @@ export default function AppRouter() {
 							<Route 
 							exact path="/board" 
 							render={() => (
-								<Board typeNum={"01"} typeName="게시판" />
+								<Board userObj={userObj} typeNum={"01"} typeName="게시판" />
 							)}
 							/>
 							<Route 
 							exact path="/board/write" 
 							render={() => (
-								<Board typeNum={"02"} typeName="글쓰기"/>
+								<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
 							)}/>
 							
 						</>

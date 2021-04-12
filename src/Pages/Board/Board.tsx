@@ -6,6 +6,8 @@ import axios from 'axios';
 import { categoryInfo } from '../../Interface/Category';
 import { postInfo } from '../../Interface/Post';
 import Post from './Components/Post/Post';
+import NewPost from './NewPost';
+import { userInfo } from '../../Interface/User';
 
 const useStyles = makeStyles({
      boardContainer : {
@@ -26,14 +28,28 @@ const useStyles = makeStyles({
           justifyContent: "space-evenly"
      }
 })
-export default function Board () {
+interface catObj {
+     category_id: number
+}
+interface BoardProps {
+     userObj: userInfo | null,
+     typeNum: string, 
+     typeName: string
+}
+export default function Board (props: BoardProps){
      const classes = useStyles()
      const history = useHistory();
+     const { typeNum,userObj } = props;
      const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 목록 
      const [categoryId, setCategoryId] = useState(1) // 현재 카테고리 
 
      const handleClickWrite = () => {
-          history.push('/board/write')
+          history.push({
+               pathname: "/board/write",
+               state: {
+                    category_id : categoryId
+               }
+          })
      } 
      // 카테고리 목록 불러오기 
      const getCategories = ()=> {
@@ -54,12 +70,22 @@ export default function Board () {
           getCategories()
      }, [])
      return (
-          <Typography component="div" style={{height: '100vh'}}>
-                    <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
-                    <div className={classes.boardBottom}>
-                         <Button variant="outlined"color="primary">내 글보기</Button>
-                         <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
-                    </div>
-          </Typography>
+          <Container maxWidth="md" className={classes.boardContainer}>
+			<Typography><h1>💫 Community </h1></Typography>
+               <Typography component="div" style={{height: '100vh'}}>
+                         { typeNum === "01" ? 
+                         <>
+                              <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
+                              <div className={classes.boardBottom}>
+                                   <Button variant="outlined"color="primary">내 글보기</Button>
+                                   <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
+                              </div>
+                         </>
+                         : <NewPost userObj={userObj}/>}
+                         
+
+
+               </Typography>
+          </Container>
           )
 }
