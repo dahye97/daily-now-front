@@ -76,14 +76,23 @@ export default function AppRouter() {
 							<Route exact path="/home" render=
 								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj} P2PList={P2PList}/>}
 							/>
-							<Container maxWidth="md" className={classes.boardContainer}>
-								<Typography><h1>💫 Community </h1></Typography>
-								<Route exact path="/board" component={Board} />
-								<Route exact path="/board/write" component={NewPost} />
-								<Route exact path="/mypage"render=
-									{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
-								/>
-							</Container>
+						
+							<Route exact path="/mypage"render=
+								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
+							/>
+	{/* 동일 컴포넌트 내에서 페이지를 이동하고 싶을때, typeNum 과같은 props를 추가하여 board 내부에서 props 에 따라 렌더링해주도록 한다! */}
+							<Route 
+							exact path="/board" 
+							render={() => (
+								<Board typeNum={"01"} typeName="게시판" />
+							)}
+							/>
+							<Route 
+							exact path="/board/write" 
+							render={() => (
+								<Board typeNum={"02"} typeName="글쓰기"/>
+							)}/>
+							
 						</>
 					: 
 					<Route exact path="/" component={Randing} />}

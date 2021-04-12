@@ -1,5 +1,5 @@
 ### Front & Back Issue 🔥
-1. CORS, (Unsupported Media Type) : 또 CORS에러 🤬 
+> 1. CORS, (Unsupported Media Type) : 또 CORS에러 🤬 
 
 - POST 으로 서버에 폼을 제출할 때, 헤더에 **Content-type을 서버와 동일하게 설정**해주어야 한다.
 - 데이터를 전송할 땐, `JSON.stringfy`를 통해 **json 형태의 데이터로 전송**해야한다. 
@@ -19,12 +19,12 @@
                .catch(error =>  console.log(error));
 ```
 
-2. 사용자의 고유키 저장 및 교환
+> 2. 사용자의 고유키 저장 및 교환
 
 - 프론트와 백은 고유키(토큰)을 이용하여 유저를 인증할 수 있다. 
 대표적으로 쿠키, 세션/로컬 스토리지가 존재한다. 이번 프로젝트에선 쿠키를 이용하며, 백에서 보내준 Auth_token 값을 set cookie로 저장하며 이를 헤더로 request 하여 백에게 유저를 인증할 수 있다. 
 
-3. request header로 고유키 전송
+> 3. request header로 고유키 전송
 
 ⚠ 헤더로 토큰을 전송해주는데 자꾸 다음과 같은 에러가 발생
 `Request header field auth_token is not allowed by Access-Control-Allow-Headers in preflight response.`
@@ -40,7 +40,7 @@ POSTMAN 등의 도구를 통하여 백엔드의 서버와 잘 통신이 되고 �
 각자 보내줄 데이터의 형식과 이름이 제대로 통일되어 있지 않으면 데이터를 원하는 곳에 주거나 받아올 수 없다. 이 과정에서 백엔드와의 원활한 의사소통은 필수!
 
 ### React 
-* react-router
+> react-router
 - React Router로 렌더링하는 컴포넌트에 prop 전달하기 : router의 컴포넌트를 설정할때 props까지 같이 보내주고 싶을 때 `render`를 사용한다.
 ```
 <Route exact path="/mypage" render={() => <Home handleLogOut={handleLogOut} />} />
@@ -48,6 +48,20 @@ POSTMAN 등의 도구를 통하여 백엔드의 서버와 잘 통신이 되고 �
 
 * url을 변경하고 싶을 땐, `history`와 `document.location.href`를 사용할 수 있다.
 
+* 동일 컴포넌트 내에서 페이지를 렌더링 해주고 싶을 때, 두 path를 한 컴포넌트에 할당하고, 컴포넌트에 props를 추가해주어 컴포넌트 내로 들어오는 props 값에 따라 렌더링 해줄 수 있다!
+```
+    <Route 
+    exact path="/board" 
+    render={() => (
+      <Board typeNum={"01"} typeName="게시판" />
+    )}
+    />
+    <Route 
+    exact path="/board/write" 
+    render={() => (
+      <Board typeNum={"02"} typeName="글쓰기"/>
+    )}/>
+```
 ### Material-UI
 * styles
 - makeStyles
