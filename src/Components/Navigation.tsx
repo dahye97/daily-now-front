@@ -25,21 +25,7 @@ interface NavProps {
 export default function Navigation(props: NavProps) {
 	const history = useHistory();
 	const classes = useStyles();
-	const handleHome = () => {
-		history.push({
-			pathname: "/home",
-		});
-	};
-    const handleLogIn = () => {
-        history.push({
-			pathname: "/auth",
-		});
-    }
-	const handleJoin = () => {
-		history.push({
-			pathname: "/registration",
-		});
-	};
+
 	return (
 		<div>
 			<AppBar position="fixed" className={classes.appbar}>
@@ -47,17 +33,17 @@ export default function Navigation(props: NavProps) {
 					<Link to="/"><img src={logo} alt="daily logo" className={classes.logo} /></Link>
 					<div>
 						<Button color="inherit" onClick={ () => history.push('/board')}>커뮤니티</Button>
-						<Button color="inherit">FAQ</Button>
+						<Button color="inherit" onClick={ () => history.push('/faq')}>FAQ</Button>
 						{props.isLoggedIn ? (
-							<Button color="inherit" onClick={handleHome}>
+							<Button color="inherit" onClick={() => history.push('/home')}>
 								마이페이지
 							</Button>
 						) : (
 							<>
-								<Button color="inherit" onClick={handleLogIn}>
+								<Button color="inherit" onClick={() => history.push('/auth')}>
 									로그인
 								</Button>
-								<Button color="inherit" onClick={handleJoin}>
+								<Button color="inherit" onClick={() => history.push('/registration')}>
 									회원가입
 								</Button>
 							</>

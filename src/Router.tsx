@@ -31,9 +31,10 @@ const useStyles = makeStyles({
 export default function AppRouter() {
 	const classes = useStyles()
 	const [isLoggedIn, setisLoggedIn] = useState(false);
-	const [userObj, setUserObj] = useState<userInfo | null>(Object)
+	const [userObj, setUserObj] = useState<userInfo | null>(null)
 	const [P2PList, setP2PList] = useState<Array<p2pInfo>>(Object)
 
+	// 로그인 함수 
 	const handleLogIn = ( data: userInfo) => {
 		console.log(data)
 		setisLoggedIn(true);
@@ -45,23 +46,25 @@ export default function AppRouter() {
 			"auth_token" : data.auth_token
 		})	
 	}
-	useEffect(() => {
-		console.log('현재 로그인한 유저 정보', userObj)
-	}, [userObj])
-
+	// 로그아웃 함수 
 	const handleLogOut = () => {
 		setisLoggedIn(false);
 		setUserObj(null)
 		document.location.href="/";
 	}
 	
+	// 연동 회사 리스트 저장 함수 
 	const handleAddP2P = ( data: Array<p2pInfo>) => {
 		setP2PList(data)
 	}
 
 	useEffect(() => {
-		console.log(P2PList)
-	}, [P2PList])
+		console.log('현재 로그인한 유저 정보', userObj)
+	}, [userObj])
+
+	// useEffect(() => {
+	// 	console.log(P2PList)
+	// }, [P2PList])
 	return (
 	
 	<BrowserRouter>
@@ -79,33 +82,34 @@ export default function AppRouter() {
 								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
 							/>
 	{/* 동일 컴포넌트 내에서 페이지를 이동하고 싶을때, typeNum 과같은 props를 추가하여 board 내부에서 props 에 따라 렌더링해주도록 한다! */}
-							<Route 
-							exact path="/board" 
-							render={() => (
-								<Board userObj={userObj} typeNum={"01"} typeName="게시판" />
-							)}
-							/>
-							<Route 
-							exact path="/board/write" 
-							render={() => (
-								<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
-							)}/>
-							
-							<Route
-							exact path="/board/detail/:postId" 
-							render={() => (
-								<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
-							)}/>
 						</>
 					: 
-					<Route exact path="/" component={Randing} />}
-					
-					<Route exact path="/auth" render={
-						() => <Auth handleLogIn={handleLogIn}/> }
-					/>
-					<Route exact path="/registration" component={Registration} />
-					<Route exact path="/faq" component={FAQ} />
-
+					<>
+						<Route 
+						exact path="/board" 
+						render={() => (
+							<Board userObj={userObj} typeNum={"01"} typeName="게시판" />
+						)}
+						/>
+						<Route 
+						exact path="/board/write" 
+						render={() => (
+							<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
+						)}/>
+						
+						<Route
+						exact path="/board/detail/:postId" 
+						render={() => (
+							<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
+						)}/>
+						<Route exact path="/" component={Randing} />
+						
+						<Route exact path="/auth" render={
+							() => <Auth handleLogIn={handleLogIn}/> }
+						/>
+						<Route exact path="/registration" component={Registration} />
+						<Route exact path="/faq" component={FAQ} />
+					</>}
 				</div>
 			</Switch>
 		</BrowserRouter>

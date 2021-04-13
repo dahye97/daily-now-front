@@ -73,7 +73,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           </TableRow>)
      }
 
-     // 선택한 게시물 데이터 불러오기 
+     // 선택한 게시물 작성 정보 데이터 불러오기 
      const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
      const [isLoading, setIsLoading] = useState(true)
      const getDetailData = () => {
@@ -88,7 +88,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     { id: 'like', align:'right',label: '공감 '+res.data.like, maxWidth: 30 },
                     { id: 'unlike', align:'right',label: '비공감 '+res.data.dislike, maxWidth: 30 },
                     { id: 'author', align:'left',label: res.data.user.slice(0,4) + '****',maxWidth: 30},
-                    { id: 'date', align:'right', label: res.data.date, maxWidth:100},
+                    { id: 'date', align:'right', label: res.data.date, maxWidth:300},
                ]);
                setIsLoading(false)
           })

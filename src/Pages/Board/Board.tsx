@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react'
+import axios from 'axios';
 import {Container,Typography, Button} from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
 import { useHistory, } from 'react-router';
-import axios from 'axios';
 import { categoryInfo } from '../../Interface/Category';
 import Post from './Components/Post/Post';
 import NewPost from './NewPost';
@@ -38,17 +38,31 @@ export default function Board (props: BoardProps){
      const classes = useStyles()
      const history = useHistory();
      const { typeNum,userObj } = props;
-     const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 목록 
+     const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 리스트 
      const [categoryId, setCategoryId] = useState(1) // 현재 카테고리 
 
+     // 새글 작성 함수
      const handleClickWrite = () => {
-          history.push({
-               pathname: "/board/write",
-               state: {
-                    category_id : categoryId
-               }
-          })
+          if(userObj !== null) {
+               history.push({
+                    pathname: "/board/write",
+                    state: {
+                         category_id : categoryId
+                    }
+               })
+          }else {
+               alert('로그인이 필요합니다.')
+          }
      } 
+     // 내 글보기 함수
+     const handleClickMyPost = () => {
+          if(userObj !== null){
+
+          }else {
+               alert('로그인이 필요합니다.')
+          }
+     }
+
      // 카테고리 목록 불러오기 
      const getCategories = ()=> {
           axios.get('http://192.168.0.69:8000/api/notice/category_list')
@@ -76,7 +90,7 @@ export default function Board (props: BoardProps){
                          <>
                               <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
                               <div className={classes.boardBottom}>
-                                   <Button variant="outlined"color="primary">내 글보기</Button>
+                                   <Button onClick={handleClickMyPost} variant="outlined"color="primary">내 글보기</Button>
                                    <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
                               </div>
                          </>
