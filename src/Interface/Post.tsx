@@ -1,4 +1,12 @@
 export interface postInfo {
+     count: number,
+     next: string,
+     previous: string,
+     results: Array<postResultInfo>
+}
+
+export interface detailPostInfo {
+     content: string // 글 내용 
      date: string, // 날짜
      like: number, // 공감, 비공감 
      dislike: number,
@@ -7,9 +15,7 @@ export interface postInfo {
      user: string // 이메일 
      views: number // 조회수
 }
-
-export interface detailPostInfo {
-     content: string // 글 내용 
+export interface postResultInfo {
      date: string, // 날짜
      like: number, // 공감, 비공감 
      dislike: number,

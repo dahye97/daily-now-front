@@ -97,6 +97,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           })
      }
 
+     // 댓글 리스트 불러오기 
      const [commentList, setCommentList] = useState<commentInfo[]>([])
      const getCommentList = () => {
           axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
@@ -111,6 +112,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           })
      }
 
+     // 댓글 작성 및 등록하기 
      const [comment, setComment] = useState("")
      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           setComment(event.target.value)
@@ -206,10 +208,10 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                                    <ul style={{padding: '20px', listStyle: 'none'}}>
                                    {commentList.map( comment => {
                                    return (
-                                        <div className={classes.commentItem}>
-                              {/* 작성자 */}<li key={comment.comment_id}>{comment.user.slice(0,4) + "****"}</li>      
-                              {/* 내용 */}<li key={comment.comment_id}>{comment.comment_content}</li>
-                              {/* 시간 */}<li key={comment.comment_id}>{comment.date}</li>
+                                        <div className={classes.commentItem} key={comment.comment_id}>
+                              {/* 작성자 */}<li>{comment.user.slice(0,4) + "****"}</li>      
+                              {/* 내용 */}<li>{comment.comment_content}</li>
+                              {/* 시간 */}<li>{comment.date}</li>
                               {/* 답글 */}<Button>답글</Button>
                               {/* 공감, 비공감 */}
                                              <Typography component="span" className={classes.handButton}>

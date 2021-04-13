@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useRef} from 'react'
 import axios from 'axios'
 import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
@@ -32,16 +32,21 @@ export default function Post(props: PostProps) {
 
      const [isLoading, setIsLoading] = useState(true)
      const [value, setValue] = React.useState(0);
-     const [postList, setpostList] = useState<Array<postInfo>>(Object) // 글 목록 
+     const [postList, setpostList] = useState<postInfo>(Object) // 글 목록 
      
-     // Pagination state & method
+     // Pagination 상태 관리 및 메소드 
      const [rowsPerPage, setRowsPerPage] = useState(10) // Rows per page 값 
      const [page, setPage] = React.useState(0);
    
-     const handleChangePage = (event: unknown, newPage: number) => {
+     // 앞, 뒤 게시물 페이지 이동 
+     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+          if (page > newPage) { // 앞으로 이동 
+               getPostList(postList.previous)
+          }else {
+               getPostList(postList.next)
+          }
        setPage(newPage);
      };
-   
      const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
        setRowsPerPage(+event.target.value);
        setPage(0);
@@ -49,20 +54,22 @@ export default function Post(props: PostProps) {
 
      // 게시판 탭 클릭 시, 카테고리 ID 변경
      const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-          // 탭을 누를때마다 카테고리 아이디 변경
           handleCategoryId(newValue+1)
           setValue(newValue);
      };
 
      // 카테고리 ID와 rowsPerPage 값에 따른 게시글 가져오기 
-     const getPostList = () => {
-          axios.post('http://192.168.0.69:8000/api/notice/post_list', {
+     const getPostList = (url: string) => {
+          if(url.length === 0){
+               url = "http://192.168.0.69:8000/api/notice/post_list"
+          }
+          axios.post(url, {
                "category_id": categoryId,
                "page_size": rowsPerPage
           })
           .then(res => {
-               console.log(res.data)
-               setpostList(res.data.results)
+               // console.log(res.data)
+               setpostList(res.data)
                setIsLoading(false)
           }) 
           .catch(function(error) {
@@ -72,8 +79,8 @@ export default function Post(props: PostProps) {
 
      // 카테고리 ID가 변경되면 LIST 업데이트
      useEffect(() => {
-          console.log('현재 카테고리' , categoryId)
-          getPostList()
+          getPostList("")
+          setPage(0)
      }, [categoryId, rowsPerPage])
      return (
          
@@ -98,7 +105,11 @@ export default function Post(props: PostProps) {
                     :
                     <>
                          <TabPanel value={value} index={0}>
-                              <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>
+                              <PostBox page={page} 
+                              rowsPerPage={rowsPerPage} 
+                              handleChangePage={handleChangePage} 
+                              handleChangeRowsPerPage={handleChangeRowsPerPage}
+                               postList={postList}/>
                          </TabPanel>
                          <TabPanel value={value} index={1}>
                               <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>

@@ -31,7 +31,7 @@ interface Column {
 }
 
 interface PostBoxProps {
-     postList : Array<postInfo>
+     postList : postInfo
      rowsPerPage: number
      page:number
      handleChangePage: any
@@ -42,6 +42,7 @@ export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
      const history = useHistory();
      const { postList, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;
+     const { count, results } = postList;
 
      const columns: Column[] = [
           { id: 'date', align:'center', label: '날짜', minWidth: 100 },
@@ -53,7 +54,7 @@ export default function PostBox(props: PostBoxProps) {
      ];
      
 
-     // Detail Post state & method
+     // 게시글 조회수 업데이트 및 상세 게시글 페이지로 이동 
      const handleClickPost = (postId : number) : void => {
           axios.post('http://192.168.0.69:8000/api/notice/update_view', {
                     post_id: postId
@@ -86,7 +87,7 @@ export default function PostBox(props: PostBoxProps) {
                               </TableHead>
 
                                    <TableBody>
-                                        {postList.map((row) => {
+                                        {results.map((row) => {
                                              return (
                                                   <TableRow hover role="checkbox" tabIndex={-1} 
                                                        key={row.post_id} onClick={() => handleClickPost(row.post_id)}
@@ -104,10 +105,11 @@ export default function PostBox(props: PostBoxProps) {
                               
                          </Table>
                     </TableContainer>
+
                     <TablePagination
                          rowsPerPageOptions={[10, 25, 100]}
                          component="div"
-                         count={postList.length}
+                         count={count}
                          rowsPerPage={rowsPerPage}
                          page={page}
                          onChangePage={handleChangePage}

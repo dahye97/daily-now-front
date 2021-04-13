@@ -60,6 +60,7 @@ export default function Board (props: BoardProps){
                 })  
      }
 
+     // 선택된 카테고리 id 저장하기 
      const handleCategoryId = (value:number) => {
           setCategoryId(value)
      }
