@@ -54,8 +54,6 @@ export default function PostBox(props: PostBoxProps) {
      
 
      // Detail Post state & method
-     const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
-     const [isClicked, setisClicked] = useState(false)
      const handleClickPost = (postId : number) : void => {
           axios.post('http://192.168.0.69:8000/api/notice/update_view', {
                     post_id: postId
@@ -63,27 +61,15 @@ export default function PostBox(props: PostBoxProps) {
           .catch(function(error) {
                console.log(error);
           })
-          
-          axios.post('http://192.168.0.69:8000/api/notice/detail_post', {
-                    post_id: postId
-               })
-          .then(res => {
-               setDetailPost(res.data)
-               setisClicked(!isClicked)
+          history.push(`/board/detail/${postId}`, {
+               post_id: postId
           })
-          .catch(function(error) {
-               console.log(error);
-           })
-
      }
      
      return (
           <>
-               {isClicked 
-               ? (
-                    <DetailPost postInfo={detailPost}/>
-               )
-               : (<Paper className={classes.root}>
+
+               <Paper className={classes.root}>
                     <TableContainer className={classes.container}>
                          <Table stickyHeader aria-label="sticky table">
                               <TableHead>
@@ -127,8 +113,8 @@ export default function PostBox(props: PostBoxProps) {
                          onChangePage={handleChangePage}
                          onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
-                    </Paper>)
-          }
+                    </Paper>
+
           </>
      )
 }

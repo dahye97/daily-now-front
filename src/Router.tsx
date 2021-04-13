@@ -91,6 +91,11 @@ export default function AppRouter() {
 								<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
 							)}/>
 							
+							<Route
+							exact path="/board/detail/:postId" 
+							render={() => (
+								<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
+							)}/>
 						</>
 					: 
 					<Route exact path="/" component={Randing} />}

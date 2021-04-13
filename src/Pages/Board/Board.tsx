@@ -4,10 +4,10 @@ import { makeStyles, } from "@material-ui/core/styles";
 import { useHistory, } from 'react-router';
 import axios from 'axios';
 import { categoryInfo } from '../../Interface/Category';
-import { postInfo } from '../../Interface/Post';
 import Post from './Components/Post/Post';
 import NewPost from './NewPost';
 import { userInfo } from '../../Interface/User';
+import DetailPost from './Components/Post/Components/DetailPost';
 
 const useStyles = makeStyles({
      boardContainer : {
@@ -28,9 +28,7 @@ const useStyles = makeStyles({
           justifyContent: "space-evenly"
      }
 })
-interface catObj {
-     category_id: number
-}
+
 interface BoardProps {
      userObj: userInfo | null,
      typeNum: string, 
@@ -72,7 +70,7 @@ export default function Board (props: BoardProps){
      return (
           <Container maxWidth="md" className={classes.boardContainer}>
 			<Typography><h1>💫 Community </h1></Typography>
-               <Typography component="div" style={{height: '100vh'}}>
+               <Typography component="div" style={{height: '100%'}}>
                          { typeNum === "01" ? 
                          <>
                               <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
@@ -81,8 +79,11 @@ export default function Board (props: BoardProps){
                                    <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
                               </div>
                          </>
-                         : <NewPost userObj={userObj}/>}
-                         
+                         : typeNum === "02" ?
+                          <NewPost userObj={userObj}/>
+                         : typeNum === "03" ?
+                         <DetailPost userObj={userObj}/>
+                         : '로딩중'}
 
 
                </Typography>
