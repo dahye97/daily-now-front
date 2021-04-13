@@ -14,6 +14,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { useHistory, useLocation } from 'react-router';
 import { commentInfo } from '../../../../../Interface/Comment';
 import { userInfo } from '../../../../../Interface/User';
+import Comment from '../../Comment/Comment';
 const useStyles = makeStyles({
      root: {
        width: '100%',
@@ -112,34 +113,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           })
      }
 
-     // 댓글 작성 및 등록하기 
-     const [comment, setComment] = useState("")
-     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-          setComment(event.target.value)
-     }
-     const handleSubmit = () => {
-          if ( comment.length <= 3 ) {
-               alert('3자 이상 입력해주세요.');
-          } else {
-               if( userObj !== null){
-                    axios.post('http://192.168.0.69:8000/api/notice/write_comment', {
-                         post_id: location.state.post_id,
-                         comment_content : comment
-                    }, {
-                         headers : {
-                              "Authorization": "Token " + userObj.auth_token,
-                         }
-                    })
-                    .then(res => {
-                     //    setCommentList(res.data)
-                        console.log(res)
-                    })
-                    .catch(function(error) {
-                         console.log(error);
-                    })
-          }
-         }
-     }
      useEffect(() => {
           getDetailData()
           getCommentList()
@@ -179,56 +152,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                          </Typography>
                     </Paper>
 
-                    {/* 댓글 창 */}
-                    <Paper className={classes.commentPaper}>
-                         <h3>댓글 {commentList.length}</h3>  
-                         {/* 댓글 달기 */}  
-                         <Typography component="div">
-                              <TextField
-                                   value={comment}
-                                   id="contentField"
-                                   label="내용"
-                                   multiline
-                                   rows={3}
-                                   defaultValue="주제와 무관한 댓글, 악플은 삭제될 수 있습니다."
-                                   variant="outlined"
-                                   fullWidth
-                                   onChange={handleChange}
-                              />          
-                         </Typography>  
-                         <Typography component="div" align="right">
-                             <Button onClick={handleSubmit}>등록</Button>
-                         </Typography>
-
-                         {/* 댓글 리스트  */}
-                         {commentList.length === 0 ? 
-                         '댓글이 없습니다.' 
-                         : 
-                              <Card>
-                                   <ul style={{padding: '20px', listStyle: 'none'}}>
-                                   {commentList.map( comment => {
-                                   return (
-                                        <div className={classes.commentItem} key={comment.comment_id}>
-                              {/* 작성자 */}<li>{comment.user.slice(0,4) + "****"}</li>      
-                              {/* 내용 */}<li>{comment.comment_content}</li>
-                              {/* 시간 */}<li>{comment.date}</li>
-                              {/* 답글 */}<Button>답글</Button>
-                              {/* 공감, 비공감 */}
-                                             <Typography component="span" className={classes.handButton}>
-                                                  <IconButton aria-label="like">
-                                                       <ThumbUpAltIcon />
-                                                  </IconButton>
-                                                  <IconButton aria-label="dislike">
-                                                       <ThumbDownIcon />
-                                                  </IconButton>
-                                             </Typography>
-                                        </div>
-                                        )
-                                   })} 
-                                   </ul>
-                              </Card>       
-                         }
-                    </Paper>
+                    <Comment userObj={userObj}commentList={commentList} postId={location.state.post_id}/>
           </Paper>
      )
 }
