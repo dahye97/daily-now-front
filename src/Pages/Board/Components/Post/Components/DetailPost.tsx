@@ -39,16 +39,12 @@ const useStyles = makeStyles({
           textAlign: "center",
           paddingTop: "30px",
      },
-     likeButton : {
-          "&$ariaDisabled" : {
-              color: "red" 
-          }
-     },
-     dislikeButton : {
-          "&$ariaDisabled" : {
-              color: "red" 
-          }
-     }
+     button: {
+          color: '#ffb303',
+      },
+      disabledButton: {
+          color: '#cfcfcf',
+      }
    });
 
 interface Column {
@@ -103,7 +99,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }, headerData)
           .then(res => {
                setDetailPost(res.data)
-               // console.log(res.data)
+               console.log(res.data)
                setColumns ( [
                     { id: 'title', align:'left',label: res.data.title, maxWidth: 100 },
                     { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: 30 },
@@ -230,14 +226,20 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                          {/* 공감,비공감 버튼 */}
                          <Typography component="div" className={classes.handButton}>
                               <IconButton 
-                              className={classes.likeButton}
-                              aria-disabled={pressableLike} 
+                              classes={{
+                                   root: classes.button,
+                                   disabled: classes.disabledButton
+                              }}
+                             disabled={pressableLike} 
                               onClick={handleLikeDisLike} aria-label="like">
                                    <ThumbUpAltIcon />
                               </IconButton>
                               <IconButton 
-                              className={classes.dislikeButton}
-                              aria-disabled={pressableDislike} 
+                              classes={{
+                                   root: classes.button,
+                                   disabled: classes.disabledButton
+                              }}
+                              disabled={pressableDislike} 
                               onClick={handleLikeDisLike} aria-label="dislike">
                                    <ThumbDownIcon />
                               </IconButton>

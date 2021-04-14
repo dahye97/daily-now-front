@@ -58,12 +58,14 @@ export default function PostBox(props: PostBoxProps) {
      const handleClickPost = (postId : number) : void => {
           axios.post('http://192.168.0.69:8000/api/notice/update_view', {
                     post_id: postId
+               }).then(res => {
+               console.log(res)
+               history.push(`/board/detail/${postId}`, {
+                    post_id: postId
                })
+          })
           .catch(function(error) {
                console.log(error);
-          })
-          history.push(`/board/detail/${postId}`, {
-               post_id: postId
           })
      }
      
