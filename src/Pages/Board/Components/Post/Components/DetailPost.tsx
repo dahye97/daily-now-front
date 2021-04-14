@@ -43,7 +43,7 @@ const useStyles = makeStyles({
           color: '#ffb303',
       },
       disabledButton: {
-          color: '#cfcfcf',
+           color: '#cfcfcf'
       }
    });
 
@@ -135,26 +135,29 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const [isClicked, setIsClicked] = useState(false)
      const [pressableLike, setPressableLike] = useState(true)
      const [pressableDislike, setPressableDislike] = useState(true)
+     // ✅
      const handleLikeDisLike = (event: React.MouseEvent) => {
           let queryString; // like, dislike 지정 url
           let label = event.currentTarget.getAttribute('aria-label')
           let likeDislike = -1;
+          console.log(event.currentTarget.hasAttribute('disabled'))
           
           if (userObj !== null) {
                console.log('현재 :',detailPost.like_dislike)
                if( detailPost.like_dislike !== -1 ) { // 공감/ 비공감 했을 경우, 취소하기
                     queryString = "cancel_post_like"
+                    
                     if( label === "like") {
-                         // console.log('like클릭', pressableLike)
                          if(detailPost.like_dislike === 1) {
                               likeDislike = 1
+                              setPressableLike(false)
                          }else {
                               alert('이미 비공감을 하셨습니다.')
                          }
                     }else if (label === "dislike") {
-                         // console.log('dislike클릭', pressableDislike)
                          if(detailPost.like_dislike === 0) {
                               likeDislike = 0
+                              setPressableDislike(false)
                          }else {
                               alert('이미 공감을 하셨습니다.')
                          }
@@ -163,8 +166,12 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     queryString = "add_post_like"
                     if( label === "like") {
                          likeDislike = 1
+                         console.log(event.currentTarget.getAttribute("className"))
+                         
+                         setPressableLike(true)
                     }else if (label === "dislike") {
                          likeDislike = 0
+                         setPressableDislike(true)
                     }
                }
                 // add,cancel 결과 
@@ -189,6 +196,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                alert('로그인 먼저 해주세요.')
           }
      }
+     // ✅
      useEffect(() => {
           getDetailData()
      }, [isClicked])
@@ -198,9 +206,11 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      }, [])
      
      useEffect(() => {
-          if(detailPost.like_dislike !== -1) { 
-               setPressableLike(false)
+          if(detailPost.like_dislike == 1) { 
                setPressableDislike(false)
+          }
+          else if (detailPost.like_dislike == 0) { 
+               setPressableLike(false)
           }
      }, [detailPost])
 
@@ -225,21 +235,15 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
                          {/* 공감,비공감 버튼 */}
                          <Typography component="div" className={classes.handButton}>
-                              <IconButton 
-                              classes={{
-                                   root: classes.button,
-                                   disabled: classes.disabledButton
-                              }}
-                             disabled={pressableLike} 
-                              onClick={handleLikeDisLike} aria-label="like">
+                         {/* ✅ */}
+                              <IconButton
+                              className={pressableLike ? classes.button : classes.disabledButton}
+                              onClick={handleLikeDisLike} aria-label="like"
+                              >
                                    <ThumbUpAltIcon />
                               </IconButton>
                               <IconButton 
-                              classes={{
-                                   root: classes.button,
-                                   disabled: classes.disabledButton
-                              }}
-                              disabled={pressableDislike} 
+                              className={pressableDislike ? classes.button : classes.disabledButton}
                               onClick={handleLikeDisLike} aria-label="dislike">
                                    <ThumbDownIcon />
                               </IconButton>

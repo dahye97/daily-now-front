@@ -55,7 +55,25 @@
 ]
 ```
 
+> 5. 공감, 비공감 저장 및 취소와 그에 따른 아이콘 색 변경 처리 
 
+✅ 서버에서 받은 게시물 상세 데이터의 `like_dislike`의 값 (0 or 1)에 따라 초기 아이콘의 색을 초기화 해주기 위해 useEffect를 이용한다. (206~)
+
+✅ `iconButton`의 `className`은 `pressableLike`과 `pressableDislike`에 따라 조건처리 될 수 있도록 하여 **색을 바꾸기 위해** 선언하였다. 
+
+✅  `iconButton`을 클릭할 경우 `handleLikeDisLike`을 실행한다.
+
+✔ `like_dislike`값이 `1`일 경우 = 공감을 한 상태
+- 공감을 다시 눌렀을 경우, 취소 처리
+- 비공감을 눌렀을 경우, "이미 공감을 했다" 는 문구를 띄운다.
+
+✔ `like_dislike`값이 `0`일 경우 = 비공감을 한 상태
+- 비공감을 다시 눌렀을 경우, 취소 처리
+- 공감을 눌렀을 경우, "이미 비공감을 했다" 는 문구를 띄운다.
+
+✔ `like_dislike`값이 `-1`일 경우 = 공감/비공감 모두 선택 가능
+- 공감/비공감 add 처리
+- 공감/비공감을 할 경우, `setPressableLike(true)`/`setPressableDislike(true)`를 통해 `className`을 변경하여 색 변경 처리
 
 
 ### We learned 🤷‍♀️
