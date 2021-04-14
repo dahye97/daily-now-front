@@ -71,7 +71,7 @@ export default function AppRouter() {
 			<Navigation isLoggedIn={isLoggedIn} />
 			<Switch>
 				<div className={classes.routeContainer}>
-					{isLoggedIn ?
+					{isLoggedIn &&
 						<>
 							<Route exact path="/" component={Randing} />
 							<Route exact path="/home" render=
@@ -83,33 +83,31 @@ export default function AppRouter() {
 							/>
 	{/* 동일 컴포넌트 내에서 페이지를 이동하고 싶을때, typeNum 과같은 props를 추가하여 board 내부에서 props 에 따라 렌더링해주도록 한다! */}
 						</>
-					: 
-					<>
-						<Route 
-						exact path="/board" 
-						render={() => (
-							<Board userObj={userObj} typeNum={"01"} typeName="게시판" />
-						)}
-						/>
-						<Route 
-						exact path="/board/write" 
-						render={() => (
-							<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
-						)}/>
-						
-						<Route
-						exact path="/board/detail/:postId" 
-						render={() => (
-							<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
-						)}/>
-						<Route exact path="/" component={Randing} />
-						
-						<Route exact path="/auth" render={
-							() => <Auth handleLogIn={handleLogIn}/> }
-						/>
-						<Route exact path="/registration" component={Registration} />
-						<Route exact path="/faq" component={FAQ} />
-					</>}
+					}
+					<Route 
+					exact path="/board" 
+					render={() => (
+						<Board userObj={userObj} typeNum={"01"} typeName="게시판" />
+					)}
+					/>
+					<Route 
+					exact path="/board/write" 
+					render={() => (
+						<Board userObj={userObj} typeNum={"02"} typeName="글쓰기"/>
+					)}/>
+					
+					<Route
+					exact path="/board/detail/:postId" 
+					render={() => (
+						<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
+					)}/>
+					<Route exact path="/" component={Randing} />
+					
+					<Route exact path="/auth" render={
+						() => <Auth handleLogIn={handleLogIn}/> }
+					/>
+					<Route exact path="/registration" component={Registration} />
+					<Route exact path="/faq" component={FAQ} />
 				</div>
 			</Switch>
 		</BrowserRouter>

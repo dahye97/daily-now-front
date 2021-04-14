@@ -39,6 +39,16 @@ const useStyles = makeStyles({
           textAlign: "center",
           paddingTop: "30px",
      },
+     likeButton : {
+          "&$ariaDisabled" : {
+              color: "red" 
+          }
+     },
+     dislikeButton : {
+          "&$ariaDisabled" : {
+              color: "red" 
+          }
+     }
    });
 
 interface Column {
@@ -78,11 +88,22 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
      const [isLoading, setIsLoading] = useState(true)
      const getDetailData = () => {
+          let headerData = {};
+
+          // 로그인 상태 게시물 클릭 시 
+          if (userObj !== null ) {
+               headerData = {
+                    headers: {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               };
+          }
           axios.post('http://192.168.0.69:8000/api/notice/detail_post', {
                post_id: location.state.post_id
-          })
+          }, headerData)
           .then(res => {
                setDetailPost(res.data)
+               // console.log(res.data)
                setColumns ( [
                     { id: 'title', align:'left',label: res.data.title, maxWidth: 100 },
                     { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: 30 },
@@ -96,6 +117,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           .catch(function(error) {
                console.log(error);
           })
+
      }
 
      // 댓글 리스트 불러오기 
@@ -106,17 +128,86 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           })
           .then(res => {
               setCommentList(res.data)
-              console.log(commentList)
+          //     console.log(commentList)
           })
           .catch(function(error) {
                console.log(error);
           })
      }
 
+     // 공감 비공감 처리 함수 
+     const [isClicked, setIsClicked] = useState(false)
+     const [pressableLike, setPressableLike] = useState(true)
+     const [pressableDislike, setPressableDislike] = useState(true)
+     const handleLikeDisLike = (event: React.MouseEvent) => {
+          let queryString; // like, dislike 지정 url
+          let label = event.currentTarget.getAttribute('aria-label')
+          let likeDislike = -1;
+          
+          if (userObj !== null) {
+               console.log('현재 :',detailPost.like_dislike)
+               if( detailPost.like_dislike !== -1 ) { // 공감/ 비공감 했을 경우, 취소하기
+                    queryString = "cancel_post_like"
+                    if( label === "like") {
+                         // console.log('like클릭', pressableLike)
+                         if(detailPost.like_dislike === 1) {
+                              likeDislike = 1
+                         }else {
+                              alert('이미 비공감을 하셨습니다.')
+                         }
+                    }else if (label === "dislike") {
+                         // console.log('dislike클릭', pressableDislike)
+                         if(detailPost.like_dislike === 0) {
+                              likeDislike = 0
+                         }else {
+                              alert('이미 공감을 하셨습니다.')
+                         }
+                    }
+               }else { // 공감/비공감 저장하기
+                    queryString = "add_post_like"
+                    if( label === "like") {
+                         likeDislike = 1
+                    }else if (label === "dislike") {
+                         likeDislike = 0
+                    }
+               }
+                // add,cancel 결과 
+                if( likeDislike !== -1) {
+                     axios.post(`http://192.168.0.69:8000/api/notice/${queryString}`, {
+                         post_id: location.state.post_id,
+                         like_dislike : likeDislike
+                    }, {
+                         headers : {
+                              "Authorization": "Token " + userObj.auth_token,
+                         }
+                    })
+                    .then(res => {
+                         console.log(res)
+                         setIsClicked(!isClicked)
+                    })
+                    .catch(function(error) {
+                         console.log(error);
+                    })
+                }
+          } else {
+               alert('로그인 먼저 해주세요.')
+          }
+     }
      useEffect(() => {
           getDetailData()
-          getCommentList()
+     }, [isClicked])
+
+     useEffect(() => {
+          getCommentList()          
      }, [])
+     
+     useEffect(() => {
+          if(detailPost.like_dislike !== -1) { 
+               setPressableLike(false)
+               setPressableDislike(false)
+          }
+     }, [detailPost])
+
      return (
           <Paper className={classes.root}>
                     <TableContainer className={classes.container}>
@@ -138,10 +229,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
                          {/* 공감,비공감 버튼 */}
                          <Typography component="div" className={classes.handButton}>
-                              <IconButton aria-label="like">
+                              <IconButton 
+                              className={classes.likeButton}
+                              aria-disabled={pressableLike} 
+                              onClick={handleLikeDisLike} aria-label="like">
                                    <ThumbUpAltIcon />
                               </IconButton>
-                              <IconButton aria-label="dislike">
+                              <IconButton 
+                              className={classes.dislikeButton}
+                              aria-disabled={pressableDislike} 
+                              onClick={handleLikeDisLike} aria-label="dislike">
                                    <ThumbDownIcon />
                               </IconButton>
                          </Typography>
@@ -152,6 +249,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                          </Typography>
                     </Paper>
 
+                    {/* 댓글 창 */}
                     <Comment userObj={userObj}commentList={commentList} postId={location.state.post_id}/>
           </Paper>
      )
