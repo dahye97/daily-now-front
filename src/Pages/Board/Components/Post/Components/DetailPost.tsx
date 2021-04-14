@@ -200,10 +200,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      useEffect(() => {
           getDetailData()
      }, [isClicked])
-
-     useEffect(() => {
-          getCommentList()          
-     }, [])
      
      useEffect(() => {
           if(detailPost.like_dislike == 1) { 
@@ -214,6 +210,13 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }, [detailPost])
 
+     const [isAddedComment, setIsAddedComment] = useState(false)
+     const handleIsAddedComment = () => {
+          setIsAddedComment(!isAddedComment)
+     }
+     useEffect(() => {
+          getCommentList()          
+     }, [isAddedComment])
      return (
           <Paper className={classes.root}>
                     <TableContainer className={classes.container}>
@@ -256,7 +259,9 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     </Paper>
 
                     {/* 댓글 창 */}
-                    <Comment userObj={userObj}commentList={commentList} postId={location.state.post_id}/>
+                    <Comment 
+                    userObj={userObj} commentList={commentList} 
+                    postId={location.state.post_id} handleIsAddedComment={handleIsAddedComment}/>
           </Paper>
      )
 }

@@ -29,11 +29,12 @@ const useStyles = makeStyles({
 interface CommentProps {
      userObj : userInfo | null,
      commentList: Array<commentInfo>,
-     postId : number
+     postId : number,
+     handleIsAddedComment :any
 }
 export default function Comment(props:CommentProps) {
      const classes = useStyles();
-     const {userObj , commentList,postId} = props;
+     const {userObj , commentList,postId, handleIsAddedComment} = props;
 
        // 댓글 작성 및 등록하기 
        const [comment, setComment] = useState("")
@@ -44,8 +45,7 @@ export default function Comment(props:CommentProps) {
                  setComment(event.target.value)
             }
        }
-
-       
+     
      const handleSubmit = () => {
           if ( comment.length <= 3 ) {
                alert('3자 이상 입력해주세요.');
@@ -60,8 +60,8 @@ export default function Comment(props:CommentProps) {
                          }
                     })
                     .then(res => {
-                     //    setCommentList(res.data)
-                        console.log(res)
+                         handleIsAddedComment()
+                         setComment('')
                     })
                     .catch(function(error) {
                          console.log(error);
