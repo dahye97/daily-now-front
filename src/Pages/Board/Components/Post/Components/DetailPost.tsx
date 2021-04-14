@@ -196,7 +196,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                alert('로그인 먼저 해주세요.')
           }
      }
-     // ✅
+
      useEffect(() => {
           getDetailData()
      }, [isClicked])
@@ -210,6 +210,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }, [detailPost])
 
+     // 댓글 추가 시 실시간 업데이트 처리 
      const [isAddedComment, setIsAddedComment] = useState(false)
      const handleIsAddedComment = () => {
           setIsAddedComment(!isAddedComment)
@@ -238,7 +239,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
                          {/* 공감,비공감 버튼 */}
                          <Typography component="div" className={classes.handButton}>
-                         {/* ✅ */}
                               <IconButton
                               className={pressableLike ? classes.button : classes.disabledButton}
                               onClick={handleLikeDisLike} aria-label="like"
