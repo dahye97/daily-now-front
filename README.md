@@ -75,6 +75,29 @@
 - 공감/비공감 add 처리
 - 공감/비공감을 할 경우, `setPressableLike(true)`/`setPressableDislike(true)`를 통해 `className`을 변경하여 색 변경 처리
 
+> 6. 댓글의 답글 창 열기 처리
+
+⚠ 댓글의 답글 창 props를 boolean 형태의 `isExpanded`로 관리하니 상태를 바꾸면 모든 댓글의 답글 창이 함께 열리고 닫힌다. 
+
+💭 `Accordion`을 사용하지 않는다면, `className`변경을 통해서 쉽게 관리할 수 있지만 `Accordion`을 이용해 `expanded`를 관리하려면 state를 사용해야만 한다.
+
+🤦‍♀️ 각 댓글 마다 고유하게 주어진 `comment_id`를 expanded의 조건 값으로 두어 댓글 클릭 시 실행되는 `handleReComment`에서 인자값으로 가져오는 `parent_id`를 `isExpanded`에 저장하도록 하여 관리한다. 
+`expanded`를 boolean으로만 관리해야 한다는 고정관념에 묶여 있어 해결하는데 시간이 많이 소비됐다. 
+
+```
+<Accordion expanded={isExpanded === ('panel'+comment.comment_id)} />
+```
+✅ 각 댓글마다 `isExpanded`의 값이 위와 같아야만 아코디언이 열린다.
+```
+const handleReComment = (e: React.MouseEvent, parent_id: number) => {
+          setIsExpanded('panel'+parent_id)
+}
+```
+✅ 댓글을 누를 때 댓글의 id를 인자값으로 보내 `setIsExpanded`에 저장한다.
+
+
+
+
 
 ### We learned 🤷‍♀️
 POSTMAN 등의 도구를 통하여 백엔드의 서버와 잘 통신이 되고 있는지, 백엔드에서 원하는 데이터 형태는 무엇인지 잘 확인해야 한다.

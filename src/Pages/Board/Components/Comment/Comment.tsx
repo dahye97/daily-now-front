@@ -77,11 +77,9 @@ export default function Comment(props:CommentProps) {
      // 답글 작성 함수
      const [isExpanded, setIsExpanded] = useState('')
      const [recommentList, setRecommentList] = useState<commentInfo[]>([])
-     const handleReComment = (e: React.MouseEvent, parent_id: number) => {
+     const handleReComment = (parent_id: number) => {
           setIsExpanded('panel'+parent_id)
-          // todo : 답글 버튼 눌렀을 때, 현재 댓글의 답글 창이 보이게
           console.log(parent_id)
-          let parentDiv = e.currentTarget.parentNode
 
           axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
                post_id: postId,
@@ -89,11 +87,13 @@ export default function Comment(props:CommentProps) {
           })
           .then(res => {
                setRecommentList(res.data)
-               // console.log( parentDiv?.parentElement?.
           })
           .catch(function(error) {
                console.log(error);
           })
+          }
+          const handleCloseRecomment = () => {
+               setIsExpanded('panel')
           }
      return (
           <>
@@ -131,7 +131,7 @@ export default function Comment(props:CommentProps) {
                                    {/* 작성자 */}<li>{comment.user.slice(0,4) + "****"}</li>      
                                    {/* 내용 */}<li>{comment.comment_content}</li>
                                    {/* 시간 */}<li>{comment.date}</li>
-                                   {/* 답글 */}<Button onClick={(e:React.MouseEvent) => handleReComment(e,comment.comment_id)}>
+                                   {/* 답글 */}<Button onClick={() => handleReComment(comment.comment_id)}>
                                                   답글</Button>
                                    {/* 공감, 비공감 */}
 
@@ -146,10 +146,15 @@ export default function Comment(props:CommentProps) {
                                                   </Typography>
                                              </div>
                                              <AccordionDetails>
-                                                  <Typography>
-                                                  우와
-                                                  </Typography>
-                                                  <Button>답글 닫기</Button>
+                                             {recommentList.map((comment) => {
+                                                  return (
+                                                       <Typography>
+                                                            <div>{comment.user.slice(0,4)+"****"}</div>
+                                                            {comment.comment_content}
+                                                       </Typography>
+                                                  )
+                                             })}
+                                             <Button onClick={handleCloseRecomment}>답글 닫기</Button>
                                              </AccordionDetails>
                                         </Accordion>
                                         )
