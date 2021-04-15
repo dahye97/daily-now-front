@@ -15,6 +15,9 @@ import { useHistory, useLocation } from 'react-router';
 import { commentInfo } from '../../../../Interface/Comment';
 import { userInfo } from '../../../../Interface/User';
 import Comment from '../Comment/Comment';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 const useStyles = makeStyles({
      root: {
        width: '100%',
@@ -224,6 +227,25 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      }
      const handleDelete = () => {
           console.log('post삭제')
+          if(userObj !== null){
+               axios.post('http://192.168.0.69:8000/api/notice/delete_post', {
+                    post_id:  detailPost.post_id,
+                    title: detailPost.title,
+                    content: detailPost.content
+               }, {
+                    headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               })
+               .then(res => {
+                    alert('게시물이 삭제되었습니다.')
+                    history.goBack()
+               })
+               .catch(function(error) {
+                    console.log(error);
+               })
+          }
+
      }
      return (
           <Paper className={classes.root}>
@@ -258,18 +280,17 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                                    <ThumbDownIcon />
                               </IconButton>
                          </Typography>
-                         
+
+                         <Typography component="div" align="right">
                          {/* 수정, 삭제 버튼 */}
                          {detailPost.editable &&
-                              <Typography component="div" align="center">
-                              <Button onClick={handleEditPost}>수정</Button>
-                              <Button onClick={handleDelete}>삭제</Button>
-                              </Typography>
+                         <>
+                              <IconButton onClick={handleEditPost}><EditIcon /></IconButton>
+                              <IconButton onClick={handleDelete}><DeleteForeverIcon /></IconButton>
+                         </>
                          }
-
                          {/* 목록 버튼 */}
-                         <Typography component="div" align="right">
-                             <Button onClick={()=> history.goBack()}>목록</Button>
+                             <IconButton onClick={()=> history.goBack()}><KeyboardBackspaceIcon /></IconButton>
                          </Typography>
                     </Paper>
 

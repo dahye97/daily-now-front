@@ -87,6 +87,7 @@ export default function Board (props: BoardProps){
           getCategories()
      }, [])
 
+     // 내 글 보기 처리 함수
      const [open, setOpen] = useState(false)
      const [myPostList, setMyPostList] = useState<detailPostInfo[]> ([])
      const handleClickMyPost = () => {
