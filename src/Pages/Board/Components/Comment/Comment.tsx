@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import axios from 'axios';
 
 import {Paper,IconButton,Typography,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
@@ -34,77 +34,11 @@ interface CommentProps {
      userObj : userInfo | null,
      commentList: Array<commentInfo>,
      postId : number,
-     handleIsAddedComment :any
+     handleIsAddedComment:any
 }
 export default function Comment(props:CommentProps) {
      const classes = useStyles();
-     const {userObj , commentList,postId, handleIsAddedComment} = props;
-
-       // 댓글 작성 함수 
-       const [comment, setComment] = useState("")
-       const [recomment, setRecomment] = useState("")
-       const handleChange = (event: React.ChangeEvent<HTMLInputElement>, parentId?: number) => {
-            // parentId 속성이 존재하면 답글, 없으면 댓글  
-            if( userObj === null ) {
-                 alert('로그인이 필요합니다.')
-            }else {
-                 if( parentId) {
-                    setRecomment(event.target.value)
-               }else {
-                    setComment(event.target.value)
-                 }
-            }
-       }
-     
-     // 댓글 저장 함수
-     const handleSubmit = (parentId?: number) => {
-         
-          let canSubmit = false;
-          const defaultData = {
-               post_id: postId,
-               comment_content : comment,
-         } // 댓글 일때 보낼 데이터 
-         const recommentData = {
-              post_id: postId,
-              comment_content : recomment,
-              parent_comment : parentId
-          } // 답글 일때 보낼 데이터 
-          let result = defaultData;
-
-         if(parentId) {
-               if( recomment.length <= 3) {
-                    alert('3자 이상 입력해주세요.');
-               }else {
-                    canSubmit = true;
-                    result = recommentData
-               }
-         }else { // 댓글
-               if( comment.length <= 3) {
-                    alert('3자 이상 입력해주세요.');
-               }else canSubmit = true;
-         }
-
-          if( userObj !== null && canSubmit){
-               axios.post('http://192.168.0.69:8000/api/notice/write_comment',
-                    result,{
-                    headers : {
-                         "Authorization": "Token " + userObj.auth_token,
-                    }
-               })
-               .then(res => {
-                    if(parentId) {
-                         setRecomment("")
-                         handleIsAddedReComment(parentId)
-                    }else {
-                         setComment("")
-                         handleIsAddedComment()
-                    }
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })
-          }
-     }
+     const {userObj , commentList,postId,handleIsAddedComment } = props;
 
      // 답글 작성 함수
      const [isExpanded, setIsExpanded] = useState('')
@@ -139,7 +73,7 @@ export default function Comment(props:CommentProps) {
            <Paper className={classes.commentPaper}>
                          <h3>댓글 {commentList.length}</h3>  
                          {/* 댓글 달기 */}  
-                         <CommentForm handleChange={handleChange} handleSubmit={handleSubmit} comment={comment}/>
+                         <CommentForm handleIsAddedComment={handleIsAddedComment} postId={postId} userObj={userObj}/>
 
                          {/* 댓글 리스트  */}
                          {commentList.length === 0 ? 
@@ -178,7 +112,7 @@ export default function Comment(props:CommentProps) {
                                                             )
                                                        })}
                                                   </div>
-                                                  <CommentForm handleChange={(e: React.ChangeEvent<HTMLInputElement> ) => handleChange(e,commentItem.comment_id)} handleSubmit={() => handleSubmit(commentItem.comment_id)} recomment={recomment} parentId={commentItem.comment_id}/>
+                                                  <CommentForm handleIsAddedReComment={handleIsAddedReComment} postId={postId} userObj={userObj} parentId={commentItem.comment_id}/>
                                                   <Button onClick={handleCloseRecomment}>답글 닫기</Button>
                                              </AccordionDetails>
                                         </Accordion>

@@ -197,6 +197,9 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }
 
+     const handleIsAddedComment = () => {
+          getCommentList()
+     }
      useEffect(() => {
           getDetailData()
      }, [isClicked])
@@ -210,10 +213,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }, [detailPost])
 
-     // 댓글, 대댓글 추가 시 실시간 업데이트 처리 
-     const handleIsAddedComment = () => {
-          getCommentList()   
-     }
      useEffect(() => {
           getCommentList()   
      }, [])
