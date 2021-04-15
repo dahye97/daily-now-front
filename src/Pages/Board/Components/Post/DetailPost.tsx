@@ -65,7 +65,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      // 선택한 게시물 행 데이터 만들기 
      const [columns, setColumns] = useState<Column[]>([])
-      const createRow = ( start: number, end : number,) => {
+     const createRow = ( start: number, end : number,) => {
           return (<TableRow style={{display:"table-row"}}>
                {columns.slice(start,end).map( column => {
                     return (<TableCell
@@ -135,7 +135,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const [isClicked, setIsClicked] = useState(false)
      const [pressableLike, setPressableLike] = useState(true)
      const [pressableDislike, setPressableDislike] = useState(true)
-     // ✅
      const handleLikeDisLike = (event: React.MouseEvent) => {
           let queryString; // like, dislike 지정 url
           let label = event.currentTarget.getAttribute('aria-label')
@@ -196,14 +195,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                alert('로그인 먼저 해주세요.')
           }
      }
-
-     const handleIsAddedComment = () => {
-          getCommentList()
-     }
+     // 공감, 비공감 실시간 업데이트를 위한 effect  (💭 공감 비공감 view 만 가지고 오는 api 없음)
      useEffect(() => {
           getDetailData()
      }, [isClicked])
-     
+
+     // 댓글 추가 실시간 업데이트 처리 함수
+     const handleIsAddedComment = () => {
+          getCommentList()
+     }
+ 
      useEffect(() => {
           if(detailPost.like_dislike == 1) { 
                setPressableDislike(false)
@@ -217,6 +218,13 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           getCommentList()   
      }, [])
 
+     // 게시글 수정, 삭제 함수 
+     const handleEditPost = () => {
+          console.log('post수정')
+     }
+     const handleDelete = () => {
+          console.log('post삭제')
+     }
      return (
           <Paper className={classes.root}>
                     <TableContainer className={classes.container}>
@@ -251,6 +259,14 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                               </IconButton>
                          </Typography>
                          
+                         {/* 수정, 삭제 버튼 */}
+                         {detailPost.editable &&
+                              <Typography component="div" align="center">
+                              <Button onClick={handleEditPost}>수정</Button>
+                              <Button onClick={handleDelete}>삭제</Button>
+                              </Typography>
+                         }
+
                          {/* 목록 버튼 */}
                          <Typography component="div" align="right">
                              <Button onClick={()=> history.goBack()}>목록</Button>

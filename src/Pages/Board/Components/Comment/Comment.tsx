@@ -40,7 +40,7 @@ export default function Comment(props:CommentProps) {
      const classes = useStyles();
      const {userObj , commentList,postId,handleIsAddedComment } = props;
 
-     // 답글 작성 함수
+     // 답글 리스트 가져오는 함수
      const [isExpanded, setIsExpanded] = useState('')
      const [recommentList, setRecommentList] = useState<commentInfo[]>([])
      const getReComment = (parent_id: number) => {
@@ -69,10 +69,10 @@ export default function Comment(props:CommentProps) {
 
      return (
           <>
-           {/* 댓글 창 */}
+           {/* ✅ 댓글 */}
            <Paper className={classes.commentPaper}>
                          <h3>댓글 {commentList.length}</h3>  
-                         {/* 댓글 달기 */}  
+                         {/* 댓글 입력 폼 */}  
                          <CommentForm handleIsAddedComment={handleIsAddedComment} postId={postId} userObj={userObj}/>
 
                          {/* 댓글 리스트  */}

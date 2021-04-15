@@ -101,7 +101,6 @@ export default function AppRouter() {
 					render={() => (
 						<Board userObj={userObj} typeNum={"03"} typeName="게시물"/>
 					)}/>
-					<Route exact path="/" component={Randing} />
 					
 					<Route exact path="/auth" render={
 						() => <Auth handleLogIn={handleLogIn}/> }

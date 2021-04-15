@@ -13,13 +13,12 @@ interface formProps {
 export default function CommentForm(props: formProps) {
      const { parentId,userObj,postId,handleIsAddedComment,handleIsAddedReComment } = props;
 
-       // 댓글 작성 함수 
        const [comment, setComment] = useState("")
        const [recomment, setRecomment] = useState("")
 
+     // 댓글, 답글 입력 값 처리 함수 
      const handleChange = (event: React.ChangeEvent<HTMLInputElement>, parent_Id?: number) => {
           // parentId 속성이 존재하면 답글, 없으면 댓글  
-          // console.log(parentId)
           if( userObj === null ) {
                alert('로그인이 필요합니다.')
           }else {
@@ -30,8 +29,7 @@ export default function CommentForm(props: formProps) {
                }
           }
      }
-
-      // 댓글 저장 함수
+      // 댓글, 답글 저장 함수
       const handleSubmit = (parentId?: number) => {
           let canSubmit = false;
           const defaultData = {
@@ -67,14 +65,13 @@ export default function CommentForm(props: formProps) {
                })
                .then(res => {
                     if(parentId) {
-                         console.log(recomment)
                          setRecomment("")
                          handleIsAddedReComment(parentId)
                     }else {
-                         console.log(comment)
                          setComment("")
                          handleIsAddedComment()
                     }
+
                })
                .catch(function(error) {
                     console.log(error);
@@ -97,10 +94,10 @@ export default function CommentForm(props: formProps) {
                                    fullWidth
                                    onChange={handleChange}
                               />          
-                         </Typography>  
-                         <Typography component="div" align="right">
-                             <Button onClick={() => handleSubmit(parentId)}>등록</Button>
-                         </Typography>
+               </Typography>  
+               <Typography component="div" align="right">
+                    <Button onClick={() => handleSubmit(parentId)}>등록</Button>
+               </Typography>
           </>
      )
 }
