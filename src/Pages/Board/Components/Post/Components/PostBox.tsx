@@ -10,9 +10,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import {detailPostInfo, postInfo} from '../../../../../Interface/Post'
+import {postInfo} from '../../../../../Interface/Post'
 import { useHistory } from 'react-router';
-import DetailPost from './DetailPost';
 
 const useStyles = makeStyles({
      root: {

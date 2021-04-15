@@ -51,7 +51,6 @@ export default function Post(props: PostProps) {
        setRowsPerPage(+event.target.value);
        setPage(0);
      };
-
      // 게시판 탭 클릭 시, 카테고리 ID 변경
      const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
           handleCategoryId(newValue+1)

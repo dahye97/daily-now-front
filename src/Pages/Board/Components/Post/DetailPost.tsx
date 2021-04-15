@@ -2,7 +2,7 @@ import React , {useState,useEffect} from 'react'
 import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { detailPostInfo } from '../../../../../Interface/Post'
+import { detailPostInfo } from '../../../../Interface/Post'
 import {Paper,IconButton,Typography,Button ,TextField,Card} from '@material-ui/core/';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,9 +12,9 @@ import TableRow from '@material-ui/core/TableRow';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { useHistory, useLocation } from 'react-router';
-import { commentInfo } from '../../../../../Interface/Comment';
-import { userInfo } from '../../../../../Interface/User';
-import Comment from '../../Comment/Comment';
+import { commentInfo } from '../../../../Interface/Comment';
+import { userInfo } from '../../../../Interface/User';
+import Comment from '../Comment/Comment';
 const useStyles = makeStyles({
      root: {
        width: '100%',
@@ -210,14 +210,14 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }, [detailPost])
 
-     // 댓글 추가 시 실시간 업데이트 처리 
-     const [isAddedComment, setIsAddedComment] = useState(false)
+     // 댓글, 대댓글 추가 시 실시간 업데이트 처리 
      const handleIsAddedComment = () => {
-          setIsAddedComment(!isAddedComment)
+          getCommentList()   
      }
      useEffect(() => {
-          getCommentList()          
-     }, [isAddedComment])
+          getCommentList()   
+     }, [])
+
      return (
           <Paper className={classes.root}>
                     <TableContainer className={classes.container}>

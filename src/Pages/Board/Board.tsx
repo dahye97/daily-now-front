@@ -7,7 +7,7 @@ import { categoryInfo } from '../../Interface/Category';
 import Post from './Components/Post/Post';
 import NewPost from './NewPost';
 import { userInfo } from '../../Interface/User';
-import DetailPost from './Components/Post/Components/DetailPost';
+import DetailPost from './Components/Post/DetailPost';
 
 const useStyles = makeStyles({
      boardContainer : {

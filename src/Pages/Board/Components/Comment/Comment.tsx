@@ -1,12 +1,13 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 
-import {Paper,IconButton,Typography,Button ,TextField,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
+import {Paper,IconButton,Typography,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { makeStyles } from '@material-ui/core/styles';
 import { commentInfo } from '../../../../Interface/Comment';
 import { userInfo } from '../../../../Interface/User';
+import CommentForm from './Components/CommentForm';
 const useStyles = makeStyles({
      
      contentPaper: {
@@ -41,43 +42,74 @@ export default function Comment(props:CommentProps) {
 
        // 댓글 작성 함수 
        const [comment, setComment] = useState("")
-       const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+       const [recomment, setRecomment] = useState("")
+       const handleChange = (event: React.ChangeEvent<HTMLInputElement>, parentId?: number) => {
+            // parentId 속성이 존재하면 답글, 없으면 댓글  
             if( userObj === null ) {
                  alert('로그인이 필요합니다.')
             }else {
-                 setComment(event.target.value)
+                 if( parentId) {
+                    setRecomment(event.target.value)
+               }else {
+                    setComment(event.target.value)
+                 }
             }
        }
      
      // 댓글 저장 함수
-     const handleSubmit = () => {
-          if ( comment.length <= 3 ) {
-               alert('3자 이상 입력해주세요.');
-          } else {
-               if( userObj !== null){
-                    axios.post('http://192.168.0.69:8000/api/notice/write_comment', {
-                         post_id: postId,
-                         comment_content : comment
-                    }, {
-                         headers : {
-                              "Authorization": "Token " + userObj.auth_token,
-                         }
-                    })
-                    .then(res => {
-                         handleIsAddedComment()
-                         setComment('')
-                    })
-                    .catch(function(error) {
-                         console.log(error);
-                    })
-          }
+     const handleSubmit = (parentId?: number) => {
+         
+          let canSubmit = false;
+          const defaultData = {
+               post_id: postId,
+               comment_content : comment,
+         } // 댓글 일때 보낼 데이터 
+         const recommentData = {
+              post_id: postId,
+              comment_content : recomment,
+              parent_comment : parentId
+          } // 답글 일때 보낼 데이터 
+          let result = defaultData;
+
+         if(parentId) {
+               if( recomment.length <= 3) {
+                    alert('3자 이상 입력해주세요.');
+               }else {
+                    canSubmit = true;
+                    result = recommentData
+               }
+         }else { // 댓글
+               if( comment.length <= 3) {
+                    alert('3자 이상 입력해주세요.');
+               }else canSubmit = true;
          }
+
+          if( userObj !== null && canSubmit){
+               axios.post('http://192.168.0.69:8000/api/notice/write_comment',
+                    result,{
+                    headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               })
+               .then(res => {
+                    if(parentId) {
+                         setRecomment("")
+                         handleIsAddedReComment(parentId)
+                    }else {
+                         setComment("")
+                         handleIsAddedComment()
+                    }
+               })
+               .catch(function(error) {
+                    console.log(error);
+               })
+          }
      }
 
      // 답글 작성 함수
      const [isExpanded, setIsExpanded] = useState('')
      const [recommentList, setRecommentList] = useState<commentInfo[]>([])
-     const handleReComment = (parent_id: number) => {
+     const getReComment = (parent_id: number) => {
           setIsExpanded('panel'+parent_id)
           console.log(parent_id)
 
@@ -92,31 +124,22 @@ export default function Comment(props:CommentProps) {
                console.log(error);
           })
           }
-          const handleCloseRecomment = () => {
-               setIsExpanded('panel')
-          }
+     const handleCloseRecomment = () => {
+          setIsExpanded('panel')
+     }
+
+     // 답글 실시간 업데이트 처리 함수 
+     const handleIsAddedReComment = (parentId: number) => {
+          getReComment(parentId)
+     }
+
      return (
           <>
            {/* 댓글 창 */}
            <Paper className={classes.commentPaper}>
                          <h3>댓글 {commentList.length}</h3>  
                          {/* 댓글 달기 */}  
-                         <Typography component="div">
-                              <TextField
-                                   value={comment}
-                                   id="contentField"
-                                   label="내용"
-                                   multiline
-                                   rows={3}
-                                   defaultValue="주제와 무관한 댓글, 악플은 삭제될 수 있습니다."
-                                   variant="outlined"
-                                   fullWidth
-                                   onChange={handleChange}
-                              />          
-                         </Typography>  
-                         <Typography component="div" align="right">
-                             <Button onClick={handleSubmit}>등록</Button>
-                         </Typography>
+                         <CommentForm handleChange={handleChange} handleSubmit={handleSubmit} comment={comment}/>
 
                          {/* 댓글 리스트  */}
                          {commentList.length === 0 ? 
@@ -124,17 +147,16 @@ export default function Comment(props:CommentProps) {
                          : 
                               <Card>
                                    <ul style={{padding: '20px', listStyle: 'none'}}>
-                                   {commentList.map( comment => {
+                                   {commentList.map( commentItem => {
                                    return (
-                                        <Accordion expanded={isExpanded === ('panel'+comment.comment_id)} className={classes.commentItem} key={comment.comment_id}>
+                                        <Accordion expanded={isExpanded === ('panel'+commentItem.comment_id)} className={classes.commentItem} key={commentItem.comment_id}>
                                              <div>
-                                   {/* 작성자 */}<li>{comment.user.slice(0,4) + "****"}</li>      
-                                   {/* 내용 */}<li>{comment.comment_content}</li>
-                                   {/* 시간 */}<li>{comment.date}</li>
-                                   {/* 답글 */}<Button onClick={() => handleReComment(comment.comment_id)}>
-                                                  답글</Button>
-                                   {/* 공감, 비공감 */}
-
+                                        {/* 작성자 */}<li>{commentItem.user.slice(0,4) + "****"}</li>      
+                                        {/* 내용 */}<li>{commentItem.comment_content}</li>
+                                        {/* 시간 */}<li>{commentItem.date}</li>
+                                        {/* 답글 */}<Button onClick={() => getReComment(commentItem.comment_id)}>
+                                                       답글</Button>
+                                        {/* 공감, 비공감 */}
 
                                                   <Typography component="span" className={classes.handButton}>
                                                        <IconButton aria-label="like">
@@ -145,16 +167,19 @@ export default function Comment(props:CommentProps) {
                                                        </IconButton>
                                                   </Typography>
                                              </div>
-                                             <AccordionDetails>
-                                             {recommentList.map((comment) => {
-                                                  return (
-                                                       <Typography>
-                                                            <div>{comment.user.slice(0,4)+"****"}</div>
-                                                            {comment.comment_content}
-                                                       </Typography>
-                                                  )
-                                             })}
-                                             <Button onClick={handleCloseRecomment}>답글 닫기</Button>
+                                             <AccordionDetails style={{display:"flex", flexDirection:"column"}}>
+                                                  <div>
+                                                       {recommentList.map((recommentItem, index) => {
+                                                            return (
+                                                                 <Typography key={index}>
+                                                                      <div>{recommentItem.user.slice(0,4)+"****"}</div>
+                                                                      {recommentItem.comment_content}
+                                                                 </Typography>
+                                                            )
+                                                       })}
+                                                  </div>
+                                                  <CommentForm handleChange={(e: React.ChangeEvent<HTMLInputElement> ) => handleChange(e,commentItem.comment_id)} handleSubmit={() => handleSubmit(commentItem.comment_id)} recomment={recomment} parentId={commentItem.comment_id}/>
+                                                  <Button onClick={handleCloseRecomment}>답글 닫기</Button>
                                              </AccordionDetails>
                                         </Accordion>
                                         )
