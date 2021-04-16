@@ -131,7 +131,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                } )
                .then(res => {
                    setCommentList(res.data)
-                   console.log(commentList)
+               //     console.log(commentList)
                })
                .catch(function(error) {
                     console.log(error);
@@ -229,13 +229,11 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      // 게시글 수정, 삭제 함수 
      // todo: 게시글 수정 함수 
      const handleEditPost = () => {
-          console.log('post수정')
-          history.push(`board/write/${detailPost.post_id}`, {
-               // 수정할 게시물 정보
-               detailPost: detailPost
-          })
-          
-          // todo 라우터에 board/write/:id 따로 파고, newpost 페이지에 props 값에 따라 텍스트 필드 창 채우게 하기
+          history.push(`/board/write/${detailPost.post_id}`, {
+          // 수정할 게시물 정보
+          detailPost: detailPost
+     })
+               // todo 라우터에 board/write/:id 따로 파고, newpost 페이지에 props 값에 따라 텍스트 필드 창 채우게 하기
           // props 값 유무? 혹은 뭐 기준은 내일 만들기.. 기준에 따라 수정 or 완료 post 보낼 수 있게 처리하기 
      }
      const handleDelete = () => {

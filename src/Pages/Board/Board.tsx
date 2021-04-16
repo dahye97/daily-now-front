@@ -117,7 +117,7 @@ export default function Board (props: BoardProps){
           <Container maxWidth="md" className={classes.boardContainer}>
 			<Typography><h1>💫 Community </h1></Typography>
                <Typography component="div" style={{height: '100%'}}>
-                         { typeNum === "01" ? 
+                         { typeNum === "01" ? // 게시판
                          <>
                               <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
                               <div className={classes.boardBottom}>
@@ -125,16 +125,16 @@ export default function Board (props: BoardProps){
                                    <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
                               </div>
                          </>
-                         : typeNum === "02" ?
+                         : typeNum === "02" || typeNum === "03" ? // 글쓰기
                           <NewPost userObj={userObj}/>
-                         : typeNum === "03" ?
+                         : typeNum === "04" ? // 게시물 
                          <DetailPost userObj={userObj}/>
                          : '로딩중'}
 
                          {/* 내 글 보기 */}
                               <Dialog fullWidth={true} onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
                                    <DialogTitle id="simple-dialog-title"><h2>내가 작성한 글 📝</h2></DialogTitle>
-                                   <List className={classes.myPost} subheader={<li />}>
+                                   <List className={classes.myPost} subheader={<div />}>
 
                                    {categories.map((category) => (
                                         <li key={category.category_id} className={classes.myPostSection}>

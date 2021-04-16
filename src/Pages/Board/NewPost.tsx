@@ -1,10 +1,11 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 
 import { Button,TextField, Typography} from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles, } from "@material-ui/core/styles";
 import { userInfo } from '../../Interface/User';
+import { detailPostInfo } from '../../Interface/Post';
 
 const useStyles = makeStyles({
      postContent : {
@@ -15,28 +16,45 @@ const useStyles = makeStyles({
 })
 interface newPostProps {
      userObj : userInfo | null,
+     
 }
 interface stateType {
-     category_id : number
+     category_id : number,
+     detailPost : detailPostInfo // 수정 시 받아올 게시글 데이터
 }
+
 export default function NewPost(props: newPostProps) {
      const location = useLocation<stateType>();
-     // const categoryId = location.state.category_id
      const history = useHistory()
      const classes = useStyles()
 
      const { userObj } = props
+     const { category_id, detailPost } = location.state
      const [title, setTitle] = useState('')
      const [content, setContent] = useState('')
-     const categoryId = location.state.category_id
-
+     
+     // 글 등록 및 수정 
      const handleSave = () => {
-          if (userObj !== null ){
-               axios.post('http://192.168.0.69:8000/api/notice/write_post', {
+          let url;
+          let data;
+          if(detailPost) { // 글 수정 시 \
+               url = "update_post" 
+               data = {
                     "title" : title,
                     "content" : content,
-                    "category_id" : categoryId
-               }, {
+                    "post_id" : detailPost.post_id,
+               }
+          }else { // 글 등록 시
+               url = "write_post" 
+               data = {
+                    "title" : title,
+                    "content" : content,
+                    "category_id" : category_id
+               }
+          }
+          if (userObj !== null ){
+               axios.post(`http://192.168.0.69:8000/api/notice/${url}`, 
+                    data, {
                     headers : {
                          "Authorization": "Token " + userObj.auth_token,
                     }
@@ -50,6 +68,7 @@ export default function NewPost(props: newPostProps) {
           }
           history.goBack();
      }
+     // 글 작성 취소
      const handleCancel = () => {
           history.goBack();
      }
@@ -62,9 +81,17 @@ export default function NewPost(props: newPostProps) {
                setContent(event.target.value)
           }
      }
+
+     useEffect(() => {
+          if(detailPost) {
+               setTitle(detailPost.title)
+               setContent(detailPost.content)     
+          }
+     }, [detailPost])
+
      return (
           <Typography component="div" style={{height: '100vh',}}>
-               <h2>새 글 작성</h2>
+               <h2>새 글 {detailPost ? "수정" : "작성"}</h2>
                <div className={classes.postContent}>
                     <TextField
                          value={title}
