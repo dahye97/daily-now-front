@@ -1,20 +1,19 @@
 import React , {useState,useEffect} from 'react'
+import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
-import { makeStyles } from '@material-ui/core/styles';
 import { detailPostInfo } from '../../../../Interface/Post'
-import {Paper,IconButton,Typography,Button ,TextField,Card} from '@material-ui/core/';
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import { useHistory, useLocation } from 'react-router';
 import { commentInfo } from '../../../../Interface/Comment';
 import { userInfo } from '../../../../Interface/User';
 import Comment from '../Comment/Comment';
+
+import { makeStyles } from '@material-ui/core/styles';
+import {Paper,IconButton,Typography,
+     Table, TableCell, TableContainer, TableHead, TableRow,
+} from '@material-ui/core/';
+
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -122,16 +121,22 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      // 댓글 리스트 불러오기 
      const [commentList, setCommentList] = useState<commentInfo[]>([])
      const getCommentList = () => {
-          axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
-               post_id: location.state.post_id
-          })
-          .then(res => {
-              setCommentList(res.data)
-          //     console.log(commentList)
-          })
-          .catch(function(error) {
-               console.log(error);
-          })
+          if(userObj!==null){
+               axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
+                    post_id: location.state.post_id
+               },{
+                    headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               } )
+               .then(res => {
+                   setCommentList(res.data)
+                   console.log(commentList)
+               })
+               .catch(function(error) {
+                    console.log(error);
+               })   
+          }
      }
 
      // 공감 비공감 처리 함수 
@@ -204,15 +209,15 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      }, [isClicked])
 
      // 댓글 추가 실시간 업데이트 처리 함수
-     const handleIsAddedComment = () => {
+     const handleUpdateComment = () => {
           getCommentList()
      }
  
      useEffect(() => {
-          if(detailPost.like_dislike == 1) { 
+          if(detailPost.like_dislike === 1) { 
                setPressableDislike(false)
           }
-          else if (detailPost.like_dislike == 0) { 
+          else if (detailPost.like_dislike === 0) { 
                setPressableLike(false)
           }
      }, [detailPost])
@@ -222,8 +227,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      }, [])
 
      // 게시글 수정, 삭제 함수 
+     // todo: 게시글 수정 함수 
      const handleEditPost = () => {
           console.log('post수정')
+          history.push(`board/write/${detailPost.post_id}`, {
+               // 수정할 게시물 정보
+               detailPost: detailPost
+          })
+          
+          // todo 라우터에 board/write/:id 따로 파고, newpost 페이지에 props 값에 따라 텍스트 필드 창 채우게 하기
+          // props 값 유무? 혹은 뭐 기준은 내일 만들기.. 기준에 따라 수정 or 완료 post 보낼 수 있게 처리하기 
      }
      const handleDelete = () => {
           console.log('post삭제')
@@ -297,7 +310,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     {/* 댓글 창 */}
                     <Comment 
                     userObj={userObj} commentList={commentList} 
-                    postId={location.state.post_id} handleIsAddedComment={handleIsAddedComment}/>
+                    postId={location.state.post_id} handleUpdateComment={handleUpdateComment}/>
           </Paper>
      )
 }
