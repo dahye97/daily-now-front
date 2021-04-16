@@ -1,15 +1,12 @@
 import React,{useState} from 'react'
 import axios from 'axios';
 
-import {Paper,IconButton,Typography,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import {Paper,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import { commentInfo } from '../../../../Interface/Comment';
 import { userInfo } from '../../../../Interface/User';
 import CommentForm from './Components/CommentForm';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import CommentView from './Components/CommentView';
 
 const useStyles = makeStyles({
      
@@ -50,16 +47,22 @@ export default function Comment(props:CommentProps) {
           setIsExpanded('panel'+parent_id)
           console.log(parent_id)
 
-          axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
-               post_id: postId,
-               parent_comment: parent_id
-          })
-          .then(res => {
-               setRecommentList(res.data)
-          })
-          .catch(function(error) {
-               console.log(error);
-          })
+          if(userObj!==null) {
+               axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
+                    post_id: postId,
+                    parent_comment: parent_id
+               }, {
+                    headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               })
+               .then(res => {
+                    setRecommentList(res.data)
+               })
+               .catch(function(error) {
+                    console.log(error);
+               })   
+          }
           }
      // 답글 창 닫기
      const handleCloseRecomment = () => {
@@ -72,7 +75,6 @@ export default function Comment(props:CommentProps) {
      }
 
      // 댓글 수정, 삭제 함수
-     // todo: 댓글 수정 함수
      const [isEditing, setIsEditing] = useState('')
      const handleEditComment = (commentId? : number) => {
           setIsEditing('panel'+commentId)
@@ -98,6 +100,9 @@ export default function Comment(props:CommentProps) {
 
 
      }
+
+     // todo: 댓글, 대댓글 공감/비공감 기능 구현 
+
      return (
           <>
            {/* ✅ 댓글 */}
@@ -114,59 +119,44 @@ export default function Comment(props:CommentProps) {
                          <ul style={{padding: '20px', listStyle: 'none'}}>
                          {commentList.map( commentItem => {
                          return (
-                              // 댓글 창
-                             <Accordion  expanded={isExpanded === ('panel'+commentItem.comment_id)} className={classes.commentItem} key={commentItem.comment_id}>
+                             <Accordion 
+                             expanded={isExpanded === ('panel'+commentItem.comment_id)} 
+                             className={classes.commentItem} key={commentItem.comment_id}>
                               
                               {isEditing === 'panel' + commentItem.comment_id ? 
                               <>
-                              {/* 댓글 수정 창 */}
-                                   <CommentForm handleEditComment={handleEditComment} handleUpdateComment={handleUpdateComment} commentItem={commentItem} userObj={userObj}/>
+                              {/* 📌 댓글 수정 창 */}
+                                   <CommentForm key={commentItem.comment_id}
+                                   handleEditComment={handleEditComment} handleUpdateComment={handleUpdateComment} 
+                                   commentItem={commentItem} userObj={userObj}/>
                                    <Button onClick={() => setIsEditing('')}>취소</Button>
                               </>
                               : 
+                              // 📌 댓글 창
                                    <div style={{display:"flex", justifyContent: "space-between"}}>
-                                        <div>
-                                   {/* 작성자 */}<li>{commentItem.user.slice(0,4) + "****"}</li>      
-                                   {/* 내용 */}<li>{commentItem.comment_content}</li>
-                                   {/* 시간 */}<li>{commentItem.date}</li>
-                                   {/* 답글 */}<Button onClick={() => getReComment(commentItem.comment_id)}>답글</Button>
-                                   {/* 공감, 비공감 */}
-                                             <Typography component="span" className={classes.handButton}>
-                                                  <IconButton aria-label="like">
-                                                       <ThumbUpAltIcon />
-                                                  </IconButton>
-                                                  <IconButton aria-label="dislike">
-                                                       <ThumbDownIcon />
-                                                  </IconButton>
-                                             </Typography>
-
-                                        </div>
-                                        { commentItem.editable &&
-                                             <div>
-                                                  <IconButton onClick={() => handleEditComment(commentItem.comment_id)}><EditIcon /></IconButton>
-                                                  <IconButton onClick={() => handleDelete(commentItem.comment_id)}><DeleteForeverIcon /></IconButton>
-                                             </div>  
-                                        }
-                                        
+                                        <CommentView 
+                                        commentItem={commentItem} handleEditComment={handleEditComment} 
+                                        handleDelete={handleDelete} getReComment={getReComment}/>
                                    </div>
                                    }
-                                   {/* 답글 창 */}
+
+                              {/* 📌 답글 창 */}
                                    <AccordionDetails style={{display:"flex", flexDirection:"column"}}>
                                         <div>
-                                             {recommentList.map((recommentItem, index) => {
+                                             {recommentList.map((recommentItem) => {
                                                   return (
-                                                       <Typography key={index}>
-                                                            <div>{recommentItem.user.slice(0,4)+"****"}</div>
-                                                            {recommentItem.comment_content}
-                                                       </Typography>
+                                                       <div style={{display:"flex", justifyContent: "space-between"}}>
+                                                            <CommentView key={recommentItem.comment_id}
+                                                             recommentItem={recommentItem} handleEditComment={handleEditComment} 
+                                                             handleDelete={handleDelete} getReComment={getReComment}/>
+                                                       </div>
                                                   )
                                              })}
                                         </div>
                                         <CommentForm handleIsAddedReComment={handleIsAddedReComment} postId={postId} userObj={userObj} parentId={commentItem.comment_id}/>
-                                        <Button onClick={handleCloseRecomment}>답글 닫기</Button>
+                                        <Button onClick={handleCloseRecomment}>답글 접기</Button>
                                    </AccordionDetails>
                               </Accordion>
-                              
                               )
                          })} 
                          </ul>

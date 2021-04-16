@@ -138,6 +138,9 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                })   
           }
      }
+     useEffect(() => {
+          getCommentList()   
+     }, [])
 
      // 공감 비공감 처리 함수 
      const [isClicked, setIsClicked] = useState(false)
@@ -203,6 +206,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                alert('로그인 먼저 해주세요.')
           }
      }
+
      // 공감, 비공감 실시간 업데이트를 위한 effect  (💭 공감 비공감 view 만 가지고 오는 api 없음)
      useEffect(() => {
           getDetailData()
@@ -213,6 +217,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           getCommentList()
      }
  
+     // 게시물에 대해 유저가 선택한 공감/비공감 정보 데이터 업데이트
      useEffect(() => {
           if(detailPost.like_dislike === 1) { 
                setPressableDislike(false)
@@ -222,22 +227,14 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }
      }, [detailPost])
 
-     useEffect(() => {
-          getCommentList()   
-     }, [])
-
      // 게시글 수정, 삭제 함수 
-     // todo: 게시글 수정 함수 
      const handleEditPost = () => {
           history.push(`/board/write/${detailPost.post_id}`, {
           // 수정할 게시물 정보
           detailPost: detailPost
      })
-               // todo 라우터에 board/write/:id 따로 파고, newpost 페이지에 props 값에 따라 텍스트 필드 창 채우게 하기
-          // props 값 유무? 혹은 뭐 기준은 내일 만들기.. 기준에 따라 수정 or 완료 post 보낼 수 있게 처리하기 
      }
      const handleDelete = () => {
-          console.log('post삭제')
           if(userObj !== null){
                axios.post('http://192.168.0.69:8000/api/notice/delete_post', {
                     post_id:  detailPost.post_id,
