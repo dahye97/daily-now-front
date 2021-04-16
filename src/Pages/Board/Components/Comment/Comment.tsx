@@ -73,25 +73,9 @@ export default function Comment(props:CommentProps) {
 
      // 댓글 수정, 삭제 함수
      // todo: 댓글 수정 함수
-     const [isEditing, setIsEditing] = useState(false)
-     const handleEditComment = () => {
-          setIsEditing(!isEditing)
-          // if(userObj !== null){
-          //      axios.post('http://192.168.0.69:8000/api/notice/update_comment', {
-          //      comment_id: commentId,
-          //      comment_content: "수정된 댓글"
-          // }, {
-          //           headers : {
-          //                "Authorization": "Token " + userObj.auth_token,
-          //           }
-          //      })
-          //      .then(res => {
-          //           handleUpdateComment()
-          //      })
-          //      .catch(function(error) {
-          //           console.log(error);
-          //      })
-          // }
+     const [isEditing, setIsEditing] = useState('')
+     const handleEditComment = (commentId? : number) => {
+          setIsEditing('panel'+commentId)
      }
      const handleDelete = (commentId : number) => {
 
@@ -131,14 +115,15 @@ export default function Comment(props:CommentProps) {
                          {commentList.map( commentItem => {
                          return (
                               // 댓글 창
-                              <>
-                              {isEditing ? 
+                             <Accordion  expanded={isExpanded === ('panel'+commentItem.comment_id)} className={classes.commentItem} key={commentItem.comment_id}>
+                              
+                              {isEditing === 'panel' + commentItem.comment_id ? 
                               <>
                               {/* 댓글 수정 창 */}
                                    <CommentForm handleEditComment={handleEditComment} handleUpdateComment={handleUpdateComment} commentItem={commentItem} userObj={userObj}/>
-                                   <Button onClick={() => setIsEditing(false)}>취소</Button>
+                                   <Button onClick={() => setIsEditing('')}>취소</Button>
                               </>
-                              : <Accordion expanded={isExpanded === ('panel'+commentItem.comment_id)} className={classes.commentItem} key={commentItem.comment_id}>
+                              : 
                                    <div style={{display:"flex", justifyContent: "space-between"}}>
                                         <div>
                                    {/* 작성자 */}<li>{commentItem.user.slice(0,4) + "****"}</li>      
@@ -158,12 +143,13 @@ export default function Comment(props:CommentProps) {
                                         </div>
                                         { commentItem.editable &&
                                              <div>
-                                                  <IconButton onClick={handleEditComment}><EditIcon /></IconButton>
+                                                  <IconButton onClick={() => handleEditComment(commentItem.comment_id)}><EditIcon /></IconButton>
                                                   <IconButton onClick={() => handleDelete(commentItem.comment_id)}><DeleteForeverIcon /></IconButton>
                                              </div>  
                                         }
                                         
                                    </div>
+                                   }
                                    {/* 답글 창 */}
                                    <AccordionDetails style={{display:"flex", flexDirection:"column"}}>
                                         <div>
@@ -180,8 +166,7 @@ export default function Comment(props:CommentProps) {
                                         <Button onClick={handleCloseRecomment}>답글 닫기</Button>
                                    </AccordionDetails>
                               </Accordion>
-                              }
-                              </>
+                              
                               )
                          })} 
                          </ul>

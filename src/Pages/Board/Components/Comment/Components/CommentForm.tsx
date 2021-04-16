@@ -9,7 +9,7 @@ interface formProps {
      parentId? : number // 답글 상위 댓글 id 
      userObj: userInfo | null, 
      handleUpdateComment? : any, // 댓글 업데이트 함수 
-     handleEditComment? : any,
+     handleEditComment?:(commentId?: number) => void,
      handleIsAddedReComment? : any, // 답글 업데이트 함수 
 
      commentItem?: commentInfo // 수정 중인 댓글 데이터 
@@ -55,7 +55,7 @@ export default function CommentForm(props: formProps) {
                     data = {
                          comment_id: commentItem.comment_id,
                          comment_content: comment
-                    } // 수정된 댓글 데이터 
+                    } // 수정할 댓글 데이터 
                     canSubmit = true;   
                }else {
                     if( comment.length <= 3) {
@@ -83,9 +83,11 @@ export default function CommentForm(props: formProps) {
                          handleIsAddedReComment(parentId)
                     }else {
                          setComment("")
+                         if(commentItem && handleEditComment){
+                              handleEditComment()
+                         }
                          handleUpdateComment()
                     }
-                    handleEditComment()
                })
                .catch(function(error) {
                     console.log(error);
@@ -93,7 +95,6 @@ export default function CommentForm(props: formProps) {
           }
      }
 
-     
      useEffect(() => {
           if(commentItem) {
                setComment(commentItem.comment_content)
