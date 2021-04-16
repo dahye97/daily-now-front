@@ -1,13 +1,13 @@
-import React,{useState,useEffect,useRef} from 'react'
+import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
-import AnnouncementIcon from '@material-ui/icons/Announcement';
 import { categoryInfo } from '../../../../Interface/Category';
 import { postInfo } from '../../../../Interface/Post';
 import PostBox from './Components/PostBox';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,
@@ -28,7 +28,7 @@ export default function Post(props: PostProps) {
      const classes = useStyles()
      const {categories ,handleCategoryId,categoryId} = props;
      
-     const  iconList = [<ChatIcon />, <HearingIcon />, <AnnouncementIcon />]
+     const  iconList = [<ChatIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
 
      const [isLoading, setIsLoading] = useState(true)
      const [value, setValue] = React.useState(0);

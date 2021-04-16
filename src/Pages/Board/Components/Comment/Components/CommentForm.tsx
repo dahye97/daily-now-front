@@ -1,20 +1,23 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Typography ,TextField,Button} from '@material-ui/core/';
 import { userInfo } from '../../../../../Interface/User';
 import axios from 'axios';
+import { commentInfo } from '../../../../../Interface/Comment';
 
 interface formProps {
-     postId : number
-     parentId? : number
-     userObj: userInfo | null,
-     handleIsAddedComment? : any,
-     handleIsAddedReComment? : any,
+     postId? : number // 게시글 id
+     parentId? : number // 답글 상위 댓글 id 
+     userObj: userInfo | null, 
+     handleUpdateComment? : any, // 댓글 업데이트 함수 
+     handleEditComment? : any,
+     handleIsAddedReComment? : any, // 답글 업데이트 함수 
+
+     commentItem?: commentInfo // 수정 중인 댓글 데이터 
 }
 export default function CommentForm(props: formProps) {
-     const { parentId,userObj,postId,handleIsAddedComment,handleIsAddedReComment } = props;
-
-       const [comment, setComment] = useState("")
-       const [recomment, setRecomment] = useState("")
+     const { parentId,userObj,postId,handleUpdateComment,handleIsAddedReComment,handleEditComment, commentItem } = props;
+     const [comment, setComment] = useState("")
+     const [recomment, setRecomment] = useState("")
 
      // 댓글, 답글 입력 값 처리 함수 
      const handleChange = (event: React.ChangeEvent<HTMLInputElement>, parent_Id?: number) => {
@@ -29,36 +32,47 @@ export default function CommentForm(props: formProps) {
                }
           }
      }
-      // 댓글, 답글 저장 함수
+      // 댓글, 답글 저장 및 수정 함수
       const handleSubmit = (parentId?: number) => {
           let canSubmit = false;
-          const defaultData = {
-               post_id: postId,
-               comment_content : comment,
-         } // 댓글 일때 보낼 데이터 
-         const recommentData = {
-              post_id: postId,
-              comment_content : recomment,
-              parent_comment : parentId
-          } // 답글 일때 보낼 데이터 
-          let result = defaultData;
+          let url = "write_comment"
+          let data;
 
-         if(parentId) {
+         if(parentId) { // 답글
                if( recomment.length <= 3) {
                     alert('3자 이상 입력해주세요.');
                }else {
+                    data = {
+                         post_id: postId,
+                         comment_content : recomment,
+                         parent_comment : parentId
+                    } // 답글 일때 보낼 데이터 
                     canSubmit = true;
-                    result = recommentData
                }
          }else { // 댓글
-               if( comment.length <= 3) {
-                    alert('3자 이상 입력해주세요.');
-               }else canSubmit = true;
+               if(commentItem){
+                    url = "update_comment"
+                    data = {
+                         comment_id: commentItem.comment_id,
+                         comment_content: comment
+                    } // 수정된 댓글 데이터 
+                    canSubmit = true;   
+               }else {
+                    if( comment.length <= 3) {
+                         alert('3자 이상 입력해주세요.');
+                    }else {
+                         data = {
+                              post_id: postId,
+                              comment_content : comment,
+                         }// 댓글 일때 보낼 데이터 
+                         canSubmit = true;   
+                    }
+               }
          }
 
           if( userObj !== null && canSubmit){
-               axios.post('http://192.168.0.69:8000/api/notice/write_comment',
-                    result,{
+               axios.post(`http://192.168.0.69:8000/api/notice/${url}`,
+                    data,{
                     headers : {
                          "Authorization": "Token " + userObj.auth_token,
                     }
@@ -69,15 +83,22 @@ export default function CommentForm(props: formProps) {
                          handleIsAddedReComment(parentId)
                     }else {
                          setComment("")
-                         handleIsAddedComment()
+                         handleUpdateComment()
                     }
-
+                    handleEditComment()
                })
                .catch(function(error) {
                     console.log(error);
                })
           }
      }
+
+     
+     useEffect(() => {
+          if(commentItem) {
+               setComment(commentItem.comment_content)
+          }
+     }, [commentItem])
 
      return (
           <>
