@@ -1,9 +1,11 @@
-import {Card,CardHeader,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar } from "@material-ui/core";
+import {Card,CardHeader,CardMedia,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar } from "@material-ui/core";
 import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
 import { userInfo } from "../../../Interface/User";
+import {useEffect,useState} from 'react'
+import axios from 'axios'
 
 // TODO: 프로필 
 const useStyles = makeStyles({
@@ -69,15 +71,46 @@ interface ProfileProps {
 }
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
-
-	const onClickSetting = () => {
+	const classes = useStyles()
+	const {userObj, handleLogOut} = props;
+	const [myPoint, setMyPoint] = useState()
+	// mypage로 이동 
+	const handleClickSetting = () => {
 		history.push('/mypage');
 	}
+	
+	// 초대 코드 생성 함수 
+	const handleClickShare = () => {
+		history.push('/home?tabName=INVITE')
+	}
 
-	const classes = useStyles()
+	// 포인트 내역 확인 
+	const handleClickPoint = () => {
+		history.push('/home?tabName=POINT_TOTAL')
+	}
+
+	// 마이 포인트 가져오기 
+	useEffect(() => {
+		if( userObj !== null) {
+			axios.get('http://192.168.0.69:8000/api/auth/my_point', 
+			{
+				headers : {
+				"Authorization": "Token " + userObj.auth_token,
+			}
+			})
+			.then(res => {
+				setMyPoint(res.data.total_point) // 포인트 값  
+			})
+			.catch(function(error) {
+				console.log(error);
+			})
+		}		
+	}, [myPoint])
+
 		return (
 			<div className="profile">
 				<Card className={classes.card} elevation={3}>
+					<div style={{display:'flex', 'justifyContent':'space-between'}}>
 						<CardHeader 
 						title={props.userObj?.first_name + "님의"} 
 						component="span"
@@ -92,18 +125,22 @@ export default function Profile(props:ProfileProps) {
 								>
 								<Avatar/>
 							</StyledBadge>
-						}></CardHeader>
-
+						}
+						></CardHeader>
+						<CardMedia>
+		{/* 회원 정보 수정 */}	<IconButton onClick={handleClickSetting}><SettingsIcon className={classes.setting} /></IconButton>
+			{/* 로그아웃 */}	<IconButton onClick={handleLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
+						</CardMedia>
+					</div>
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
-	{/* 회원 정보 수정 */}	<IconButton onClick={onClickSetting}><SettingsIcon className={classes.setting} /></IconButton>
-		{/* 로그아웃 */}	<IconButton onClick={props.handleLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
+						<p>보유 포인트</p>
+						<h2>{myPoint} P</h2>
 					</CardContent>
 					<CardActions>
-						<Button className={classes.button}>회원정보</Button>
-						<Button className={classes.button}>나의투자</Button>
-						<Button className={classes.button}>활동</Button>
-						<Button className={classes.button}>메세지</Button>
+						<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>
+						<Button onClick={handleClickPoint} className={classes.button}>포인트 내역</Button>
+						<Button onClick={handleClickShare} className={classes.button}>초대하기</Button>
 					</CardActions>
 				</Card>
 			</div>

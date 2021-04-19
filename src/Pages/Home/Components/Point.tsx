@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
 import { userInfo } from '../../../Interface/User'
+import { pointInfo } from '../../../Interface/Point'
 
 interface PointProps {
 	userObj : userInfo | null,
@@ -9,7 +10,7 @@ interface PointProps {
 export default function Point(props: PointProps) {
 
      const { userObj } = props;
-     // const [point, setPoint] = useState(initialState)
+     const [point, setPoint] = useState<pointInfo[]>([])
      useEffect(() => {
           if( userObj !== null) {
 			axios.get('http://192.168.0.69:8000/api/auth/my_point_list', 
@@ -19,7 +20,8 @@ export default function Point(props: PointProps) {
 			}
 			})
 			.then(res => {
-                    console.log(res)
+                    setPoint(res.data)
+                    console.log(res.data)
                })
 			.catch(function(error) {
 				console.log(error);

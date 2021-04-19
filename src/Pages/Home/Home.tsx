@@ -198,7 +198,7 @@ export default function Home(props: HomeProps) {
 						: tabName === "POINT_TOTAL" ? 
 							<Point userObj={userObj}/>
 						: tabName === "INVITE" ? 
-							<Share />
+							<Share userObj={userObj}/>
 						: null}
 
 
