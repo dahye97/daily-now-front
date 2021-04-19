@@ -43,7 +43,7 @@ export default function Navigation(props: NavProps) {
 								<Button color="inherit" onClick={() => history.push('/auth')}>
 									로그인
 								</Button>
-								<Button color="inherit" onClick={() => history.push('/registration')}>
+								<Button color="inherit" onClick={() => history.push('/registration?share=FALSE')}>
 									회원가입
 								</Button>
 							</>

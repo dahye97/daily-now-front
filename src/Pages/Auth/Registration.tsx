@@ -3,10 +3,11 @@ import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@m
 import logo from '../../asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import {RegisterErrorInfo} from '../../Interface/Error';
+import queryString from 'query-string'
 
-// TODO: 회원가입 페이지
+// 회원가입 페이지
 const useStyles = makeStyles({
      authContainer: {
           padding: "100px",
@@ -32,33 +33,41 @@ const useStyles = makeStyles({
           marginTop: "20px"
      }
 })
+
 export default function Registration() {
+     const location = useLocation();
+     
+     const queryObj = queryString.parse(location.search);
+     const { share, ucode }= queryObj;
+     console.log(share,ucode)
      const classes = useStyles()
+     const history = useHistory();
+     const [cookies, setCookie, removeCookie] = useCookies([]);
 
      const [firstName, setFirstName] = useState("")
      const [lastName, setLastName] = useState("")
      const [id, setId] = useState("")
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
-
+     
+     const [invitedCode, setInvitedCode] = useState<string | string[] | null>('')
      const [error, setError] = useState<RegisterErrorInfo | undefined>(Object);
 
      useEffect(() => {
           console.log(error)
      }, [error])
-     const history = useHistory();
-     const [cookies, setCookie, removeCookie] = useCookies([]);
 
      const onSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
-
-          const registerInfo = {
+          let registerInfo = {
                "username": id,
                "email": email,
                "password": password,
                "first_name": firstName,
-               "last_name": lastName
-          }
+               "last_name": lastName,
+               "code" : invitedCode
+          };
+
           console.log(registerInfo)
           fetch('http://192.168.0.69:8000/api/auth/register', {
                method: "POST",
@@ -109,10 +118,13 @@ export default function Registration() {
                case "passwordInput":
                     setPassword(value)
                     break
+               case "ucodeInput":
+                    setInvitedCode(value)
+                    break
           }
      }
           return (
-               <Container className={classes.authContainer} maxWidth="sm">
+               <Container className={classes.authContainer} maxWidth="md">
                     <div className={classes.authBox}>
                          <img src={logo} width="80px"/>
                          <h2>Daily Check ✔</h2>
@@ -143,7 +155,7 @@ export default function Registration() {
 
                               <FormControl error={error && (error.username? true : undefined)} id="username"className={classes.input}>
                                    {/* 아이디 */}
-                                   <InputLabel htmlFor="firstName">ID</InputLabel>
+                                   <InputLabel htmlFor="firstName">ID *</InputLabel>
                                    <Input 
                                    id="userIdInput"
                                    aria-describedby="userId-text" 
@@ -156,7 +168,7 @@ export default function Registration() {
 
                               <FormControl error={error && (error.email? true : undefined)}id="email" className={classes.input}>
                                    {/* 이메일 */}
-                                   <InputLabel htmlFor="email">Email(ID)</InputLabel>
+                                   <InputLabel htmlFor="email">Email(ID) *</InputLabel>
                                    <Input 
                                    id="emailInput"
                                    aria-describedby="email-text" 
@@ -169,7 +181,7 @@ export default function Registration() {
 
                               <FormControl  error={error && (error.password? true : undefined)} id="password"  className={classes.input}>
                                    {/* 비밀번호*/}
-                                   <InputLabel htmlFor="password">Password</InputLabel>
+                                   <InputLabel htmlFor="password">Password *</InputLabel>
                                    <Input 
                                    id="passwordInput" 
                                    aria-describedby="password-text" 
@@ -177,6 +189,20 @@ export default function Registration() {
                                    onChange={onChange}/>
                                    <FormHelperText id="password-text" className="password-text">
                                         {error && (error.password? error.password : "Enter your password")}
+                                   </FormHelperText>
+                              </FormControl>
+
+                              <FormControl error={error && (error.ucode? true : undefined)} id="ucode"  className={classes.input}>
+                                   {/* 초대 코드 */}
+                                   <InputLabel htmlFor="ucode">Invited Code</InputLabel>
+                                   <Input 
+                                   defaultValue={share === "TRUE" ? ucode : ""}
+                                   id="ucodeInput" 
+                                   aria-describedby="ucode-text" 
+                                   type="ucode" 
+                                   onChange={onChange}/>
+                                   <FormHelperText id="ucode-text" className="ucode-text">
+                                        {error && (error.ucode? error.ucode : "Enter your invited code")}
                                    </FormHelperText>
                               </FormControl>
                               <div className={classes.button}>

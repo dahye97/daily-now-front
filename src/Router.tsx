@@ -106,7 +106,7 @@ export default function AppRouter() {
 					<Route exact path="/auth" render={
 						() => <Auth handleLogIn={handleLogIn}/> }
 					/>
-					<Route exact path="/registration" component={Registration} />
+					<Route path="/registration" component={Registration} />
 					<Route exact path="/faq" component={FAQ} />
 				</div>
 			</Switch>

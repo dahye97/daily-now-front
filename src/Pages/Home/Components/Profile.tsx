@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import { userInfo } from "../../../Interface/User";
 import {useEffect,useState} from 'react'
 import axios from 'axios'
+import jiyeon from '../../../asset/img/jiyeon.png'
 
 // TODO: 프로필 
 const useStyles = makeStyles({
@@ -123,7 +124,7 @@ export default function Profile(props:ProfileProps) {
 								}}
 								variant="dot"
 								>
-								<Avatar/>
+								<Avatar src={jiyeon}/>
 							</StyledBadge>
 						}
 						></CardHeader>
