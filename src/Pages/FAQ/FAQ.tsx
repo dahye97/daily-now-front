@@ -41,7 +41,7 @@ export default function FAQ() {
                     {faqList.map( faq => {
                          return ( 
                               <>
-                              <FAQItem faq={faq} />
+                              <FAQItem key={faq.id} faq={faq} />
                               </>
                          )
                          })}
