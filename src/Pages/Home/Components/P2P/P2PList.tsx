@@ -32,15 +32,16 @@ const useStyles = makeStyles({
 
 interface FundListProps {
 	handleCompanyID : (id: number) => void,
-	handleClickP2P : (name: string) => void,
+	handleCompany : (name: string) => void,
 	handleAddP2P : (data: Array<p2pInfo>) => void,
+	handleNickName : (name: string ) => void
 	userObj : userInfo | null,
 	P2PList: Array<p2pInfo>
 }
 
 export default function FundList(props: FundListProps) {
 	const classes = useStyles()
-	const {handleCompanyID, handleClickP2P, handleAddP2P, userObj, P2PList} = props;
+	const {handleCompanyID, handleCompany, handleNickName, handleAddP2P, userObj, P2PList} = props;
 	// STATE
 	const [open, setOpen] = useState(false)
 	const [P2PUpdated, setP2PUpdated] = useState(false)
@@ -84,20 +85,25 @@ export default function FundList(props: FundListProps) {
 			}
 	},[P2PUpdated])
 
-	// 회사 이름, id 보내기  
-	const onP2PClick = (name: string | null) => {
-		if(name !== null) {
-			if( name === "모든 투자") {
-				handleClickP2P("all")
-			}else{
-				// 회사 id 가져오기
-				fetchP2PID(name)
-				handleClickP2P(name)
-
+	// 회사 선택 시, 회사 이름과 id 보내기  
+	const onP2PClick = (company: p2pInfo | string | null) => {
+		//name: string | null
+		if (company !== null){
+			if (typeof(company) === "string") {
+				if( company === "모든 투자") {
+					handleCompany("all")
+				}
+			}else{ // 회사 id 가져오기
+				fetchP2PID(company.company_name)
+				handleCompany(company.company_name)
+				handleNickName(company.nickname)
 			}
 		}
 	}
 
+	// fixme: 비효율적인 코드임. 회사 id 를 애초에 같이 보내주는 방향으로 고치길 바람! 
+	// 선택된 회사의 id를 가지고 계좌, 투자 정보를 가져오기 때문에
+	// 회사 선택 시, 회사 id를 가져와야한다. 
 	// 회사 id 가져오기 
 	const fetchP2PID = (name: string ) => {
 		fetch('http://192.168.0.69:8000/api/register/company', {
@@ -116,7 +122,7 @@ export default function FundList(props: FundListProps) {
 			}
 		})
 	}
-	// 📌 P2PID가 바뀔때 id를 전달하기 위해 useEffect를 이용 
+	// 📌 P2PID가 바뀌면 Home에 id를 전달
 	useEffect(() => {
 		handleCompanyID(P2PID)
 				// console.log(P2PID)
@@ -138,7 +144,7 @@ export default function FundList(props: FundListProps) {
 					<IconButton onClick={(e) => onP2PClick(e.currentTarget.textContent)} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
 					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
 							return (
-								<IconButton key={index} onClick={(e) => onP2PClick(e.currentTarget.textContent)}>
+								<IconButton style={{padding: 0}} key={index} onClick={() => onP2PClick(company)}>
 									<div className={classes.iconBody}>
 										<Avatar/>
 										<p>{company.company_name}</p>
