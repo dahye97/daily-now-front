@@ -11,6 +11,10 @@ import Product from "./Components/Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
 import Account from '../MyPage/Account';
 import Transaction from './Components/Transaction';
+import { useLocation } from 'react-router';
+import queryString from 'query-string'
+import Point from './Components/Point';
+import Share from './Share';
 
 const useStyles = makeStyles({
 	home: {
@@ -79,17 +83,27 @@ interface HomeProps {
 }
 export default function Home(props: HomeProps) {
 	const classes = useStyles();
+	
+	const location = useLocation()
+	const queryObj = queryString.parse(location.search);
+	const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
+
+	const { userObj, handleLogOut, handleAddP2P} = props;
 	const [company, setCompany] = useState("all")
 	const [companyID, setCompanyID] = useState(0)
+	const [nickName, setNickName] = useState("")
 	const [account, setAccount] = useState<accountInfo | undefined>(Object);
 	const [fund, setFund] = useState<fundInfo[]>([])
 
 	// p2plist에서 선택한 회사 정보 저장 
-	const handleClickP2P = (name: string) => {
+	const handleCompany = (name: string) => {
 		setCompany(name);
 	}
 	const handleCompanyID =(id: number ) => {
 		setCompanyID(id);
+	}
+	const handleNickName = (name: string) => {
+		setNickName(name)
 	}
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	useEffect(() => {
@@ -97,12 +111,12 @@ export default function Home(props: HomeProps) {
 			'company_id' : companyID
 		};
 		
-		if (props.userObj !== null && company !== "all") {
-			fetch('http://192.168.0.69:8000/api/company/account', {
+		if (userObj !== null && company !== "all") {
+			fetch(`http://192.168.0.69:8000/api/${nickName}/account`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json; charset=utf-8",
-							"Authorization": "Token " + props.userObj.auth_token,
+							"Authorization": "Token " + userObj.auth_token,
 						},
 						body: JSON.stringify(p2pID),	// json 데이터를 전송
 			})
@@ -119,11 +133,11 @@ export default function Home(props: HomeProps) {
 				})
 				.catch(error =>  console.log(error));
 		
-			fetch('http://192.168.0.69:8000/api/company/balance', {
+			fetch(`http://192.168.0.69:8000/api/${nickName}/balance`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json; charset=utf-8",
-							"Authorization": "Token " + props.userObj.auth_token,
+							"Authorization": "Token " + userObj.auth_token,
 						},
 						body: JSON.stringify(p2pID),	// json 데이터를 전송
 			})
@@ -145,41 +159,52 @@ export default function Home(props: HomeProps) {
 	return (
 			<Grid container spacing={3}  className={classes.home}>
 
-				{/* TODO 메인 홈 : 마이 페이지 [ 총 투자내역, 상세 투자내역, 보유 예치금 등 ] */}
+				{/* 마이 페이지 */}
 				<Grid item xs={6} >
 					<div className={classes.homeContainer}>
 
-						<Profile userObj={props.userObj} handleLogOut={props.handleLogOut}/>
-						<P2PList P2PList={props.P2PList} userObj={props.userObj} handleCompanyID={handleCompanyID} handleClickP2P={handleClickP2P} handleAddP2P={props.handleAddP2P} />
+						<Profile userObj={userObj} handleLogOut={handleLogOut}/>
+						<P2PList 
+						P2PList={props.P2PList} userObj={userObj} 
+						handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
+						handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
 
-						<ul className={classes.contentList}>
-		{/* 보유 예치금 */} 	<li className={classes.contentItem}>
-								<Typography className={classes.deposit} variant="h5">
-									💰 {company === "all"? "총" : "현"} 보유 예치금
-									
-									<span>{company === "all"? 0 : account?.deposit} 원</span>
-								</Typography>	
-							</li>
-							{company !== "all" && account !== undefined ?
-								<li className={classes.contentItem}>
-									<Account account={account}/>
+						{/* 나의투자, 포인트 내역, 초대하기 */}
+						{tabName === "MY_FUNDING" ? 
+							<ul className={classes.contentList}>
+			{/* 보유 예치금 */} 	<li className={classes.contentItem}>
+									<Typography className={classes.deposit} variant="h5">
+										💰 {company === "all"? "총" : "현"} 보유 예치금
+										
+										<span>{company === "all"? 0 : account?.deposit} 원</span>
+									</Typography>	
 								</li>
-							: null
-							}
-		{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
-								<Funding company={company} fund={fund}/>
-							</li>
-							{company !== "all" && 
-								<li className={classes.contentItem}>
-			{/* 입출금 내역 */}			<Transaction />
+								{company !== "all" && account !== undefined ?
+									<li className={classes.contentItem}>
+										<Account account={account}/>
+									</li>
+								: null
+								}
+			{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
+									<Funding company={company} fund={fund}/>
 								</li>
-							}
-							
-						</ul>
+								{company !== "all" && 
+									<li className={classes.contentItem}>
+				{/* 입출금 내역 */}			<Transaction />
+									</li>
+								}
+								
+							</ul>						
+						: tabName === "POINT_TOTAL" ? 
+							<Point userObj={userObj}/>
+						: tabName === "INVITE" ? 
+							<Share />
+						: null}
+
 
 						</div>
 				</Grid>
-				{ /* TODO 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
+				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} direction="column" className={classes.asideContainer}>
 					<div  className={classes.asideItem}>
 						<Calendar />

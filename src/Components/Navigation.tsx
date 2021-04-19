@@ -35,7 +35,7 @@ export default function Navigation(props: NavProps) {
 						<Button color="inherit" onClick={ () => history.push('/board')}>커뮤니티</Button>
 						<Button color="inherit" onClick={ () => history.push('/faq')}>FAQ</Button>
 						{props.isLoggedIn ? (
-							<Button color="inherit" onClick={() => history.push('/home')}>
+							<Button color="inherit" onClick={() => history.push('/home?tabName=MY_FUNDING')}>
 								마이페이지
 							</Button>
 						) : (

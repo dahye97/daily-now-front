@@ -62,9 +62,6 @@ export default function AppRouter() {
 		console.log('현재 로그인한 유저 정보', userObj)
 	}, [userObj])
 
-	// useEffect(() => {
-	// 	console.log(P2PList)
-	// }, [P2PList])
 	return (
 	
 	<BrowserRouter>
@@ -73,7 +70,7 @@ export default function AppRouter() {
 				<div className={classes.routeContainer}>
 					{isLoggedIn &&
 						<>
-							<Route exact path="/home" render=
+							<Route path="/home" render=
 								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj} P2PList={P2PList}/>}
 							/>
 						
