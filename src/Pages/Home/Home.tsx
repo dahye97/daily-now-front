@@ -1,20 +1,21 @@
 /** @format */
 import {useState,useEffect} from 'react';
-import Profile from "./Components/Profile";
-import P2PList from "./Components/P2P/P2PList"
-import Funding from "./Components/Funding";
-import { makeStyles, } from "@material-ui/core/styles";
+import Profile from "./Components/Funding/Profile";
+import P2PList from "./Components/Funding/P2P/P2PList"
+import { makeStyles, } from "@material-ui/styles";
 
 import { Typography,Grid } from "@material-ui/core";
 import Calendar from "./Components/Calendar";
 import Product from "./Components/Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
 import Account from '../MyPage/Account';
-import Transaction from './Components/Transaction';
 import { useLocation } from 'react-router';
 import queryString from 'query-string'
-import Point from './Components/Point';
-import Share from './Share';
+import Share from './Components/Share/Share';
+import Point from './Components/Point/Point';
+import Balance from './Components/Funding/Balance';
+import Transaction from './Components/Funding/Transaction';
+import Funding from './Components/Funding/Funding';
 
 const useStyles = makeStyles({
 	home: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 		padding: "20px",
 		marginTop: "80px",
 		borderRadius: "50px",
-		background: "linear-gradient(100deg, #ffffff, #ECF0F3)",
+		background: "#ffffff",
 		boxShadow: "17px 17px 34px #b1b1b1, -17px -17px 34px #ffffff",
 		minWidth : "580px",
 		overflow: "hidden",
@@ -93,7 +94,7 @@ export default function Home(props: HomeProps) {
 	const [companyID, setCompanyID] = useState(0)
 	const [nickName, setNickName] = useState("")
 	const [account, setAccount] = useState<accountInfo | undefined>(Object);
-	const [fund, setFund] = useState<fundInfo[]>([])
+	const [fund, setFund] = useState<fundInfo>(Object)
 
 	// p2plist에서 선택한 회사 정보 저장 
 	const handleCompany = (name: string) => {
@@ -149,7 +150,11 @@ export default function Home(props: HomeProps) {
 						})
 					}else {
 						console.log('투자 정보가 없습니다.')
-						setFund([])
+						setFund({
+							total_investment : "-",
+							number_of_investing_products : "-",
+							residual_investment_price : "-"
+						})
 					}
 				})
 				.catch(error =>  console.log(error));
@@ -164,13 +169,15 @@ export default function Home(props: HomeProps) {
 					<div className={classes.homeContainer}>
 
 						<Profile userObj={userObj} handleLogOut={handleLogOut}/>
-						<P2PList 
-						P2PList={props.P2PList} userObj={userObj} 
-						handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
-						handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
+						
 
 						{/* 나의투자, 포인트 내역, 초대하기 */}
 						{tabName === "MY_FUNDING" ? 
+							<>
+							<P2PList 
+							P2PList={props.P2PList} userObj={userObj} 
+							handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
+							handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
 							<ul className={classes.contentList}>
 			{/* 보유 예치금 */} 	<li className={classes.contentItem}>
 									<Typography className={classes.deposit} variant="h5">
@@ -185,16 +192,22 @@ export default function Home(props: HomeProps) {
 									</li>
 								: null
 								}
-			{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
-									<Funding company={company} fund={fund}/>
+								<li className={classes.contentItem}>
+				{/* 잔고 */}			<Balance fund={fund}/>
 								</li>
+
 								{company !== "all" && 
 									<li className={classes.contentItem}>
 				{/* 입출금 내역 */}			<Transaction />
 									</li>
 								}
+			{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
+									<Funding company={company}/>
+								</li>
 								
-							</ul>						
+								
+							</ul>
+							</>						
 						: tabName === "POINT_TOTAL" ? 
 							<Point userObj={userObj}/>
 						: tabName === "INVITE" ? 
