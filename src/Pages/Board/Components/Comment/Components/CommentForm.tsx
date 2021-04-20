@@ -10,12 +10,12 @@ interface formProps {
      userObj: userInfo | null, 
      handleUpdateComment? : any, // 댓글 업데이트 함수 
      handleEditComment?:(commentId?: number) => void,
-     handleIsAddedReComment? : any, // 답글 업데이트 함수 
+     handleUpdateReComment? : any, // 답글 업데이트 함수 
 
      commentItem?: commentInfo // 수정 중인 댓글 데이터 
 }
 export default function CommentForm(props: formProps) {
-     const { parentId,userObj,postId,handleUpdateComment,handleIsAddedReComment,handleEditComment, commentItem } = props;
+     const { parentId,userObj,postId,handleUpdateComment,handleUpdateReComment,handleEditComment, commentItem } = props;
      const [comment, setComment] = useState("")
      const [recomment, setRecomment] = useState("")
 
@@ -78,11 +78,11 @@ export default function CommentForm(props: formProps) {
                     }
                })
                .then(res => {
-                    if(parentId) {
+                    if(parentId) { // 답글일 경우 답글 초기화 및 업데이트
                          setRecomment("")
-                         handleIsAddedReComment(parentId)
+                         handleUpdateReComment(parentId)
                     }else {
-                         setComment("")
+                         setComment("") // 댓글일 경우 댓글 초기화 및 업데이트
                          if(commentItem && handleEditComment){
                               handleEditComment()
                          }

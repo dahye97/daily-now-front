@@ -36,16 +36,15 @@ interface CommentProps {
      postId : number,
      handleUpdateComment:any
 }
-export default function Comment(props:CommentProps) {
+function Comment(props:CommentProps) {
      const classes = useStyles();
      const {userObj , commentList, postId, handleUpdateComment } = props;
 
      // 답글 리스트 가져오는 함수
      const [isExpanded, setIsExpanded] = useState('')
      const [recommentList, setRecommentList] = useState<commentInfo[]>([])
-     const getReComment = (parent_id: number) => {
+     const getReComment = (parent_id: number | null) => {
           setIsExpanded('panel'+parent_id)
-          console.log(parent_id)
 
           if(userObj!==null) {
                axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
@@ -70,7 +69,7 @@ export default function Comment(props:CommentProps) {
      }
 
      // 답글 실시간 업데이트 처리 함수 
-     const handleIsAddedReComment = (parentId: number) => {
+     const handleUpdateReComment = (parentId: number) => {
           getReComment(parentId)
      }
 
@@ -100,9 +99,6 @@ export default function Comment(props:CommentProps) {
 
 
      }
-
-     // todo: 댓글, 대댓글 공감/비공감 기능 구현 
-
      return (
           <>
            {/* ✅ 댓글 */}
@@ -110,7 +106,6 @@ export default function Comment(props:CommentProps) {
                <h3>댓글 {commentList.length}</h3>  
                {/* 댓글 입력 폼 */}  
                <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj}/>
-
                {/* 댓글 리스트  */}
                {commentList.length === 0 ? 
                '댓글이 없습니다.' 
@@ -135,8 +130,10 @@ export default function Comment(props:CommentProps) {
                               // 📌 댓글 창
                                    <div style={{display:"flex", justifyContent: "space-between"}}>
                                         <CommentView 
+                                        handleUpdateComment={handleUpdateComment}
                                         commentItem={commentItem} handleEditComment={handleEditComment} 
-                                        handleDelete={handleDelete} getReComment={getReComment}/>
+                                        handleDelete={handleDelete} getReComment={getReComment}
+                                        userObj={userObj} />
                                    </div>
                                    }
 
@@ -147,13 +144,14 @@ export default function Comment(props:CommentProps) {
                                                   return (
                                                        <div style={{display:"flex", justifyContent: "space-between"}}>
                                                             <CommentView key={recommentItem.comment_id}
+                                                            handleUpdateComment={handleUpdateComment}
                                                              recommentItem={recommentItem} handleEditComment={handleEditComment} 
-                                                             handleDelete={handleDelete} getReComment={getReComment}/>
+                                                             handleDelete={handleDelete} getReComment={getReComment} userObj={userObj}/>
                                                        </div>
                                                   )
                                              })}
                                         </div>
-                                        <CommentForm handleIsAddedReComment={handleIsAddedReComment} postId={postId} userObj={userObj} parentId={commentItem.comment_id}/>
+                                        <CommentForm handleUpdateReComment={handleUpdateReComment} postId={postId} userObj={userObj} parentId={commentItem.comment_id}/>
                                         <Button onClick={handleCloseRecomment}>답글 접기</Button>
                                    </AccordionDetails>
                               </Accordion>
@@ -166,3 +164,4 @@ export default function Comment(props:CommentProps) {
           </>
      )
 }
+export default React.memo(Comment)

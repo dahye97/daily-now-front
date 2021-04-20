@@ -1,4 +1,4 @@
-import React , {useState,useEffect} from 'react'
+import React , {useState,useEffect,useCallback} from 'react'
 import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
@@ -120,24 +120,25 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      // 댓글 리스트 불러오기 
      const [commentList, setCommentList] = useState<commentInfo[]>([])
-     const getCommentList = () => {
-          if(userObj!==null){
-               axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
-                    post_id: location.state.post_id
-               },{
-                    headers : {
-                         "Authorization": "Token " + userObj.auth_token,
-                    }
-               } )
-               .then(res => {
-                   setCommentList(res.data)
-               //     console.log(commentList)
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })   
-          }
-     }
+     const getCommentList = useCallback(
+          () => {
+               if(userObj!==null){
+                    axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
+                         post_id: location.state.post_id
+                    },{
+                         headers : {
+                              "Authorization": "Token " + userObj.auth_token,
+                         }
+                    } )
+                    .then(res => {
+                        setCommentList(res.data)
+                    })
+                    .catch(function(error) {
+                         console.log(error);
+                    })
+               }},  [location.state.post_id],
+     )
+
      useEffect(() => {
           getCommentList()   
      }, [])
@@ -146,44 +147,42 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const [isClicked, setIsClicked] = useState(false)
      const [pressableLike, setPressableLike] = useState(true)
      const [pressableDislike, setPressableDislike] = useState(true)
+
      const handleLikeDisLike = (event: React.MouseEvent) => {
-          let queryString; // like, dislike 지정 url
-          let label = event.currentTarget.getAttribute('aria-label')
-          let likeDislike = -1;
-          console.log(event.currentTarget.hasAttribute('disabled'))
+          let queryString; // like, dislike 별 지정 url 값 저장
+          let label = event.currentTarget.getAttribute('aria-label') // 현재 선택한 값 라벨 확인 : like, dislike
+          let likeDislike = -1; // 공감,비공감 여부 초기값
           
           if (userObj !== null) {
                console.log('현재 :',detailPost.like_dislike)
-               if( detailPost.like_dislike !== -1 ) { // 공감/ 비공감 했을 경우, 취소하기
-                    queryString = "cancel_post_like"
-                    
-                    if( label === "like") {
-                         if(detailPost.like_dislike === 1) {
-                              likeDislike = 1
-                              setPressableLike(false)
-                         }else {
-                              alert('이미 비공감을 하셨습니다.')
-                         }
-                    }else if (label === "dislike") {
-                         if(detailPost.like_dislike === 0) {
-                              likeDislike = 0
-                              setPressableDislike(false)
-                         }else {
-                              alert('이미 공감을 하셨습니다.')
-                         }
-                    }
-               }else { // 공감/비공감 저장하기
+               if( detailPost.like_dislike === -1 ) { // 공감, 비공감 저장 : -1 = 공감, 비공감이 없을 경우
                     queryString = "add_post_like"
                     if( label === "like") {
                          likeDislike = 1
-                         console.log(event.currentTarget.getAttribute("className"))
-                         
                          setPressableLike(true)
                     }else if (label === "dislike") {
                          likeDislike = 0
                          setPressableDislike(true)
                     }
-               }
+               }else {
+                         if( label === "like") {
+                              if(detailPost.like_dislike === 1) {
+                                   likeDislike = 1
+                                   queryString = "cancel_post_like"
+                                   setPressableLike(false)
+                              }else {
+                                   alert('이미 비공감을 하셨습니다.')
+                              }
+                         }else if (label === "dislike") {
+                              if(detailPost.like_dislike === 0) {
+                                   likeDislike = 0
+                                   queryString = "cancel_post_like"
+                                   setPressableDislike(false)
+                              }else {
+                                   alert('이미 공감을 하셨습니다.')
+                              }
+                         }
+                    }
                 // add,cancel 결과 
                 if( likeDislike !== -1) {
                      axios.post(`http://192.168.0.69:8000/api/notice/${queryString}`, {
