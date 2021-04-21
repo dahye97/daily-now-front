@@ -35,13 +35,13 @@ export default function FAQ() {
      }, [])
      return (
           <Container maxWidth="md" className={classes.faqContainer}>
-               <Typography><h2>📌 자주 묻는 질문 </h2></Typography>
+               <h2>📌 자주 묻는 질문 </h2>
                <Typography component="div" style={{height: '100vh'}}>
 
-                    {faqList.map( faq => {
+                    {faqList.map( (faq,index) => {
                          return ( 
                               <>
-                              <FAQItem key={faq.id} faq={faq} />
+                              <FAQItem key={index} faq={faq} />
                               </>
                          )
                          })}
