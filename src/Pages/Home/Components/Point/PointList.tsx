@@ -1,9 +1,7 @@
-import { Paper } from '@material-ui/core'
+import { Paper  } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { black } from 'material-ui/styles/colors'
-import React from 'react'
 import { pointInfo } from '../../../../Interface/Point'
-
+import {useState} from 'react'
 type pointType = {
      point : pointInfo
 }
@@ -42,8 +40,7 @@ const useStyles = makeStyles ({
 export default function PointList(props : pointType) {
      const classes = useStyles()
 
-     const { action, point, total_point, detail_action, date } = props.point
-
+     const { action, point, total_point, detail_action, date, } = props.point
      // date 처리
      const realDate = date.split('T')[0].replaceAll('-','. ')
      return (
