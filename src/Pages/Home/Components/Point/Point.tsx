@@ -15,6 +15,10 @@ interface PointProps {
 	userObj : userInfo | null,
 }
 const useStyles= makeStyles( {
+     pointCard: {
+          margin: '20px 0',
+          borderRadius: '20px'
+     },
      pointEvent: {
           listStyle: 'none',
           display:'flex',
@@ -33,8 +37,8 @@ export default function Point(props: PointProps) {
           if( userObj !== null) {
 			axios.post('http://192.168.0.69:8000/api/auth/my_point_list', 
                {
-                    "page_size" : 30,
-                    "start" : "2021-04-14",
+                    "page_size" : 10,
+                    "start" : "2021-04-19",
                     "end": "2021-04-19"
                },
 			{
@@ -53,7 +57,7 @@ export default function Point(props: PointProps) {
 
      return (
           <>
-               <Card>
+               <Card className={classes.pointCard}>
                     <CardHeader 
                     style={{textAlign: 'center'}}
                     title="💰POINT💰"

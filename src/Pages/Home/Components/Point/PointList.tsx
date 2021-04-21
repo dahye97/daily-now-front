@@ -1,5 +1,6 @@
 import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
+import { black } from 'material-ui/styles/colors'
 import React from 'react'
 import { pointInfo } from '../../../../Interface/Point'
 
@@ -8,31 +9,67 @@ type pointType = {
 }
 const useStyles = makeStyles ({
      pointItem: {
-          textAlign: 'right',
-          margin: '10px',
+          margin:'5px 0',
           padding: '5px',
-          background: '#ECF0F3'
-     },         
+          background: '#e3f2fd',
+          borderRadius: '20px',
+
+          '&:hover': {
+               background: '#bbdefb',
+               transition: "all ease 0.5s 0s",
+          }
+     },        
+     ulTag: {
+          padding: '0 10px',
+          "& li" : {
+               display:'flex',
+               justifyContent: 'space-between',
+          }
+     } ,
+     pointInfo : {
+          color: "#707070",
+
+     },
      plusPoint: {
           color: "red"
      },
      minusPoint: {
           color: 'blue'
-     }
+     },
+
+
 })
 export default function PointList(props : pointType) {
      const classes = useStyles()
+
      const { action, point, total_point, detail_action, date } = props.point
+
+     // date 처리
+     const realDate = date.split('T')[0].replaceAll('-','. ')
      return (
           <Paper className={classes.pointItem}>
-               <ul style={{listStyle: 'none'}}>
-                    <li>{action}</li>
+               <ul className={classes.ulTag} style={{listStyle: 'none'}}>
+               {props.point && 
+               <>
+                    <li className={classes.pointInfo}>{realDate}</li>
+                    <br />
+                    <li>
+                         <span className={classes.pointInfo}>포인트 유형</span>
+                         <span>{action}</span>
+                    </li>
                     <li className={point.toString().slice(0,1) === '-' ? classes.minusPoint : classes.plusPoint }>
+                         <span className={classes.pointInfo}>획득 포인트</span>
                          <b>{point.toString().slice(0,1) !== '-' ? '+' + point : point}</b>
                     </li>
-                    <li><b>{total_point}</b> P</li>
-                    <li>{detail_action}</li>
-                    <li>{date.getDate}</li>
+                    <li>
+                         <span className={classes.pointInfo}>누적 포인트</span>
+                         <b>{total_point} P</b></li>
+                    <li>
+                         <span className={classes.pointInfo}>포인트 정보</span>
+                         {detail_action}
+                    </li>
+               </>
+               }
                </ul>
  
           </Paper>
