@@ -4,7 +4,7 @@ import Profile from "./Components/Funding/Profile";
 import P2PList from "./Components/Funding/P2P/P2PList"
 import { makeStyles, } from "@material-ui/styles";
 
-import { Typography,Grid } from "@material-ui/core";
+import { Typography,Grid,IconButton } from "@material-ui/core";
 import Calendar from "./Components/Calendar";
 import Product from "./Components/Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
@@ -16,6 +16,7 @@ import Point from './Components/Point/Point';
 import Balance from './Components/Funding/Balance';
 import Transaction from './Components/Funding/Transaction';
 import Funding from './Components/Funding/Funding';
+import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const useStyles = makeStyles({
 	home: {
@@ -23,25 +24,37 @@ const useStyles = makeStyles({
 		justifyContent: "center",
 		margin:" 0 auto",
 		background: "linear-gradient(145deg, #ffffff, #ECF0F3)",
+		minWidth: '680px',
 	},
 	homeContainer: {
 		padding: "20px",
 		marginTop: "80px",
+		marginLeft: '80px',
 		borderRadius: "50px",
 		background: "#ffffff",
 		boxShadow: "17px 17px 34px #b1b1b1, -17px -17px 34px #ffffff",
 		minWidth : "580px",
 		overflow: "hidden",
-
 	},
 	asideContainer : {
 		position: "sticky",
 		top: "80px",
 		marginTop: "80px",
-
-		'@media(max-width: 1270px)' : {
+	},
+	'@media(max-width: 1270px)' : {
+		asideContainer : {
 			display:'none'
+		},
+		home: {
+			display: 'block',
+			width: 'fit-content',
+			margin: '0 auto',
+			background: '#ffffff'
+		},
+		homeContainer : {
+			boxShadow: '#ffffff'
 		}
+
 	},
 	asideItem : {
 		padding: "30px",
@@ -73,6 +86,13 @@ const useStyles = makeStyles({
 	deposit: {
 		display: "flex",
 		justifyContent: "space-between"
+	},
+	UpButton: {
+		position: 'sticky',
+		bottom: '5%',
+		left: 0,
+		padding: '20px',
+		background: '#ffffff'
 	}
 });
 
@@ -161,16 +181,17 @@ export default function Home(props: HomeProps) {
 		}
 	}, [companyID])
 
+	const handleClickUpButton = () => {
+		window.scrollTo(0, 0);
+	}
 	return (
-			<Grid container spacing={3}  className={classes.home}>
+			<Grid container spacing={3} className={classes.home}>
 
 				{/* 마이 페이지 */}
-				<Grid item xs={6} >
+				<Grid item xs={6}>
+
 					<div className={classes.homeContainer}>
-
 						<Profile userObj={userObj} handleLogOut={handleLogOut}/>
-						
-
 						{/* 나의투자, 포인트 내역, 초대하기 */}
 						{tabName === "MY_FUNDING" ? 
 							<>
@@ -213,9 +234,11 @@ export default function Home(props: HomeProps) {
 						: tabName === "INVITE" ? 
 							<Share userObj={userObj}/>
 						: null}
-
-
 						</div>
+						{tabName=="POINT_TOTAL" && 
+						<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
+							<UpIcon />
+						</IconButton>}
 				</Grid>
 				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} direction="column" className={classes.asideContainer}>
