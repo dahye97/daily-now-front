@@ -89,7 +89,7 @@ const useStyles = makeStyles({
 	},
 	UpButton: {
 		position: 'sticky',
-		bottom: '5%',
+		bottom: '10%',
 		left: 0,
 		padding: '20px',
 		background: '#ffffff'
@@ -184,6 +184,16 @@ export default function Home(props: HomeProps) {
 	const handleClickUpButton = () => {
 		window.scrollTo(0, 0);
 	}
+
+	const [scrollY, setScrollY] = useState(0)
+	
+	const handleScroll = () => {
+		setScrollY(window.pageYOffset)
+	}
+	
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll, { passive: true });
+	}, [])
 	return (
 			<Grid container spacing={3} className={classes.home}>
 
@@ -235,7 +245,7 @@ export default function Home(props: HomeProps) {
 							<Share userObj={userObj}/>
 						: null}
 						</div>
-						{tabName=="POINT_TOTAL" && 
+						{tabName=="POINT_TOTAL" && ( scrollY > 0) &&
 						<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
 							<UpIcon />
 						</IconButton>}
