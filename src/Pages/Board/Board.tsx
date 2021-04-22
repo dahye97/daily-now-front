@@ -34,7 +34,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     myPostSection: {
       backgroundColor: 'inherit',
-    },
+     },
+     myPostItem: {
+          cursor: 'pointer',
+          '&:hover' : {
+               background: '#e3f2fd'
+          }
+     },
     ul: {
       backgroundColor: 'inherit',
       padding: 0,
@@ -149,7 +155,7 @@ export default function Board (props: BoardProps){
                                                   mypost.category_id === category.category_id)
                                                   .map( (result,index) => {
                                                        return (
-                                                       <ListItem style={{cursor: 'pointer'}} onClick={(e: React.MouseEvent) => handleClickMyPostItem(e, result.post_id)} key={index}>
+                                                       <ListItem className={classes.myPostItem} onClick={(e: React.MouseEvent) => handleClickMyPostItem(e, result.post_id)} key={index}>
                                                             <ListItemText primary={result.title} />
                                                             <ListItemText style={{textAlign: 'right'}}primary={result.date.split('T')[0].replaceAll('-','. ')} />
                                                        </ListItem>)
