@@ -8,7 +8,7 @@ import { Typography,Grid,IconButton } from "@material-ui/core";
 import Calendar from "./Components/Calendar";
 import Product from "./Components/Product";
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
-import Account from '../MyPage/Account';
+import Account from './Components/Funding/Account';
 import { useLocation } from 'react-router';
 import queryString from 'query-string'
 import Share from './Components/Share/Share';
@@ -42,8 +42,8 @@ const useStyles = makeStyles({
 		marginTop: "80px",
 	},
 	'@media(max-width: 1270px)' : {
-		asideContainer : {
-			display:'none'
+		asideContainer: {
+ //
 		},
 		home: {
 			display: 'block',
@@ -52,7 +52,8 @@ const useStyles = makeStyles({
 			background: '#ffffff'
 		},
 		homeContainer : {
-			boxShadow: '#ffffff'
+			boxShadow: '#ffffff',
+			marginLeft: 0
 		}
 
 	},
@@ -90,9 +91,15 @@ const useStyles = makeStyles({
 	UpButton: {
 		position: 'sticky',
 		bottom: '10%',
-		left: 0,
+		left: '5%',
 		padding: '20px',
-		background: '#ffffff'
+		color: '#ffffff',
+		borderRadius: "50%",
+		background: "#198BFB",
+		boxShadow:  "3px 3px 8px #167add",
+		'&:hover' : {
+			background: '#004ba0',
+		}
 	}
 });
 
@@ -195,6 +202,7 @@ export default function Home(props: HomeProps) {
 		window.addEventListener('scroll', handleScroll, { passive: true });
 	}, [])
 	return (
+		<>
 			<Grid container spacing={3} className={classes.home}>
 
 				{/* 마이 페이지 */}
@@ -245,10 +253,7 @@ export default function Home(props: HomeProps) {
 							<Share userObj={userObj}/>
 						: null}
 						</div>
-						{tabName=="POINT_TOTAL" && ( scrollY > 0) &&
-						<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
-							<UpIcon />
-						</IconButton>}
+
 				</Grid>
 				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} direction="column" className={classes.asideContainer}>
@@ -260,7 +265,11 @@ export default function Home(props: HomeProps) {
 						<div className={classes.productList}><Product /></div>
 					</div>
 				</Grid>
-				
 			</Grid>
+			{tabName=="POINT_TOTAL" && ( scrollY > 500) &&
+			<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
+				<UpIcon />
+			</IconButton>}
+		</>
 	);
 }
