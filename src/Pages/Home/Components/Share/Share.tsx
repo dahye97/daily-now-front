@@ -1,19 +1,26 @@
-import React , {useState} from 'react'
-import { IconButton,BottomNavigation,BottomNavigationAction  } from '@material-ui/core'
+import React , {useState,useEffect} from 'react'
+import { BottomNavigation,Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import InstagramIcon from '@material-ui/icons/Instagram';
+
 
 import axios from 'axios'
 import { useHistory } from 'react-router';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import { userInfo } from '../../../../Interface/User';
+import holypig from '../../../../asset/img/holypig.png'
 
 const useStyles = makeStyles({
      root: {
        background: 'none',
        border: 'none',
-       padding: "10px"
+       padding: "10px",
+
      },
+     kakaoButton: {
+          paddingRight: '12px',
+          background: "url('//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png')",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center"
+     }
    });
 
 interface ShareProps {
@@ -38,16 +45,38 @@ export default function Share(props: ShareProps) {
                })
                .then(res => {
                     console.log(res.data)// 유저 초대 코드 
-                    history.push(`/registration?share=TRUE&ucode=${res.data}`) // 회원가입 페이지로 코드 전송
-                    
-                    // setShareUrl(`/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
-                    // todo: sns 연동  
-                    // todo: 친구 초대 포인트 적립 api 보내기 
+                    setShareUrl(`http://192.168.0.84:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
+                    // 친구 초대 포인트 적립 api 보내기 
+
                })
                .catch(function(error) {
                     console.log(error);
                })
           }
+     }
+
+     const sendKakaoMessage = () => {
+          window.Kakao.Link.sendDefault({
+               objectType: 'feed', // 메시지 형식 : 피드 타입
+          content: {
+               title: '데일리펀딩에 초대합니다.',
+               description: '매일이 행복한 투자 현황, 홀리랑 함께 해요!',
+               imageUrl: "", // 메인으로 보여질 이미지 주소
+               link: {
+                    webUrl: shareUrl,
+                    mobileWebUrl: shareUrl,
+               },
+          },
+          buttons: [
+               {
+               title: '함께 해보기', // 버튼 이름
+               link: {
+                    webUrl: shareUrl,
+                    mobileWebUrl: shareUrl,
+               },
+               },
+          ],
+               });
      }
      return (
           <div>
@@ -59,8 +88,9 @@ export default function Share(props: ShareProps) {
                     showLabels
                     className={classes.root}
                     >
-                    <BottomNavigationAction label="인스타그램" icon={<InstagramIcon />} onClick={handleClickInvite} />
-                    <BottomNavigationAction label="찜한 상품" icon={<FavoriteIcon />} />
+                    <Button className={classes.kakaoButton} onClick= {sendKakaoMessage} id="plusfriend-addfriend-button">
+
+                    </Button>
                </BottomNavigation>
           </div>
      )

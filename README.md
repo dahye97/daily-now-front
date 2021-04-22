@@ -160,3 +160,27 @@ ex) **댓글, 대댓글 기능 처리**
 ## Typescript 
 * `typescript import image cannot find module`
 - `index.d.ts` 파일을 생성하여 `declare module '*.png'`를 추가해준다.
+
+> ### *카카오톡 공유 API 이용하기*
+
+* `'Window & typeof globalThis' 형식에 'Kakao' 속성이 없습니다.`
+- window에 Kakao를 받을 속성 type이 정의되어 있지 않아 발생하는 에러이다. 
+
+🚀 `react-app-env.d.ts` 에 window의 새로운 속성인 `Kakao`를 추가한다.
+
+- type을 any로 설정하면 typescript를 사용하는 이유가 없으므로 `Object`로 설정
+```
+interface Window {
+     Kakao: Object
+}
+```
+
+⚠ `'Object' 형식에 'Link' 속성이 없습니다.` 
+Object로는 Kakao 속성을 인식할 수 없는 것 같다. 어떤 타입으로 정해줘야 하는지 몇 시간 동안 찾아봤지만 결국
+any로 설정해서 메시지 기능을 추가할 수 있었다. 
+
+```
+interface Window {
+     Kakao: any
+}
+```
