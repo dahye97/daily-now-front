@@ -113,9 +113,15 @@ export default function Board (props: BoardProps){
      const handleClose = () => {
          setOpen(false)
      };
+     // 선택한 내 글로 이동 
+     const handleClickMyPostItem = (e: React.MouseEvent, postId : number) => {
+          history.push(`/board/detail/${postId}`, {
+                    post_id : postId
+          })
+     }
      return (
           <Container maxWidth="md" className={classes.boardContainer}>
-			<Typography><h1>💫 Community </h1></Typography>
+			<h1>💫 Community </h1>
                <Typography component="div" style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판
                          <>
@@ -143,8 +149,9 @@ export default function Board (props: BoardProps){
                                                   mypost.category_id === category.category_id)
                                                   .map( (result,index) => {
                                                        return (
-                                                       <ListItem key={index}>
+                                                       <ListItem style={{cursor: 'pointer'}} onClick={(e: React.MouseEvent) => handleClickMyPostItem(e, result.post_id)} key={index}>
                                                             <ListItemText primary={result.title} />
+                                                            <ListItemText style={{textAlign: 'right'}}primary={result.date.split('T')[0].replaceAll('-','. ')} />
                                                        </ListItem>)
                                                   })
                                              }

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import axios from 'axios';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -58,7 +58,6 @@ export default function PostBox(props: PostBoxProps) {
           axios.post('http://192.168.0.69:8000/api/notice/update_view', {
                     post_id: postId
                }).then(res => {
-               console.log(res)
                history.push(`/board/detail/${postId}`, {
                     post_id: postId
                })
@@ -93,7 +92,7 @@ export default function PostBox(props: PostBoxProps) {
                                                   <TableRow hover role="checkbox" tabIndex={-1} 
                                                        key={row.post_id} onClick={() => handleClickPost(row.post_id)}
                                                        style={{ cursor: "pointer"}}>
-                                                       <TableCell>{row.date}</TableCell>
+                                                       <TableCell>{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
                                                        <TableCell>{row.title}</TableCell>
                                                        <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
                                                        <TableCell align="center">{row.views}</TableCell>
