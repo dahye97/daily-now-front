@@ -1,12 +1,9 @@
 import React , {useState,useEffect} from 'react'
 import { BottomNavigation,Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-
-
 import axios from 'axios'
 import { useHistory } from 'react-router';
 import { userInfo } from '../../../../Interface/User';
-import holypig from '../../../../asset/img/holypig.png'
 
 const useStyles = makeStyles({
      root: {
@@ -45,7 +42,7 @@ export default function Share(props: ShareProps) {
                })
                .then(res => {
                     console.log(res.data)// 유저 초대 코드 
-                    setShareUrl(`http://192.168.0.84:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
+                    setShareUrl(`http://localhost:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
                     // 친구 초대 포인트 적립 api 보내기 
 
                })
@@ -78,6 +75,11 @@ export default function Share(props: ShareProps) {
           ],
                });
      }
+     useEffect(() => {
+          if(shareUrl) {
+               sendKakaoMessage()
+          }
+     }, [shareUrl])
      return (
           <div>
                <BottomNavigation
@@ -88,7 +90,7 @@ export default function Share(props: ShareProps) {
                     showLabels
                     className={classes.root}
                     >
-                    <Button className={classes.kakaoButton} onClick= {sendKakaoMessage} id="plusfriend-addfriend-button">
+                    <Button className={classes.kakaoButton} onClick= {handleClickInvite} id="plusfriend-addfriend-button">
 
                     </Button>
                </BottomNavigation>
