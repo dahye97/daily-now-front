@@ -57,6 +57,12 @@ export default function Registration() {
           console.log(error)
      }, [error])
 
+     useEffect(() => {
+          if(share) {
+               setInvitedCode(ucode)
+          }
+     }, [share])
+     
      const onSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
           let registerInfo = {
