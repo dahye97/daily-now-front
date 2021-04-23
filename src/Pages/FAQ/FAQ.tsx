@@ -39,10 +39,8 @@ export default function FAQ() {
                <Typography component="div" style={{height: '100vh'}}>
 
                     {faqList.map( (faq,index) => {
-                         return ( 
-                              <>
+                         return (         
                               <FAQItem key={index} faq={faq} />
-                              </>
                          )
                          })}
                
