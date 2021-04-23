@@ -32,6 +32,7 @@ export default function Share(props: ShareProps) {
 
      const [value, setValue] = React.useState(0);
 
+     const [isClicked, setIsClicked] = useState(false)
      const handleClickInvite = () => {
           if( userObj !== null) {
                axios.get(`http://192.168.0.69:8000/api/join/create_code`, 
@@ -43,6 +44,7 @@ export default function Share(props: ShareProps) {
                .then(res => {
                     console.log(res.data)// 유저 초대 코드 
                     setShareUrl(`http://localhost:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
+                    setIsClicked(!isClicked)
                     // 친구 초대 포인트 적립 api 보내기 
 
                })
@@ -58,7 +60,7 @@ export default function Share(props: ShareProps) {
           content: {
                title: '데일리펀딩에 초대합니다.',
                description: '매일이 행복한 투자 현황, 홀리랑 함께 해요!',
-               imageUrl: "", // 메인으로 보여질 이미지 주소
+               imageUrl: "https://postfiles.pstatic.net/MjAxOTExMTlfNTcg/MDAxNTc0MTI0NDc5MTY4.svckLGX-9eQGz5ysLhHa36hi_Diher0SMG6g1EDqBIMg.c7HwR2PoRYgD9buJ0QzUCD70OQveRZIbdPRbZq3gUGYg.PNG.daily-funding/holy-emo-with-deli2.png?type=w966", // 메인으로 보여질 이미지 주소
                link: {
                     webUrl: shareUrl,
                     mobileWebUrl: shareUrl,
@@ -79,7 +81,7 @@ export default function Share(props: ShareProps) {
           if(shareUrl) {
                sendKakaoMessage()
           }
-     }, [shareUrl])
+     }, [isClicked])
      return (
           <div>
                <BottomNavigation
