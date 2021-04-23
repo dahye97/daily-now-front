@@ -82,6 +82,11 @@ export default function Share(props: ShareProps) {
                sendKakaoMessage()
           }
      }, [isClicked])
+
+     useEffect(() => {
+          window.Kakao.init(process.env.REACT_APP_KAKAO);
+          console.log(window.Kakao.isInitialized())
+     }, [])
      return (
           <div>
                <BottomNavigation
