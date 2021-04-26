@@ -15,6 +15,7 @@ interface P2PRegisterProps {
      P2PID: number,
 
      allCompany: Array<companyInfo>
+     handleChangeAllCompany: (company: companyInfo[]) => void
 }
 
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 
 export default function P2PRegister(props: P2PRegisterProps) {
      const classes = useStyles();
-     const { handleClose, open, handleP2PUpdated,P2PID, allCompany } = props;
+     const { handleClose, open, handleP2PUpdated,P2PID, allCompany,handleChangeAllCompany } = props;
 
      // INPUT
 	const [userName, setUserName] = useState("")
@@ -107,12 +108,19 @@ export default function P2PRegister(props: P2PRegisterProps) {
           setP2PName('')
      }, [open])
      
+     // 회사 검색 기능 구현
      const [companyName, setCompanyName] = React.useState('')
-
      const handleCompanyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           setCompanyName(event.target.value);
      };
 
+     const [filteredCompany, setFilteredCompany] = useState<companyInfo[]>([])
+     useEffect(() => {
+               setFilteredCompany(allCompany.filter( company => {
+                    return company.company_name.includes(companyName)
+               }))
+          }
+     , [companyName])
      return (
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                <DialogTitle id="form-dialog-title">연동 회사 등록</DialogTitle>
@@ -127,11 +135,10 @@ export default function P2PRegister(props: P2PRegisterProps) {
                     <DialogContentText>
                     연동할 회사와 회원 ID, 패스워드를 입력해주세요.
                     </DialogContentText>
-
                     <Autocomplete
                          id="company-search"
                          freeSolo
-                         options={allCompany.map((company) => company.company_name)}
+                         options={(filteredCompany.length !== 0 ? filteredCompany : allCompany).map((company) => company.company_name)}
                          renderInput={(params: any) => (
                               <TextField {...params} label="연동할 회사" value={companyName} onChange={handleCompanyChange} margin="normal" variant="outlined" />
                          )}

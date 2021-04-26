@@ -121,11 +121,9 @@ export default function FundList(props: FundListProps) {
 			}
 		})
 	}
-	// // 📌 P2PID가 바뀌면 Home에 id를 전달
-	// useEffect(() => {
-	// 	handleCompanyID(P2PID)
-	// 			// console.log(P2PID)
-	// }, [P2PID])
+	const handleChangeAllCompany = (company: companyInfo[]) => {
+		setAllCompany(company)
+	}
 
 	const handleP2PIndex = (startValue:number, endValue: number ) => {
 		setP2PIndex( {
@@ -164,6 +162,7 @@ export default function FundList(props: FundListProps) {
 			</div>
 			<P2PRegister 
 			allCompany ={allCompany}
+			handleChangeAllCompany={handleChangeAllCompany}
 			P2PID={P2PID} 
 			handleP2PUpdated={handleP2PUpdated}
 			userObj={userObj} open={open} 
