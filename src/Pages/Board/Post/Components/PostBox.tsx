@@ -1,17 +1,10 @@
-import React, {useState} from 'react'
 import axios from 'axios';
+import { useHistory } from 'react-router';
 
 import { makeStyles } from '@material-ui/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import {postInfo} from '../../../../../Interface/Post'
-import { useHistory } from 'react-router';
+import {Table, TableBody , TableCell, TableContainer ,TableHead ,TablePagination ,TableRow }
+          from '@material-ui/core';
+import {postInfo} from '../../../../Interface/Board'
 
 const useStyles = makeStyles({
      root: {
@@ -70,7 +63,7 @@ export default function PostBox(props: PostBoxProps) {
      return (
           <>
 
-               <Paper className={classes.root}>
+               <div className={classes.root}>
                     <TableContainer className={classes.container}>
                          <Table stickyHeader aria-label="sticky table">
                               <TableHead>
@@ -115,7 +108,7 @@ export default function PostBox(props: PostBoxProps) {
                          onChangePage={handleChangePage}
                          onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
-                    </Paper>
+                    </div>
 
           </>
      )

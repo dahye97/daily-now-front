@@ -1,14 +1,16 @@
 import React,{useState,useEffect} from 'react'
-import { commentInfo } from '../../../../../Interface/Comment'
+import axios from 'axios';
+import { useLocation } from 'react-router';
+
 import {IconButton,Typography,Button} from '@material-ui/core/';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { userInfo } from '../../../../../Interface/User';
-import axios from 'axios';
-import { useLocation } from 'react-router';
+
+import { commentInfo } from '../../../../Interface/Board'
+import { userInfo } from '../../../../Interface/User';
 
 const useStyles = makeStyles({
      handButton: {

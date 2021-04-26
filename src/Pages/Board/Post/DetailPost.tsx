@@ -2,9 +2,8 @@ import React , {useState,useEffect,useCallback} from 'react'
 import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
-import { detailPostInfo } from '../../../../Interface/Post'
-import { commentInfo } from '../../../../Interface/Comment';
-import { userInfo } from '../../../../Interface/User';
+import { commentInfo, detailPostInfo } from '../../../Interface/Board'
+import { userInfo } from '../../../Interface/User';
 import Comment from '../Comment/Comment';
 
 import { makeStyles } from '@material-ui/core/styles';

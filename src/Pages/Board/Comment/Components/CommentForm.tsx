@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import {Typography ,TextField,Button} from '@material-ui/core/';
-import { userInfo } from '../../../../../Interface/User';
+import { userInfo } from '../../../../Interface/User';
 import axios from 'axios';
-import { commentInfo } from '../../../../../Interface/Comment';
+import { commentInfo } from '../../../../Interface/Board';
 
 interface formProps {
      postId? : number // 게시글 id

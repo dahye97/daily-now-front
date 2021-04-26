@@ -1,10 +1,7 @@
 import { Paper  } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { pointInfo } from '../../../../Interface/Point'
-import {useState} from 'react'
-type pointType = {
-     point : pointInfo
-}
+import { pointInfo } from '../../../../Interface/User'
+
 const useStyles = makeStyles ({
      pointItem: {
           margin:'5px 0',
@@ -34,9 +31,11 @@ const useStyles = makeStyles ({
      minusPoint: {
           color: 'blue'
      },
-
-
 })
+type pointType = {
+     point : pointInfo
+}
+
 export default function PointList(props : pointType) {
      const classes = useStyles()
 

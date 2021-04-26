@@ -4,9 +4,7 @@ import { IconButton, Avatar  } from "@material-ui/core";
 import { makeStyles  } from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from "@material-ui/icons/Home";
-import { p2pInfo, userInfo } from '../../../../../Interface/User';
-import { companyInfo } from '../../../../../Interface/Company';
-
+import { p2pInfo, userInfo } from '../../../../../Interface/User'
 import P2PRegister from './P2PRegister';
 import Stepper from '../../../../../Components/Stepper';
 
@@ -37,6 +35,12 @@ interface FundListProps {
 	handleNickName : (name: string ) => void
 	userObj : userInfo | null,
 	P2PList: Array<p2pInfo>
+}
+
+// 회사 id를 가져오기 위한 회사 정보 인터페이스 
+export interface companyInfo {
+     id : number,
+     company_name: string
 }
 
 export default function FundList(props: FundListProps) {
@@ -141,20 +145,27 @@ export default function FundList(props: FundListProps) {
 			<>
 			<div className={classes.fundListContainer}>
 				<div className={classes.fundList}>
-					<IconButton onClick={(e) => onP2PClick(e.currentTarget.textContent)} className={classes.iconBody}><span><HomeIcon fontSize="large"/><p>모든 투자</p></span></IconButton>
+					<IconButton 
+					onClick={(e) => onP2PClick(e.currentTarget.textContent)} 
+					className={classes.iconBody}>
+						<span><HomeIcon fontSize="large"/><p>모든 투자</p></span>
+					</IconButton>
+
 					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
-							return (
-								<IconButton style={{padding: 0}} key={index} onClick={() => onP2PClick(company)}>
-									<div className={classes.iconBody}>
-										<Avatar/>
-										<p>{company.company_name}</p>
-									</div>
-								</IconButton>)
+						return (
+							<IconButton style={{padding: 0}} key={index} onClick={() => onP2PClick(company)}>
+								<div className={classes.iconBody}>
+									<Avatar/>
+									<p>{company.company_name}</p>
+								</div>
+							</IconButton>)
 					})}
-					<IconButton><AddIcon onClick={handleClickAdd} style={{fontSize: "40px"}}/></IconButton>
+					<IconButton onClick={handleClickAdd} >
+						<AddIcon style={{fontSize: "40px"}}/>
+					</IconButton>
 				</div>
 
-			<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
+				<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
 			</div>
 			<P2PRegister P2PID={P2PID} isExist={isExist} handleP2PUpdated={handleP2PUpdated} userObj={userObj} open={open} fetchP2PID={fetchP2PID} handleClose={handleClose}/>
 			</>

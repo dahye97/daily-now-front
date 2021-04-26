@@ -1,22 +1,23 @@
 /** @format */
 import {useState,useEffect} from 'react';
-import Profile from "./Components/Funding/Profile";
-import P2PList from "./Components/Funding/P2P/P2PList"
-import { makeStyles, } from "@material-ui/styles";
-
-import { Typography,Grid,IconButton } from "@material-ui/core";
-import Calendar from "./Components/Calendar";
-import Product from "./Components/Product";
-import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
-import Account from './Components/Funding/Account';
 import { useLocation } from 'react-router';
 import queryString from 'query-string'
-import Share from './Components/Share/Share';
-import Point from './Components/Point/Point';
-import Balance from './Components/Funding/Balance';
-import Transaction from './Components/Funding/Transaction';
-import Funding from './Components/Funding/Funding';
+import { makeStyles, } from "@material-ui/styles";
+import { Typography,Grid,IconButton } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+
+import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
+import Calendar from "./Components/Calendar";
+import Product from "./Components/Product";
+import Share from './Profile/Share/Share';
+
+import Profile from "./Profile/Profile";
+import P2PList from "./Profile/Funding/P2P/P2PList"
+import Balance from './Profile/Funding/Balance';
+import Transaction from './Profile/Funding/Transaction';
+import Funding from './Profile/Funding/Funding';
+import Point from './Profile/Point/Point';
+import Account from './Profile/Funding/Account';
 
 const useStyles = makeStyles({
 	home: {
@@ -256,7 +257,7 @@ export default function Home(props: HomeProps) {
 
 				</Grid>
 				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
-				<Grid item xs={3} direction="column" className={classes.asideContainer}>
+				<Grid item xs={3} className={classes.asideContainer}>
 					<div  className={classes.asideItem}>
 						<Calendar />
 					</div>

@@ -1,13 +1,14 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios'
-import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
+
 import { makeStyles, } from "@material-ui/core/styles";
+import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
-import { categoryInfo } from '../../../../Interface/Category';
-import { postInfo } from '../../../../Interface/Post';
-import PostBox from './Components/PostBox';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+
+import PostBox from './Components/PostBox';
+import { postInfo,categoryInfo } from '../../../Interface/Board';
 const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,

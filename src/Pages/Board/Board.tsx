@@ -1,14 +1,16 @@
 import React, { useState, useEffect} from 'react'
 import axios from 'axios';
-import {Container,Typography, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle } from '@material-ui/core';
-import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
 import { useHistory, } from 'react-router';
-import { categoryInfo } from '../../Interface/Category';
-import Post from './Components/Post/Post';
+
+import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle } from '@material-ui/core';
+import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
+
+import Post from './Post/Post';
+import DetailPost from './Post/DetailPost';
 import NewPost from './NewPost';
+
 import { userInfo } from '../../Interface/User';
-import DetailPost from './Components/Post/DetailPost';
-import { detailPostInfo } from '../../Interface/Post';
+import { detailPostInfo,categoryInfo } from '../../Interface/Board';
 
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({
@@ -128,7 +130,7 @@ export default function Board (props: BoardProps){
      return (
           <Container maxWidth="md" className={classes.boardContainer}>
 			<h1>💫 Community </h1>
-               <Typography component="div" style={{height: '100%'}}>
+               <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판
                          <>
                               <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
@@ -166,7 +168,7 @@ export default function Board (props: BoardProps){
                                    </List>
                               </Dialog>
 
-               </Typography>
+               </div>
           </Container>
           )
 }

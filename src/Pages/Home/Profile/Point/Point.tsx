@@ -1,9 +1,8 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
-import { pointInfo } from '../../../../Interface/Point'
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import {Button,Card,CardContent,CardActions,CardHeader,Select,MenuItem,InputLabel, FormControl} from '@material-ui/core'
-import { userInfo } from '../../../../Interface/User';
+import { userInfo, pointInfo  } from '../../../../Interface/User';
 import PointList from './PointList';
 
 import PetsIcon from '@material-ui/icons/Pets';

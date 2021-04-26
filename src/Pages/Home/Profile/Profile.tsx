@@ -3,7 +3,7 @@ import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useHistory } from "react-router";
-import { userInfo } from "../../../../Interface/User";
+import { userInfo } from "../../../Interface/User";
 import {useEffect,useState} from 'react'
 import axios from 'axios'
 import jiyeon from '../../../../asset/img/jiyeon.png'
@@ -135,7 +135,7 @@ export default function Profile(props:ProfileProps) {
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>
 					<CardContent>
 						<p>보유 포인트</p>
-						<h2>{myPoint} P</h2>
+						<h2>{myPoint ? myPoint : 0} P</h2>
 					</CardContent>
 					<CardActions>
 						<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>

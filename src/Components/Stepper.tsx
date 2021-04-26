@@ -5,7 +5,11 @@ import { Button } from "@material-ui/core";
 import MobileStepper from '@material-ui/core/MobileStepper';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import { indexInfo } from '../Interface/Stepper';
+
+export interface indexInfo {
+     start : number,
+     end : number
+}
 
 const useStyles = makeStyles({
      root: {

@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from 'react'
-import { BottomNavigation,Button } from '@material-ui/core'
+import { BottomNavigation,BottomNavigationAction } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { useHistory } from 'react-router';
@@ -107,14 +107,16 @@ export default function Share(props: ShareProps) {
                <BottomNavigation
                     value={value}
                     onChange={(event, newValue) => {
-                    setValue(newValue);
+                         setValue(newValue);
                     }}
-                    showLabels
+                    showLabels={false}
                     className={classes.root}
                     >
-                    <Button className={classes.kakaoButton} onClick= {handleClickInvite} id="plusfriend-addfriend-button">
-
-                    </Button>
+                    <BottomNavigationAction 
+                         className={classes.kakaoButton} 
+                         onClick= {handleClickInvite} 
+                         id="plusfriend-addfriend-button">
+                    </BottomNavigationAction>
                </BottomNavigation>
           </div>
      )

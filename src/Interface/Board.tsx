@@ -1,3 +1,9 @@
+// 게시판: 게시판 카테고리, 게시글, 세부 게시글, 댓글
+export interface categoryInfo {
+     category_id : number,
+     category_name: string
+}
+
 export interface postInfo {
      count: number,
      next: string,
@@ -32,3 +38,17 @@ export interface postResultInfo {
      user: string // 이메일 
      views: number // 조회수
 }
+
+export interface commentInfo {
+     comment_id : number,
+     user: string,
+     comment_content: string,
+     date : string,
+     like: number,
+     dislike: number,
+     post_id: number,
+     parent_comment: null,
+     
+     editable: boolean,
+     like_dislike: number
+ }

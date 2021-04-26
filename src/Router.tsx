@@ -10,7 +10,7 @@ import Registration from "./Pages/Auth/Registration";
 import MyPage from "./Pages/MyPage/MyPage";
 import Navigation from "./Components/Navigation";
 import {p2pInfo, userInfo} from './Interface/User';
-import { makeStyles, } from "@material-ui/core/styles";
+import { makeStyles, } from "@material-ui/styles";
 
 const useStyles = makeStyles({
 	routeContainer : {
@@ -67,6 +67,7 @@ export default function AppRouter() {
 	<BrowserRouter>
 			<Navigation isLoggedIn={isLoggedIn} />
 			<Switch>
+				<>
 				<div className={classes.routeContainer}>
 					{isLoggedIn &&
 						<>
@@ -109,6 +110,7 @@ export default function AppRouter() {
 					<Route path="/registration" component={Registration} />
 					<Route exact path="/faq" component={FAQ} />
 				</div>
+				</>
 			</Switch>
 		</BrowserRouter>
 	);

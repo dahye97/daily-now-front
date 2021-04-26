@@ -3,8 +3,8 @@ import axios from 'axios';
 
 import {Paper,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import { commentInfo } from '../../../../Interface/Comment';
-import { userInfo } from '../../../../Interface/User';
+import { commentInfo } from '../../../Interface/Board';
+import { userInfo } from '../../../Interface/User';
 import CommentForm from './Components/CommentForm';
 import CommentView from './Components/CommentView';
 

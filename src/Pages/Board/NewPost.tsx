@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from 'react'
+import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import { Button,TextField, Typography} from '@material-ui/core';
-import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles, } from "@material-ui/core/styles";
 import { userInfo } from '../../Interface/User';
-import { detailPostInfo } from '../../Interface/Post';
+import { detailPostInfo } from '../../Interface/Board';
 
 const useStyles = makeStyles({
      postContent : {
