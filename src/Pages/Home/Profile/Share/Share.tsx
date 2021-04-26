@@ -33,6 +33,7 @@ export default function Share(props: ShareProps) {
      const [value, setValue] = React.useState(0);
 
      const [isClicked, setIsClicked] = useState(false)
+     const [isInitialized, setIsInitialized] = useState(false)
      const handleClickInvite = () => {
           if( userObj !== null) {
                axios.get(`http://192.168.0.69:8000/api/join/create_code`, 
@@ -99,9 +100,11 @@ export default function Share(props: ShareProps) {
      }, [isClicked])
 
      useEffect(() => {
-          window.Kakao.init(process.env.REACT_APP_KAKAO);
-          console.log(window.Kakao.isInitialized())
-     }, [])
+          if(!window.Kakao.isInitialized()){
+               window.Kakao.init(process.env.REACT_APP_KAKAO);
+               setIsInitialized(true)
+          }
+     }, [isInitialized])
      return (
           <div>
                <BottomNavigation
