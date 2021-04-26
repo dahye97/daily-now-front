@@ -1,18 +1,20 @@
 import React, {useState,useEffect} from 'react'
-import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button,Select,MenuItem,Input } from "@material-ui/core";
+import {Autocomplete, Alert, AlertTitle } from '@material-ui/lab';
 import {userInfo}from '../../../../../Interface/User'
 import { makeStyles } from "@material-ui/core/styles";
+import { companyInfo } from './P2PList';
 
 interface P2PRegisterProps {
      userObj : userInfo | null,
      open: boolean,// 폼 오픈 여부
-     isExist: boolean, // 회사 인증 여부 
 
      handleClose: any, // 폼 닫기
      handleP2PUpdated : any, // 회사 추가 여부 
-     fetchP2PID: any, // 회사 id fetch
-     P2PID: number 
+     getAllCompany: any, // 회사 id fetch
+     P2PID: number,
+
+     allCompany: Array<companyInfo>
 }
 
 const useStyles = makeStyles({
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
 
 export default function P2PRegister(props: P2PRegisterProps) {
      const classes = useStyles();
-     const { handleClose, open, fetchP2PID, handleP2PUpdated, userObj,isExist,P2PID } = props;
+     const { handleClose, open, handleP2PUpdated,P2PID, allCompany } = props;
 
      // INPUT
 	const [userName, setUserName] = useState("")
@@ -56,8 +58,8 @@ export default function P2PRegister(props: P2PRegisterProps) {
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
 		console.log('handleSubmit')
+          console.log(P2PID)
 
-          if ( isExist ) {
                const p2pInfo = {
                     "username":userName,
                     "user_password":password,
@@ -97,27 +99,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          })
                          .catch(error =>  console.log(error));
                }
-          } else {
-               alert('먼저 회사 인증을 해주세요.')
           }
-	}
-
-     // 회사 존재 유무 확인, 있으면 아이디 저장 
-     const handleClickAuth = () => {
-          if(userObj !== null && P2PName.length !== 0){
-               fetchP2PID(P2PName); // company id result
-          }
-     }
-
-     useEffect(() => {
-          if( isExist ) {
-               console.log('회사 존재')
-               console.log(P2PID, P2PName)
-          }
-          else {
-               console.log('회사 없음')
-          }
-     }, [isExist])
 
      useEffect(() => {
           setUserName('')
@@ -125,9 +107,15 @@ export default function P2PRegister(props: P2PRegisterProps) {
           setP2PName('')
      }, [open])
      
+     const [companyName, setCompanyName] = React.useState('')
+
+     const handleCompanyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+          setCompanyName(event.target.value);
+     };
+
      return (
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-               <DialogTitle id="form-dialog-title">P2P 회사 등록</DialogTitle>
+               <DialogTitle id="form-dialog-title">연동 회사 등록</DialogTitle>
                <Collapse in={isError.isTrue}>
                     <Alert  
                          severity={ isError.isTrue ? "error":"success"}>
@@ -137,12 +125,17 @@ export default function P2PRegister(props: P2PRegisterProps) {
                </Collapse>
                <DialogContent>
                     <DialogContentText>
-                    연동할 회사의 이름과 회원 ID, 패스워드를 입력해주세요.
+                    연동할 회사와 회원 ID, 패스워드를 입력해주세요.
                     </DialogContentText>
-                    <div className={classes.p2pField}>
-                         <TextField onChange={handleChange} autoFocus margin="dense" id="p2pName" label="회사 이름" type="string"/>
-                         <Button onClick={handleClickAuth} variant="outlined" color="primary">{isExist? "인증완료" : "확인"}</Button>
-                    </div>
+
+                    <Autocomplete
+                         id="company-search"
+                         freeSolo
+                         options={allCompany.map((company) => company.company_name)}
+                         renderInput={(params: any) => (
+                              <TextField {...params} label="연동할 회사" value={companyName} onChange={handleCompanyChange} margin="normal" variant="outlined" />
+                         )}
+                    />
                     <TextField onChange={handleChange} autoFocus margin="dense" id="email" label="Email(ID)" type="email" fullWidth/>
                     <TextField onChange={handleChange} autoFocus margin="dense" id="password" label="Password" type="password" fullWidth/>
                </DialogContent>

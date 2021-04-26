@@ -7,8 +7,6 @@ import { Typography,Grid,IconButton } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
-import Calendar from "./Components/Calendar";
-import Product from "./Components/Product";
 import Share from './Profile/Share/Share';
 
 import Profile from "./Profile/Profile";
@@ -18,6 +16,8 @@ import Transaction from './Profile/Funding/Transaction';
 import Funding from './Profile/Funding/Funding';
 import Point from './Profile/Point/Point';
 import Account from './Profile/Funding/Account';
+import Calendar from './Calendar';
+import Product from './Product';
 
 const useStyles = makeStyles({
 	home: {
@@ -135,9 +135,10 @@ export default function Home(props: HomeProps) {
 		setNickName(name)
 	}
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
-	useEffect(() => {
+	const getUserDataOfCompany = (refresh: number) => {
 		let p2pID = {
-			'company_id' : companyID
+			'company_id' : companyID,
+			refresh: refresh
 		};
 		
 		if (userObj !== null && company !== "all") {
@@ -187,6 +188,9 @@ export default function Home(props: HomeProps) {
 				})
 				.catch(error =>  console.log(error));
 		}
+	}
+	useEffect(() => {
+		getUserDataOfCompany(1)
 	}, [companyID])
 
 	const handleClickUpButton = () => {
@@ -210,7 +214,8 @@ export default function Home(props: HomeProps) {
 				<Grid item xs={6}>
 
 					<div className={classes.homeContainer}>
-						<Profile userObj={userObj} handleLogOut={handleLogOut}/>
+						<Profile userObj={userObj} handleLogOut={handleLogOut} 
+						companyID={companyID} getUserDataOfCompany={getUserDataOfCompany}/>
 						{/* 나의투자, 포인트 내역, 초대하기 */}
 						{tabName === "MY_FUNDING" ? 
 							<>
@@ -244,8 +249,6 @@ export default function Home(props: HomeProps) {
 			{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
 									<Funding company={company}/>
 								</li>
-								
-								
 							</ul>
 							</>						
 						: tabName === "POINT_TOTAL" ? 
@@ -254,7 +257,6 @@ export default function Home(props: HomeProps) {
 							<Share userObj={userObj}/>
 						: null}
 						</div>
-
 				</Grid>
 				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} className={classes.asideContainer}>

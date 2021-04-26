@@ -2,11 +2,13 @@ import {Card,CardHeader,CardMedia,CardContent,IconButton,Button,CardActions,Typo
 import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
+import UpdateIcon from '@material-ui/icons/Update';
+
 import { useHistory } from "react-router";
 import { userInfo } from "../../../Interface/User";
 import {useEffect,useState} from 'react'
 import axios from 'axios'
-import jiyeon from '../../../../asset/img/jiyeon.png'
+import jiyeon from '../../../asset/img/jiyeon.png'
 // TODO: 프로필 
 const useStyles = makeStyles({
 	card: {
@@ -23,17 +25,13 @@ const useStyles = makeStyles({
 			color: "white",
 		},
 	},
-	setting: {
+	controlButton: {
 		color: "white",
 		fontSize: "40px"
 	},
 	addAccount: {
 		color: "white"
 	}, 
-	logout: {
-		color: 'white',
-		fontSize: "40px"
-	}
 });
 
 const StyledBadge = withStyles((theme) => ({
@@ -68,11 +66,14 @@ const StyledBadge = withStyles((theme) => ({
 interface ProfileProps {
 	userObj : userInfo | null,
 	handleLogOut:any,
+	
+	companyID: number,
+	getUserDataOfCompany: (refresh: number) => void
 }
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 	const classes = useStyles()
-	const {userObj, handleLogOut} = props;
+	const {userObj, handleLogOut,companyID,getUserDataOfCompany} = props;
 	const [myPoint, setMyPoint] = useState()
 	// mypage로 이동 
 	const handleClickSetting = () => {
@@ -89,6 +90,9 @@ export default function Profile(props:ProfileProps) {
 		history.push('/home?tabName=POINT_TOTAL')
 	}
 
+	const handleClickRefresh = () => {
+		getUserDataOfCompany(0)
+	}
 	// 마이 포인트 가져오기 
 	useEffect(() => {
 		if( userObj !== null) {
@@ -128,8 +132,9 @@ export default function Profile(props:ProfileProps) {
 						}
 						></CardHeader>
 						<CardMedia>
-		{/* 회원 정보 수정 */}	<IconButton onClick={handleClickSetting}><SettingsIcon className={classes.setting} /></IconButton>
-			{/* 로그아웃 */}	<IconButton onClick={handleLogOut}><ExitToAppIcon className={classes.logout} /></IconButton>
+			{/* 새로고침 */}	<IconButton onClick={handleClickRefresh}><UpdateIcon  className={classes.controlButton}/></IconButton>
+		{/* 회원 정보 수정 */}	<IconButton onClick={handleClickSetting}><SettingsIcon className={classes.controlButton} /></IconButton>
+			{/* 로그아웃 */}	<IconButton onClick={handleLogOut}><ExitToAppIcon className={classes.controlButton} /></IconButton>
 						</CardMedia>
 					</div>
 					<Typography className={classes.headerContent}>매일이 행복한 투자 현황</Typography>

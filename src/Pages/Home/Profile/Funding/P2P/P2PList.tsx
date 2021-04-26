@@ -61,7 +61,7 @@ export default function FundList(props: FundListProps) {
 
 	// 연동 회사 폼 여닫이 핸들러 
 	const handleClickAdd = () => {
-		setOpen(true);
+		getAllCompany()
 	}
 	const handleClose = () => {
 		setOpen(false);
@@ -97,19 +97,16 @@ export default function FundList(props: FundListProps) {
 				if( company === "모든 투자") {
 					handleCompany("all")
 				}
-			}else{ // 회사 id 가져오기
-				fetchP2PID(company.company_name)
+			}else{ 
+				handleCompanyID(company.company_id)
 				handleCompany(company.company_name)
 				handleNickName(company.nickname)
 			}
 		}
 	}
 
-	// fixme: 비효율적인 코드임. 회사 id 를 애초에 같이 보내주는 방향으로 고치길 바람! 
-	// 선택된 회사의 id를 가지고 계좌, 투자 정보를 가져오기 때문에
-	// 회사 선택 시, 회사 id를 가져와야한다. 
-	// 회사 id 가져오기 
-	const fetchP2PID = (name: string ) => {
+	const [allCompany, setAllCompany] = useState<companyInfo[]>([])
+	const getAllCompany = () => {
 		fetch('http://192.168.0.69:8000/api/register/company', {
 			method: "GET",
 			headers: {
@@ -118,19 +115,17 @@ export default function FundList(props: FundListProps) {
 		}).then(res => {
 			if(res.ok) {
 				res.json().then( companies => {
-					setP2PID((companies.filter( 
-							(company : companyInfo)=> 
-								company.company_name === name))[0].id)
-					setIsExist(true)
+					setAllCompany(companies)
+					setOpen(true);
 				})
 			}
 		})
 	}
-	// 📌 P2PID가 바뀌면 Home에 id를 전달
-	useEffect(() => {
-		handleCompanyID(P2PID)
-				// console.log(P2PID)
-	}, [P2PID])
+	// // 📌 P2PID가 바뀌면 Home에 id를 전달
+	// useEffect(() => {
+	// 	handleCompanyID(P2PID)
+	// 			// console.log(P2PID)
+	// }, [P2PID])
 
 	const handleP2PIndex = (startValue:number, endValue: number ) => {
 		setP2PIndex( {
@@ -167,7 +162,13 @@ export default function FundList(props: FundListProps) {
 
 				<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
 			</div>
-			<P2PRegister P2PID={P2PID} isExist={isExist} handleP2PUpdated={handleP2PUpdated} userObj={userObj} open={open} fetchP2PID={fetchP2PID} handleClose={handleClose}/>
+			<P2PRegister 
+			allCompany ={allCompany}
+			P2PID={P2PID} 
+			handleP2PUpdated={handleP2PUpdated}
+			userObj={userObj} open={open} 
+			getAllCompany={getAllCompany} 
+			handleClose={handleClose}/>
 			</>
 			}
 		</div>
