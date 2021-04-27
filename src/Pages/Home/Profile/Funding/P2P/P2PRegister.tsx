@@ -12,7 +12,6 @@ interface P2PRegisterProps {
      handleClose: any, // 폼 닫기
      handleP2PUpdated : any, // 회사 추가 여부 
      getAllCompany: any, // 회사 id fetch
-     P2PID: number,
 
      allCompany: Array<companyInfo>
      handleChangeAllCompany: (company: companyInfo[]) => void
@@ -28,11 +27,13 @@ const useStyles = makeStyles({
 
 export default function P2PRegister(props: P2PRegisterProps) {
      const classes = useStyles();
-     const { handleClose, open, handleP2PUpdated,P2PID, allCompany,handleChangeAllCompany } = props;
+     const { handleClose, open, handleP2PUpdated, allCompany } = props;
 
      // INPUT
 	const [userName, setUserName] = useState("")
 	const [password, setPassword] = useState("")
+
+     const [P2PId, setP2PId] = useState(0)
 	const [P2PName, setP2PName] = useState("")
 
      const [isError, setError] = useState({
@@ -58,69 +59,81 @@ export default function P2PRegister(props: P2PRegisterProps) {
 	
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
-		console.log('handleSubmit')
-          console.log(P2PID)
 
-               const p2pInfo = {
-                    "username":userName,
-                    "user_password":password,
-                    "company_id": P2PID
-               }
-     
-               if(props.userObj !== null ) {
-                    fetch('http://192.168.0.69:8000/api/register/company_register', {
-                         method: "POST",
-                         headers: {
-                              "Content-Type": "application/json; charset=utf-8",
-                              "Authorization": "Token " + props.userObj.auth_token
-                         },
-                         body: JSON.stringify(p2pInfo),
-                         })
-                         .then(res => {
-                              if(res.ok) {
-                                   res.json().then( data => {
-                                        if ( data[0] === "Information registration completed!") {
-                                             setError({
-                                                  open: false,
-                                                  isTrue : false,
-                                                  message: ""
-                                             })
-                                             console.log('등록완료!')
-                                             handleP2PUpdated()
-                                             handleClose()
-                                        }else {
-                                             setError({
-                                                  open: true,
-                                                  isTrue : true,
-                                                  message: data
-                                             })
-                                        }
-                                   })
-                              }
-                         })
-                         .catch(error =>  console.log(error));
-               }
+          const p2pInfo = {
+               "username":userName,
+               "user_password":password,
+               "company_id": P2PId
+          }
+
+          if(props.userObj !== null ) {
+               fetch('http://192.168.0.69:8000/api/register/company_register', {
+                    method: "POST",
+                    headers: {
+                         "Content-Type": "application/json; charset=utf-8",
+                         "Authorization": "Token " + props.userObj.auth_token
+                    },
+                    body: JSON.stringify(p2pInfo),
+                    })
+                    .then(res => {
+                         if(res.ok) {
+                              res.json().then( data => {
+                                   if ( data[0] === "Information registration completed!") {
+                                        setError({
+                                             open: false,
+                                             isTrue : false,
+                                             message: ""
+                                        })
+                                        console.log('등록완료!')
+                                        handleP2PUpdated()
+                                        handleClose()
+                                   }else {
+                                        setError({
+                                             open: true,
+                                             isTrue : true,
+                                             message: data
+                                        })
+                                   }
+                              })
+                         }
+                    })
+                    .catch(error =>  console.log(error));
+          }
           }
 
      useEffect(() => {
           setUserName('')
           setPassword('')
           setP2PName('')
+          setValue('')
+          setInputValue('')
+          setFilteredCompany([])
      }, [open])
      
-     // 회사 검색 기능 구현
-     const [companyName, setCompanyName] = React.useState('')
-     const handleCompanyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-          setCompanyName(event.target.value);
-     };
+     
+     const [value, setValue] = useState<string | null>();
+     const [inputValue, setInputValue] = useState('');
 
      const [filteredCompany, setFilteredCompany] = useState<companyInfo[]>([])
      useEffect(() => {
+          if(typeof(value)=== 'string'){
                setFilteredCompany(allCompany.filter( company => {
-                    return company.company_name.includes(companyName)
+                    return company.company_name.includes(value)
                }))
+
+               let company = [{
+                    id: 0,
+                    company_name: ''
+               }]
+               company = allCompany.filter(company => value === company.company_name)
+               if(company.length !== 0){
+                    setP2PId( company[0].id )
+               }
           }
-     , [companyName])
+     }
+     , [value])
+
+
      return (
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                <DialogTitle id="form-dialog-title">연동 회사 등록</DialogTitle>
@@ -137,12 +150,19 @@ export default function P2PRegister(props: P2PRegisterProps) {
                     </DialogContentText>
                     <Autocomplete
                          id="company-search"
-                         freeSolo
+                         value={value}
+                         onChange={(event: any, newValue: string | null) => {
+                              setValue(newValue);
+                         }}
                          options={(filteredCompany.length !== 0 ? filteredCompany : allCompany).map((company) => company.company_name)}
                          renderInput={(params: any) => (
-                              <TextField {...params} label="연동할 회사" value={companyName} onChange={handleCompanyChange} margin="normal" variant="outlined" />
+                              <TextField {...params} label="연동할 회사" margin="normal" variant="outlined" />
                          )}
-                    />
+                         inputValue={inputValue}
+                         onInputChange={(event, newInputValue) => {
+                              setInputValue(newInputValue)
+                         }}
+                         />
                     <TextField onChange={handleChange} autoFocus margin="dense" id="email" label="Email(ID)" type="email" fullWidth/>
                     <TextField onChange={handleChange} autoFocus margin="dense" id="password" label="Password" type="password" fullWidth/>
                </DialogContent>
