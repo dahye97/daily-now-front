@@ -68,7 +68,7 @@ interface ProfileProps {
 	handleLogOut:any,
 	
 	companyID: number,
-	getUserDataOfCompany: (refresh: number) => void
+	getUserDataOfCompany: (refresh: number, id?: number) => void
 }
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
@@ -91,7 +91,7 @@ export default function Profile(props:ProfileProps) {
 	}
 
 	const handleClickRefresh = () => {
-		getUserDataOfCompany(0)
+		getUserDataOfCompany(1)
 	}
 	// 마이 포인트 가져오기 
 	useEffect(() => {
@@ -109,7 +109,7 @@ export default function Profile(props:ProfileProps) {
 				console.log(error);
 			})
 		}		
-	}, [myPoint])
+	}, [])
 
 		return (
 			<div className="profile">

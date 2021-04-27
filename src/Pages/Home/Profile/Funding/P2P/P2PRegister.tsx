@@ -15,6 +15,7 @@ interface P2PRegisterProps {
 
      allCompany: Array<companyInfo>
      handleChangeAllCompany: (company: companyInfo[]) => void
+     getUserDataOfCompany : (refresh: number, id?: number) => void
 }
 
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 
 export default function P2PRegister(props: P2PRegisterProps) {
      const classes = useStyles();
-     const { handleClose, open, handleP2PUpdated, allCompany } = props;
+     const { handleClose, open, handleP2PUpdated, allCompany, getUserDataOfCompany } = props;
 
      // INPUT
 	const [userName, setUserName] = useState("")
@@ -85,8 +86,10 @@ export default function P2PRegister(props: P2PRegisterProps) {
                                              message: ""
                                         })
                                         console.log('등록완료!')
+                                        getUserDataOfCompany(1, P2PId)
                                         handleP2PUpdated()
                                         handleClose()
+
                                    }else {
                                         setError({
                                              open: true,

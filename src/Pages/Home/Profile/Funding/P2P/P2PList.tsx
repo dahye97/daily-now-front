@@ -33,6 +33,7 @@ interface FundListProps {
 	handleCompany : (name: string) => void,
 	handleAddP2P : (data: Array<p2pInfo>) => void,
 	handleNickName : (name: string ) => void
+	getUserDataOfCompany : (refresh: number, id?: number) => void,
 	userObj : userInfo | null,
 	P2PList: Array<p2pInfo>
 }
@@ -45,11 +46,10 @@ export interface companyInfo {
 
 export default function FundList(props: FundListProps) {
 	const classes = useStyles()
-	const {handleCompanyID, handleCompany, handleNickName, handleAddP2P, userObj, P2PList} = props;
+	const {handleCompanyID, handleCompany, handleNickName, handleAddP2P, userObj, P2PList, getUserDataOfCompany} = props;
 	// STATE
 	const [open, setOpen] = useState(false)
 	const [P2PUpdated, setP2PUpdated] = useState(false)
-	const [P2PID, setP2PID] = useState(0)
 
      const [isExist, setIsExist] = useState(false)
 
@@ -161,9 +161,9 @@ export default function FundList(props: FundListProps) {
 				<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
 			</div>
 			<P2PRegister 
+			getUserDataOfCompany = {getUserDataOfCompany}
 			allCompany ={allCompany}
 			handleChangeAllCompany={handleChangeAllCompany}
-			P2PID={P2PID} 
 			handleP2PUpdated={handleP2PUpdated}
 			userObj={userObj} open={open} 
 			getAllCompany={getAllCompany} 

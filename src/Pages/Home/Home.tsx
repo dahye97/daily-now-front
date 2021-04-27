@@ -118,13 +118,15 @@ export default function Home(props: HomeProps) {
 	const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
 	const { userObj, handleLogOut, handleAddP2P} = props;
+
 	const [company, setCompany] = useState("all")
 	const [companyID, setCompanyID] = useState(0)
 	const [nickName, setNickName] = useState("")
+
 	const [account, setAccount] = useState<accountInfo | undefined>(Object);
 	const [fund, setFund] = useState<fundInfo>(Object)
 
-	// p2plist에서 선택한 회사 정보 저장 
+	// 선택한 회사 정보 저장 
 	const handleCompany = (name: string) => {
 		setCompany(name);
 	}
@@ -134,35 +136,43 @@ export default function Home(props: HomeProps) {
 	const handleNickName = (name: string) => {
 		setNickName(name)
 	}
-	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
-	const getUserDataOfCompany = (refresh: number) => {
-		let p2pID = {
-			'company_id' : companyID,
-			refresh: refresh
-		};
-		
-		if (userObj !== null && company !== "all") {
+
+	// 가져온 계좌, 투자 정보 저장
+	const handleAccount = (account: accountInfo | undefined) => {
+		setAccount(account)
+	}
+	const handleFund = (fund: fundInfo) => {
+		setFund(fund)
+	}
+
+	const getAccountData =  (p2pID: { company_id: number, refresh: number}) => {
+		console.log('getaccountdata')
+		if (userObj !== null){
 			fetch(`http://192.168.0.69:8000/api/${nickName}/account`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json; charset=utf-8",
-							"Authorization": "Token " + userObj.auth_token,
-						},
-						body: JSON.stringify(p2pID),	// json 데이터를 전송
-			})
-				.then(res => {
-					if( res.ok ){
-						res.json().then( data => {
-							// 유저계좌정보 저장
-							setAccount(data)
-						})
-					}else {
-						console.log('계좌 정보가 없습니다.')
-						setAccount(undefined)
-					}
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json; charset=utf-8",
+								"Authorization": "Token " + userObj.auth_token,
+							},
+							body: JSON.stringify(p2pID),	// json 데이터를 전송
 				})
-				.catch(error =>  console.log(error));
-		
+					.then(res => {
+						if( res.ok ){
+							res.json().then( data => {
+								// 유저계좌정보 저장
+								handleAccount(data)
+							})
+						}else {
+							handleAccount(undefined)
+						}
+					})
+					.catch(error =>  console.log(error));
+			}
+	}
+
+	const getBalanceData = (p2pID: { company_id: number, refresh: number}) => {
+
+		if(userObj !== null) {
 			fetch(`http://192.168.0.69:8000/api/${nickName}/balance`, {
 						method: "POST",
 						headers: {
@@ -175,22 +185,39 @@ export default function Home(props: HomeProps) {
 					if( res.ok ){
 						res.json().then( data => {
 							// 회사 투자정보 저장
-							setFund(data)
+							handleFund(data)
 						})
 					}else {
-						console.log('투자 정보가 없습니다.')
-						setFund({
+						handleFund({
 							total_investment : "-",
 							number_of_investing_products : "-",
 							residual_investment_price : "-"
-						})
-					}
+						})					}
 				})
 				.catch(error =>  console.log(error));
 		}
 	}
+	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
+	const getUserDataOfCompany = (refresh: number, id?: number) => {
+		let idValue = companyID;
+		if(id) {
+			idValue = id
+		}
+		let p2pID = {
+			company_id : idValue,
+			refresh: refresh
+		};
+		
+		console.log('현재 company ', company)
+		if (userObj !== null) {
+			getAccountData(p2pID)
+			getBalanceData(p2pID)
+		}
+	}
 	useEffect(() => {
-		getUserDataOfCompany(1)
+		if( companyID !== 0){
+			getUserDataOfCompany(0, companyID)
+		}
 	}, [companyID])
 
 	const handleClickUpButton = () => {
@@ -198,7 +225,6 @@ export default function Home(props: HomeProps) {
 	}
 
 	const [scrollY, setScrollY] = useState(0)
-	
 	const handleScroll = () => {
 		setScrollY(window.pageYOffset)
 	}
@@ -216,10 +242,12 @@ export default function Home(props: HomeProps) {
 					<div className={classes.homeContainer}>
 						<Profile userObj={userObj} handleLogOut={handleLogOut} 
 						companyID={companyID} getUserDataOfCompany={getUserDataOfCompany}/>
+
 						{/* 나의투자, 포인트 내역, 초대하기 */}
 						{tabName === "MY_FUNDING" ? 
-							<>
+						<>
 							<P2PList 
+							getUserDataOfCompany={getUserDataOfCompany}
 							P2PList={props.P2PList} userObj={userObj} 
 							handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
 							handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
@@ -232,25 +260,16 @@ export default function Home(props: HomeProps) {
 									</Typography>	
 								</li>
 								{company !== "all" && account !== undefined ?
-									<li className={classes.contentItem}>
-										<Account account={account}/>
-									</li>
+									<li className={classes.contentItem}><Account account={account}/></li>
 								: null
 								}
-								<li className={classes.contentItem}>
-				{/* 잔고 */}			<Balance fund={fund}/>
-								</li>
-
-								{company !== "all" && 
-									<li className={classes.contentItem}>
-				{/* 입출금 내역 */}			<Transaction />
-									</li>
+				{/* 잔고 */}			<li className={classes.contentItem}><Balance fund={fund}/></li>
+				{/* 입출금 내역 */}	{company !== "all" && 
+									<li className={classes.contentItem}><Transaction /></li>
 								}
-			{/* 투자 내역 관리 */}	<li className={classes.contentItem}>
-									<Funding company={company}/>
-								</li>
+			{/* 투자 내역 관리 */}		<li className={classes.contentItem}><Funding company={company}/></li>
 							</ul>
-							</>						
+						</>						
 						: tabName === "POINT_TOTAL" ? 
 							<Point userObj={userObj}/>
 						: tabName === "INVITE" ? 
@@ -260,9 +279,7 @@ export default function Home(props: HomeProps) {
 				</Grid>
 				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
 				<Grid item xs={3} className={classes.asideContainer}>
-					<div  className={classes.asideItem}>
-						<Calendar />
-					</div>
+					<div  className={classes.asideItem}><Calendar /></div>
 					<div  className={classes.asideItem}>
 						<Typography variant="h5">💙 모집 중인 상품 </Typography>
 						<div className={classes.productList}><Product /></div>
