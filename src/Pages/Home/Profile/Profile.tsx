@@ -65,9 +65,9 @@ const StyledBadge = withStyles((theme) => ({
 
 interface ProfileProps {
 	userObj : userInfo | null,
-	handleLogOut:any,
-	
 	companyID: number,
+	
+	handleLogOut:() => void,
 	getUserDataOfCompany: (refresh: number, id?: number) => void
 }
 export default function Profile(props:ProfileProps) {

@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
 import logo from '../../asset/img/logo.webp'
 import { useHistory } from 'react-router';
+import { userInfo } from '../../Interface/User';
 // TODO: 로그인 페이지 
 
 const useStyles = makeStyles({
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 });
 
 interface AuthProps {
-     handleLogIn : any
+     handleLogIn : ( data: userInfo ) => void
 }
 export default function Auth (Props:AuthProps) {
      const classes = useStyles()

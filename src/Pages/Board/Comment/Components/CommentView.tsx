@@ -29,9 +29,9 @@ interface viewProps {
      commentItem?: commentInfo
      recommentItem?: commentInfo,
      
-     handleEditComment: any,
-     handleDelete : any,
-     handleUpdateComment: any,
+     handleEditComment: (commendId? :number) => void,
+     handleDelete : (commendId : number) => void,
+     handleUpdateComment: () => void,
      getReComment: (parentId: number | null) => void
 }
 interface stateProps {

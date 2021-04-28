@@ -8,9 +8,9 @@ interface formProps {
      postId? : number // 게시글 id
      parentId? : number // 답글 상위 댓글 id 
      userObj: userInfo | null, 
-     handleUpdateComment? : any, // 댓글 업데이트 함수 
+     handleUpdateComment? : () => void, // 댓글 업데이트 함수 
      handleEditComment?:(commentId?: number) => void,
-     handleUpdateReComment? : any, // 답글 업데이트 함수 
+     handleUpdateReComment? : (parendId: number) => void, // 답글 업데이트 함수 
 
      commentItem?: commentInfo // 수정 중인 댓글 데이터 
 }
@@ -78,7 +78,7 @@ export default function CommentForm(props: formProps) {
                     }
                })
                .then(res => {
-                    if(parentId) { // 답글일 경우 답글 초기화 및 업데이트
+                    if(parentId && handleUpdateReComment) { // 답글일 경우 답글 초기화 및 업데이트
                          setRecomment("")
                          handleUpdateReComment(parentId)
                     }else {
@@ -86,7 +86,7 @@ export default function CommentForm(props: formProps) {
                          if(commentItem && handleEditComment){
                               handleEditComment()
                          }
-                         handleUpdateComment()
+                         if(handleUpdateComment) handleUpdateComment()
                     }
                })
                .catch(function(error) {
@@ -111,7 +111,6 @@ export default function CommentForm(props: formProps) {
                                    label="내용"
                                    multiline
                                    rows={3}
-                                   defaultValue="주제와 무관한 댓글, 악플은 삭제될 수 있습니다."
                                    variant="outlined"
                                    fullWidth
                                    onChange={handleChange}

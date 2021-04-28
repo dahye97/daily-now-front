@@ -9,9 +9,9 @@ interface P2PRegisterProps {
      userObj : userInfo | null,
      open: boolean,// 폼 오픈 여부
 
-     handleClose: any, // 폼 닫기
-     handleP2PUpdated : any, // 회사 추가 여부 
-     getAllCompany: any, // 회사 id fetch
+     handleClose: () => void, // 폼 닫기
+     handleP2PUpdated : () => void, // 회사 추가 여부 
+     getAllCompany: () => void, // 회사 id fetch
 
      allCompany: Array<companyInfo>
      handleChangeAllCompany: (company: companyInfo[]) => void
@@ -108,18 +108,19 @@ export default function P2PRegister(props: P2PRegisterProps) {
           setUserName('')
           setPassword('')
           setP2PName('')
-          setValue('')
+          setValue(null)
           setInputValue('')
           setFilteredCompany([])
      }, [open])
      
-     
+
      const [value, setValue] = useState<string | null>();
      const [inputValue, setInputValue] = useState('');
 
      const [filteredCompany, setFilteredCompany] = useState<companyInfo[]>([])
      useEffect(() => {
-          if(value !== '' && typeof(value) === 'string'){
+          console.log(value, inputValue, filteredCompany)
+          if(value !== null && typeof(value) === 'string'){
                setFilteredCompany(allCompany.filter( company => {
                     return company.company_name.includes(value)
                }))
@@ -136,7 +137,6 @@ export default function P2PRegister(props: P2PRegisterProps) {
      }
      , [value])
 
-
      return (
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                <DialogTitle id="form-dialog-title">연동 회사 등록</DialogTitle>
@@ -146,7 +146,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          <AlertTitle>등록 { isError.isTrue ? "실패" : "성공"}</AlertTitle>
                          <strong>{isError.message}</strong>
                     </Alert>
-               </Collapse>
+               </Collapse> 
                <DialogContent>
                     <DialogContentText>
                     연동할 회사와 회원 ID, 패스워드를 입력해주세요.
@@ -157,7 +157,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          onChange={(event: any, newValue: string | null) => {
                               setValue(newValue);
                          }}
-                         options={(filteredCompany.length !== 0 ? filteredCompany : allCompany).map((company) => company.company_name)}
+                         options={(value === null ? allCompany : filteredCompany).map((company) => company.company_name)}
                          renderInput={(params: any) => (
                               <TextField {...params} label="연동할 회사" margin="normal" variant="outlined" />
                          )}

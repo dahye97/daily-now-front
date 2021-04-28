@@ -210,11 +210,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           getDetailData()
      }, [isClicked])
 
-     // 댓글 추가 실시간 업데이트 처리 함수
-     const handleUpdateComment = () => {
-          getCommentList()
-     }
- 
      // 게시물에 대해 유저가 선택한 공감/비공감 정보 데이터 업데이트
      useEffect(() => {
           if(detailPost.like_dislike === 1) { 
@@ -224,6 +219,11 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                setPressableLike(false)
           }
      }, [detailPost])
+
+     // 댓글 추가 실시간 업데이트 처리 함수
+     const handleUpdateComment = () => {
+          getCommentList()
+     }
 
      // 게시글 수정, 삭제 함수 
      const handleEditPost = () => {

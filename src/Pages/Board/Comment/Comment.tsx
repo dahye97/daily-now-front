@@ -34,7 +34,7 @@ interface CommentProps {
      userObj : userInfo | null,
      commentList: Array<commentInfo>,
      postId : number,
-     handleUpdateComment:any
+     handleUpdateComment:() => void
 }
 function Comment(props:CommentProps) {
      const classes = useStyles();
@@ -142,8 +142,8 @@ function Comment(props:CommentProps) {
                                         <div>
                                              {recommentList.map((recommentItem) => {
                                                   return (
-                                                       <div style={{display:"flex", justifyContent: "space-between"}}>
-                                                            <CommentView key={recommentItem.comment_id}
+                                                       <div key={recommentItem.comment_id} style={{display:"flex", justifyContent: "space-between"}}>
+                                                            <CommentView
                                                             handleUpdateComment={handleUpdateComment}
                                                              recommentItem={recommentItem} handleEditComment={handleEditComment} 
                                                              handleDelete={handleDelete} getReComment={getReComment} userObj={userObj}/>

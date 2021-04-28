@@ -114,7 +114,6 @@ export default function NewPost(props: newPostProps) {
                          label="내용"
                          multiline
                          rows={10}
-                         defaultValue="내용을 입력해주세요."
                          variant="outlined"
                          onChange={handleChange}
                     />

@@ -77,7 +77,7 @@ export default function Post(props: PostProps) {
                })
      }
 
-     // 카테고리 ID가 변경되면 LIST 업데이트
+     // 카테고리 ID, 페이지 인덱스가 변경되면 LIST 업데이트
      useEffect(() => {
           getPostList("")
           setPage(0)

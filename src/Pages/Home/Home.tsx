@@ -16,8 +16,6 @@ import Transaction from './Profile/Funding/Transaction';
 import Funding from './Profile/Funding/Funding';
 import Point from './Profile/Point/Point';
 import Account from './Profile/Funding/Account';
-import Calendar from './Calendar';
-import Product from './Product';
 
 const useStyles = makeStyles({
 	home: {
@@ -43,9 +41,6 @@ const useStyles = makeStyles({
 		marginTop: "80px",
 	},
 	'@media(max-width: 1270px)' : {
-		asideContainer: {
- //
-		},
 		home: {
 			display: 'block',
 			width: 'fit-content',
@@ -107,7 +102,7 @@ const useStyles = makeStyles({
 interface HomeProps {
 	userObj: userInfo | null,
 	P2PList: Array<p2pInfo>
-	handleLogOut: any,
+	handleLogOut: () => void,
 	handleAddP2P : (data: Array<p2pInfo>) => void
 }
 export default function Home(props: HomeProps) {
@@ -166,7 +161,7 @@ export default function Home(props: HomeProps) {
 							handleAccount(undefined)
 						}
 					})
-					.catch(error =>  console.log(error));
+					.catch(error =>  console.log('계좌 정보가 없습니다.'));
 			}
 	}
 
@@ -194,7 +189,7 @@ export default function Home(props: HomeProps) {
 							residual_investment_price : "-"
 						})					}
 				})
-				.catch(error =>  console.log(error));
+				.catch(error =>  console.log('투자 정보가 없습니다.'));
 		}
 	}
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
@@ -215,6 +210,7 @@ export default function Home(props: HomeProps) {
 		}
 	}
 	useEffect(() => {
+		console.log(companyID)
 		if( companyID !== 0){
 			getUserDataOfCompany(0, companyID)
 		}
@@ -252,6 +248,7 @@ export default function Home(props: HomeProps) {
 							handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
 							handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
 							<ul className={classes.contentList}>
+								<h2 style={{textAlign: 'center'}}>{company !== "all" && `🏬 ${company}`}</h2>
 			{/* 보유 예치금 */} 	<li className={classes.contentItem}>
 									<Typography className={classes.deposit} variant="h5">
 										💰 {company === "all"? "총" : "현"} 보유 예치금
@@ -276,14 +273,6 @@ export default function Home(props: HomeProps) {
 							<Share userObj={userObj}/>
 						: null}
 						</div>
-				</Grid>
-				{ /* 사이드 바 : 월간 내역, 모집 중인 상품 리스트 */}
-				<Grid item xs={3} className={classes.asideContainer}>
-					<div  className={classes.asideItem}><Calendar /></div>
-					<div  className={classes.asideItem}>
-						<Typography variant="h5">💙 모집 중인 상품 </Typography>
-						<div className={classes.productList}><Product /></div>
-					</div>
 				</Grid>
 			</Grid>
 			{tabName=="POINT_TOTAL" && ( scrollY > 500) &&

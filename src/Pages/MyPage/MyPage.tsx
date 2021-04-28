@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 
 interface MyPageProps {
      userObj: userInfo | null
-     handleWithdrawal: any
+     handleWithdrawal: () => void
 }
 // TODO: 탈퇴, 회원정보 수정
 export default function MyPage( props: MyPageProps) {

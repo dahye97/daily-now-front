@@ -10,7 +10,8 @@ export interface userInfo {
 export interface p2pInfo {
      uid: number,
      company_name:string,
-     nickname: string
+     nickname: string,
+     company_id: number
 }
 
 export interface accountInfo {

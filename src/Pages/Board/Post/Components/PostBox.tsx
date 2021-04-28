@@ -26,8 +26,8 @@ interface PostBoxProps {
      postList : postInfo
      rowsPerPage: number
      page:number
-     handleChangePage: any
-     handleChangeRowsPerPage:any
+     handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void
+     handleChangeRowsPerPage:(event: React.ChangeEvent<HTMLInputElement>) => void
 }
 // 실제 탭 패널 내용 
 export default function PostBox(props: PostBoxProps) {
