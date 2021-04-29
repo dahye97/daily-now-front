@@ -120,14 +120,14 @@ export default function CommentForm(props: formProps) {
      return (
           <>
                {/* 댓글, 답글 폼 */}
-               <Typography component="div">
+               <Typography component="div" style={{border: '1px solid #D0D0D0', padding: '15px'}}>
+                              <b>{userObj?.email.split('@')[0]}</b>
                               <TextField
                                    value={comment? comment : recomment}
                                    id="contentField"
                                    label="내용"
                                    multiline
                                    rows={3}
-                                   variant="outlined"
                                    fullWidth
                                    onChange={handleChange}
                               />          

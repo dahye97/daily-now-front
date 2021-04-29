@@ -26,9 +26,15 @@ const useStyles = makeStyles({
           textAlign: "center",
           paddingTop: "30px",
      },
+     recommentContainer: {
+          display:"flex",
+          flexDirection:"column",
+          background: '#FBFCFD'
+     },
      recommentItem: {
-          display: 'none'
-     }
+          display: 'none',
+     },
+
    });
 interface CommentProps {
      userObj : userInfo | null,
@@ -102,7 +108,7 @@ function Comment(props:CommentProps) {
           <>
            {/* ✅ 댓글 */}
            <Paper className={classes.commentPaper}>
-               <h3>댓글 {commentList.length}</h3>  
+               <h3>댓글 {commentList.length + recommentList.length}</h3>  
                {/* 댓글 입력 폼 */}  
                <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj}/>
                {/* 댓글 리스트  */}
@@ -110,6 +116,7 @@ function Comment(props:CommentProps) {
                '댓글이 없습니다.' 
                : 
                     <Card>
+                         {/* <span style={{background: 'green'}}><img src="https://guest.goodchoice.kr/img/asset/icn_1_info_64x64.png" /></span> */}
                          <ul style={{padding: '20px', listStyle: 'none'}}>
                          {commentList.map( commentItem => {
                          return (
@@ -127,17 +134,16 @@ function Comment(props:CommentProps) {
                               </>
                               : 
                               // 📌 댓글 창
-                                   <div style={{display:"flex", justifyContent: "space-between"}}>
+
                                         <CommentView 
                                         handleUpdateComment={handleUpdateComment}
                                         commentItem={commentItem} handleEdit={handleEdit} 
                                         handleDelete={handleDelete} getReComment={getReComment}
                                         userObj={userObj} />
-                                   </div>
                                    }
 
                               {/* 📌 답글 창 */}
-                                   <AccordionDetails style={{display:"flex", flexDirection:"column"}}>
+                                   <AccordionDetails className={classes.recommentContainer}>
                                         <div>
                                              {recommentList.map((recommentItem) => {                                                  
                                                   return (
@@ -151,7 +157,7 @@ function Comment(props:CommentProps) {
                                                              
                                                             <Button onClick={() => setIsEditing('')}>취소</Button>
                                                        </>
-                                                       : (<div key={recommentItem.comment_id} style={{display:"flex", justifyContent: "space-between"}}>
+                                                       : (<div key={recommentItem.comment_id}>
                                                             <CommentView
                                                             handleUpdateComment={handleUpdateComment}
                                                              recommentItem={recommentItem} handleEdit={handleEdit} 

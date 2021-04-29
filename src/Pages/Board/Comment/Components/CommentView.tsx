@@ -13,15 +13,25 @@ import { commentInfo } from '../../../../Interface/Board'
 import { userInfo } from '../../../../Interface/User';
 
 const useStyles = makeStyles({
+     commentContainer : {
+          padding: '20px',
+          
+          '& li' : {
+               padding: '3px'
+          }
+     },
      handButton: {
           textAlign: "center",
-          paddingTop: "30px",
      },
      button: {
-          color: '#ffb303',
+          color: '#64b5f6',
+          padding: '5px',
+          fontSize: "1.2rem"
       },
       disabledButton: {
-           color: '#cfcfcf'
+           color: '#cfcfcf',
+           padding: '5px',
+           fontSize: "1.2rem"
       }
 })
 interface viewProps {
@@ -136,40 +146,53 @@ function CommentView(props: viewProps) {
           <>
           {item &&
                <>
-               <div>
-          {/* 작성자 */} <li>{item.user.substr(0,4) + "****"}</li>      
-          {/* 내용 */}   <li>{item.comment_content}</li>
-          {/* 시간 */}   <li>{item.date.split('T')[0].replaceAll('-','. ')}</li>
-          {/* 답글 */}   {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글</Button>}
-          {/* 공감, 비공감 */}
-                         <Typography component="span" className={classes.handButton}>
+               <div className ={ classes.commentContainer}>
+          {/* 작성자 */} <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
+                              <span><b>{item.user.substr(0,4) + "****"}</b></span>
+                              
+          {/* 수정, 삭제 버튼 */}
+                                   { item.editable &&
+                                        <span>
+                                             <IconButton onClick={() => {
+                                                  handleEdit(item.comment_id)
+                                                  }}><EditIcon /></IconButton>
+                                             <IconButton onClick={() => {
+                                                  handleDelete(item.comment_id)
+                                                  }}><DeleteForeverIcon /></IconButton>
+                                        </span>  
+                                   }
+
+                         </li>      
+          {/* 내용 */}   <li style={{margin: '20px 0'}}>{item.comment_content}</li>
+          {/* 시간 */}   <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
+               
+                              <span style={{color: '#9e9e9e'}}>{item.date.split('T')[0].replaceAll('-','. ')}</span>
+
+          {/* 공감, 비공감 */}               
+                          <Typography component="span" className={classes.handButton}>
                               <IconButton 
                               aria-label="like"
                               className={pressableLike ? classes.button : classes.disabledButton}
                               onClick={(e: React.MouseEvent) => handleLikeDisLike(e, item.comment_id)}
                               >
-                                   <ThumbUpAltIcon /> {item.like}
+                                   <ThumbUpAltIcon  fontSize="small"/> {item.like}
                               </IconButton>
                               <IconButton 
                               aria-label="dislike"
                               className={pressableDislike ? classes.button : classes.disabledButton}
                               onClick={(e: React.MouseEvent) => handleLikeDisLike(e,item.comment_id)}
                               >
-                                   <ThumbDownIcon /> {item.dislike}
+                                   <ThumbDownIcon  fontSize="small"/> {item.dislike}
                               </IconButton>
                          </Typography>
+                              
+                    </li>
+
+                         <div  style={{display:"flex", justifyContent: "space-between",}}>
+               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글</Button>}
+                         </div>
                </div>
-          {/* 수정, 삭제 버튼 */}
-                    { item.editable &&
-                         <div>
-                              <IconButton onClick={() => {
-                                   handleEdit(item.comment_id)
-                                   }}><EditIcon /></IconButton>
-                              <IconButton onClick={() => {
-                                    handleDelete(item.comment_id)
-                                   }}><DeleteForeverIcon /></IconButton>
-                         </div>  
-                    }
+
                </>
                }
           </>
