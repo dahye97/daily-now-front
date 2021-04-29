@@ -75,7 +75,7 @@ function Comment(props:CommentProps) {
 
      // 댓글 수정, 삭제 함수
      const [isEditing, setIsEditing] = useState('')
-     const handleEditComment = (commentId? : number) => {
+     const handleEdit = (commentId? : number) => {
           setIsEditing('panel'+commentId)
      }
      const handleDelete = (commentId : number) => {
@@ -89,7 +89,6 @@ function Comment(props:CommentProps) {
                     }
                })
                .then(res => {
-                    alert('댓글이 삭제되었습니다.')
                     handleUpdateComment()
                })
                .catch(function(error) {
@@ -122,7 +121,7 @@ function Comment(props:CommentProps) {
                               <>
                               {/* 📌 댓글 수정 창 */}
                                    <CommentForm key={commentItem.comment_id}
-                                   handleEditComment={handleEditComment} handleUpdateComment={handleUpdateComment} 
+                                   handleEdit={handleEdit} handleUpdateComment={handleUpdateComment} 
                                    commentItem={commentItem} userObj={userObj}/>
                                    <Button onClick={() => setIsEditing('')}>취소</Button>
                               </>
@@ -131,7 +130,7 @@ function Comment(props:CommentProps) {
                                    <div style={{display:"flex", justifyContent: "space-between"}}>
                                         <CommentView 
                                         handleUpdateComment={handleUpdateComment}
-                                        commentItem={commentItem} handleEditComment={handleEditComment} 
+                                        commentItem={commentItem} handleEdit={handleEdit} 
                                         handleDelete={handleDelete} getReComment={getReComment}
                                         userObj={userObj} />
                                    </div>
@@ -140,14 +139,25 @@ function Comment(props:CommentProps) {
                               {/* 📌 답글 창 */}
                                    <AccordionDetails style={{display:"flex", flexDirection:"column"}}>
                                         <div>
-                                             {recommentList.map((recommentItem) => {
+                                             {recommentList.map((recommentItem) => {                                                  
                                                   return (
-                                                       <div key={recommentItem.comment_id} style={{display:"flex", justifyContent: "space-between"}}>
+
+                                                       isEditing === 'panel' + recommentItem.comment_id ?    
+                                                       <>
+                                                       {/* 📌 답글 수정 창 */}
+                                                            <CommentForm key={recommentItem.comment_id}
+                                                            handleEdit={handleEdit} handleUpdateReComment={handleUpdateReComment} 
+                                                            recommentItem={recommentItem} userObj={userObj} parentId={ recommentItem.parent_comment}/>
+                                                             
+                                                            <Button onClick={() => setIsEditing('')}>취소</Button>
+                                                       </>
+                                                       : (<div key={recommentItem.comment_id} style={{display:"flex", justifyContent: "space-between"}}>
                                                             <CommentView
                                                             handleUpdateComment={handleUpdateComment}
-                                                             recommentItem={recommentItem} handleEditComment={handleEditComment} 
+                                                             recommentItem={recommentItem} handleEdit={handleEdit} 
                                                              handleDelete={handleDelete} getReComment={getReComment} userObj={userObj}/>
-                                                       </div>
+                                                       </div>) 
+                                                       
                                                   )
                                              })}
                                         </div>

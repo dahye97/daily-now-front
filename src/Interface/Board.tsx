@@ -47,7 +47,7 @@ export interface commentInfo {
      like: number,
      dislike: number,
      post_id: number,
-     parent_comment: null,
+     parent_comment: number,
      
      editable: boolean,
      like_dislike: number

@@ -29,7 +29,7 @@ interface viewProps {
      commentItem?: commentInfo
      recommentItem?: commentInfo,
      
-     handleEditComment: (commendId? :number) => void,
+     handleEdit: (commendId? :number) => void,
      handleDelete : (commendId : number) => void,
      handleUpdateComment: () => void,
      getReComment: (parentId: number | null) => void
@@ -41,7 +41,7 @@ function CommentView(props: viewProps) {
      const classes = useStyles();
      const location = useLocation<stateProps>();
      const { userObj, commentItem, recommentItem, 
-          handleEditComment,handleDelete,getReComment,handleUpdateComment } = props;
+          handleEdit,handleDelete,getReComment,handleUpdateComment } = props;
 
      const [item, setItem] = useState<commentInfo>()
 
@@ -139,7 +139,7 @@ function CommentView(props: viewProps) {
                <div>
           {/* 작성자 */} <li>{item.user.substr(0,4) + "****"}</li>      
           {/* 내용 */}   <li>{item.comment_content}</li>
-          {/* 시간 */}   <li>{item.date}</li>
+          {/* 시간 */}   <li>{item.date.split('T')[0].replaceAll('-','. ')}</li>
           {/* 답글 */}   {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글</Button>}
           {/* 공감, 비공감 */}
                          <Typography component="span" className={classes.handButton}>
@@ -163,12 +163,10 @@ function CommentView(props: viewProps) {
                     { item.editable &&
                          <div>
                               <IconButton onClick={() => {
-                                   if(commentItem) handleEditComment(item.comment_id)
-                                   else console.log('답글 수정')
+                                   handleEdit(item.comment_id)
                                    }}><EditIcon /></IconButton>
                               <IconButton onClick={() => {
-                                   if(commentItem) handleDelete(item.comment_id)
-                                   else console.log('답글 삭제')
+                                    handleDelete(item.comment_id)
                                    }}><DeleteForeverIcon /></IconButton>
                          </div>  
                     }

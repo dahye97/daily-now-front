@@ -6,16 +6,17 @@ import { commentInfo } from '../../../../Interface/Board';
 
 interface formProps {
      postId? : number // 게시글 id
-     parentId? : number // 답글 상위 댓글 id 
+     parentId? : number  // 답글 상위 댓글 id 
      userObj: userInfo | null, 
      handleUpdateComment? : () => void, // 댓글 업데이트 함수 
-     handleEditComment?:(commentId?: number) => void,
+     handleEdit?:(commentId?: number) => void,
      handleUpdateReComment? : (parendId: number) => void, // 답글 업데이트 함수 
 
      commentItem?: commentInfo // 수정 중인 댓글 데이터 
+     recommentItem? : commentInfo // 수정 중인 답글 데이터 
 }
 export default function CommentForm(props: formProps) {
-     const { parentId,userObj,postId,handleUpdateComment,handleUpdateReComment,handleEditComment, commentItem } = props;
+     const { parentId,userObj,postId,handleUpdateComment,handleUpdateReComment,handleEdit, commentItem,recommentItem } = props;
      const [comment, setComment] = useState("")
      const [recomment, setRecomment] = useState("")
 
@@ -38,18 +39,30 @@ export default function CommentForm(props: formProps) {
           let url = "write_comment"
           let data;
 
-         if(parentId) { // 답글
-               if( recomment.length <= 3) {
-                    alert('3자 이상 입력해주세요.');
-               }else {
+         if(parentId) { // 1. 답글
+          console.log(recommentItem)
+               if( recommentItem) {
+                    url = "update_comment"
                     data = {
-                         post_id: postId,
-                         comment_content : recomment,
-                         parent_comment : parentId
-                    } // 답글 일때 보낼 데이터 
-                    canSubmit = true;
+                         comment_id: recommentItem.comment_id,
+                         comment_content: recomment
+                    }
+                    canSubmit = true;   
                }
-         }else { // 댓글
+               else {
+                    if( recomment.length <= 3) {
+                         alert('3자 이상 입력해주세요.');
+                    }else {
+                         data = {
+                              post_id: postId,
+                              comment_content : recomment,
+                              parent_comment : parentId
+                         } // 답글 일때 보낼 데이터 
+                         canSubmit = true;
+                    }
+               }
+              
+         }else { // 2. 댓글
                if(commentItem){
                     url = "update_comment"
                     data = {
@@ -78,13 +91,14 @@ export default function CommentForm(props: formProps) {
                     }
                })
                .then(res => {
+                    setRecomment("")
                     if(parentId && handleUpdateReComment) { // 답글일 경우 답글 초기화 및 업데이트
-                         setRecomment("")
-                         handleUpdateReComment(parentId)
+                         if(handleEdit) handleEdit()
+                         if(handleUpdateReComment) handleUpdateReComment(parentId)
                     }else {
-                         setComment("") // 댓글일 경우 댓글 초기화 및 업데이트
-                         if(commentItem && handleEditComment){
-                              handleEditComment()
+                         setComment("")
+                         if(commentItem && handleEdit){ // 댓글일 경우 댓글 초기화 및 업데이트
+                              handleEdit()
                          }
                          if(handleUpdateComment) handleUpdateComment()
                     }
@@ -98,12 +112,14 @@ export default function CommentForm(props: formProps) {
      useEffect(() => {
           if(commentItem) {
                setComment(commentItem.comment_content)
+          } else if(recommentItem) {
+               setRecomment(recommentItem.comment_content)
           }
-     }, [commentItem])
+     }, [commentItem, recommentItem])
 
      return (
           <>
-               {/* 댓글 폼 */}
+               {/* 댓글, 답글 폼 */}
                <Typography component="div">
                               <TextField
                                    value={comment? comment : recomment}
