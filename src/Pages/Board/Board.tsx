@@ -129,7 +129,7 @@ export default function Board (props: BoardProps){
      }
      return (
           <Container maxWidth="md" className={classes.boardContainer}>
-			<h1>💫 Community </h1>
+			<h1>💬 토론해요 </h1>
                <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판
                          <>

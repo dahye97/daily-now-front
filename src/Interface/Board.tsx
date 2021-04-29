@@ -48,6 +48,7 @@ export interface commentInfo {
      dislike: number,
      post_id: number,
      parent_comment: number,
+     num_child : number // 답글 수
      
      editable: boolean,
      like_dislike: number

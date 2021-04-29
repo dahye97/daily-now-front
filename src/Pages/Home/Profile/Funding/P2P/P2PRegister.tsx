@@ -42,7 +42,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
 		isTrue: false,
 		message: ""
 	})
-     // 연동 회사 등록 폼 인풋 핸들러
+     // 연동 회사 등록 폼 input 핸들러
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
@@ -58,6 +58,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
      }
 	
+     // 연동 회사 등록 함수 
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
 
@@ -104,6 +105,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
           }
 
+     // 폼 초기화 핸들러 함수
      useEffect(() => {
           setUserName('')
           setPassword('')
@@ -117,6 +119,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
      const [value, setValue] = useState<string | null>();
      const [inputValue, setInputValue] = useState('');
 
+     // 회사 검색 결과 핸들러 함수
      const [filteredCompany, setFilteredCompany] = useState<companyInfo[]>([])
      useEffect(() => {
           console.log(value, inputValue, filteredCompany)

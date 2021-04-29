@@ -8,7 +8,6 @@ const useStyles = makeStyles({
      },
      randing : {
           position:'relative',
-          margin: '20px',
           backgroundImage: `url(${randingImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -32,7 +31,12 @@ const useStyles = makeStyles({
           lineHeight: "1.3125"
      },
      content: {
-          color: "#198BFB"
+          // color: "#198BFB"
+     },
+     '@media(max-width: 1320px)' : {
+		title: {
+               display: 'none'
+		}
      }
 });
 
@@ -43,8 +47,7 @@ export default function Randing () {
                     <Card className={classes.randing} elevation={3}>
                          <div className={classes.header}>
                               <Typography className={classes.title}variant="h1" component="h1">
-                                        투자 관리는?
-                                        <p className={classes.content}>Daily Check!</p>
+                                        <p>Daily Check</p>
                               </Typography>
                          </div>
 				</Card>

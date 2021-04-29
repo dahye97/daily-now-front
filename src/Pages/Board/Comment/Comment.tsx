@@ -108,7 +108,7 @@ function Comment(props:CommentProps) {
           <>
            {/* ✅ 댓글 */}
            <Paper className={classes.commentPaper}>
-               <h3>댓글 {commentList.length + recommentList.length}</h3>  
+               <p>댓글 <b style={{color: 'red'}}>{commentList.length + recommentList.length}</b></p>  
                {/* 댓글 입력 폼 */}  
                <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj}/>
                {/* 댓글 리스트  */}
@@ -116,58 +116,74 @@ function Comment(props:CommentProps) {
                '댓글이 없습니다.' 
                : 
                     <Card>
-                         {/* <span style={{background: 'green'}}><img src="https://guest.goodchoice.kr/img/asset/icn_1_info_64x64.png" /></span> */}
+                         {/* <span style={{display: 'inline-block', background: 'green'}}>
+                              <img src="https://guest.goodchoice.kr/img/asset/icn_1_info_64x64.png" />
+                         </span> */}
                          <ul style={{padding: '20px', listStyle: 'none'}}>
                          {commentList.map( commentItem => {
                          return (
+                              // 💡 댓글은 선택된 comment만 접히도록 하기 위해 Accordion 태그를 map 함수 안에 두어 commentItem 마다 Accordion을 감싸도록 한다.
                              <Accordion 
-                             expanded={isExpanded === ('panel'+commentItem.comment_id)} 
-                             className={classes.commentItem} key={commentItem.comment_id}>
-                              
+                                   expanded={isExpanded === ('panel'+commentItem.comment_id)} 
+                                   className={classes.commentItem} 
+                                   key={commentItem.comment_id}
+                             >
                               {isEditing === 'panel' + commentItem.comment_id ? 
                               <>
                               {/* 📌 댓글 수정 창 */}
-                                   <CommentForm key={commentItem.comment_id}
-                                   handleEdit={handleEdit} handleUpdateComment={handleUpdateComment} 
-                                   commentItem={commentItem} userObj={userObj}/>
+                                   <CommentForm 
+                                   handleEdit={handleEdit} 
+                                   handleUpdateComment={handleUpdateComment} 
+                                   commentItem={commentItem} 
+                                   userObj={userObj}/>
                                    <Button onClick={() => setIsEditing('')}>취소</Button>
                               </>
                               : 
                               // 📌 댓글 창
-
                                         <CommentView 
+                                        handleEdit={handleEdit} 
                                         handleUpdateComment={handleUpdateComment}
-                                        commentItem={commentItem} handleEdit={handleEdit} 
+                                        commentItem={commentItem} 
                                         handleDelete={handleDelete} getReComment={getReComment}
                                         userObj={userObj} />
                                    }
 
-                              {/* 📌 답글 창 */}
                                    <AccordionDetails className={classes.recommentContainer}>
                                         <div>
                                              {recommentList.map((recommentItem) => {                                                  
                                                   return (
-
                                                        isEditing === 'panel' + recommentItem.comment_id ?    
                                                        <>
                                                        {/* 📌 답글 수정 창 */}
-                                                            <CommentForm key={recommentItem.comment_id}
-                                                            handleEdit={handleEdit} handleUpdateReComment={handleUpdateReComment} 
-                                                            recommentItem={recommentItem} userObj={userObj} parentId={ recommentItem.parent_comment}/>
+                                                            <CommentForm 
+                                                            key={recommentItem.comment_id}
+                                                            handleEdit={handleEdit} 
+                                                            handleUpdateReComment={handleUpdateReComment} 
+                                                            recommentItem={recommentItem} 
+                                                            userObj={userObj} 
+                                                            parentId={ recommentItem.parent_comment}/>
                                                              
                                                             <Button onClick={() => setIsEditing('')}>취소</Button>
                                                        </>
-                                                       : (<div key={recommentItem.comment_id}>
+
+                                                       : 
+                                                       // 📌 답글 창
                                                             <CommentView
+                                                            key={recommentItem.comment_id}
+                                                            handleEdit={handleEdit} 
                                                             handleUpdateComment={handleUpdateComment}
-                                                             recommentItem={recommentItem} handleEdit={handleEdit} 
-                                                             handleDelete={handleDelete} getReComment={getReComment} userObj={userObj}/>
-                                                       </div>) 
+                                                            recommentItem={recommentItem} 
+                                                            handleDelete={handleDelete} getReComment={getReComment}
+                                                            userObj={userObj}/>
                                                        
                                                   )
                                              })}
                                         </div>
-                                        <CommentForm handleUpdateReComment={handleUpdateReComment} postId={postId} userObj={userObj} parentId={commentItem.comment_id}/>
+                                        <CommentForm 
+                                        handleUpdateReComment={handleUpdateReComment}
+                                        postId={postId} 
+                                        userObj={userObj} 
+                                        parentId={commentItem.comment_id}/>
                                         <Button onClick={handleCloseRecomment}>답글 접기</Button>
                                    </AccordionDetails>
                               </Accordion>

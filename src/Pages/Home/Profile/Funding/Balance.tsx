@@ -9,9 +9,6 @@ interface BalanceProps {
 }
 
 const useStyles = makeStyles({
-	accountContainer: {
-
-     },
      ul : {
           listStyle: 'none',
           padding: '0 40px',
