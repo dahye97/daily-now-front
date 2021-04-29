@@ -4,7 +4,6 @@ import logo from '../../asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
 import { useHistory, useLocation } from "react-router";
-import {RegisterErrorInfo} from '../../Interface/Error';
 import queryString from 'query-string'
 
 // 회원가입 페이지
@@ -39,7 +38,7 @@ export default function Registration() {
      
      const queryObj = queryString.parse(location.search);
      const { share, ucode }= queryObj;
-     console.log(share,ucode)
+
      const classes = useStyles()
      const history = useHistory();
      const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -51,11 +50,8 @@ export default function Registration() {
      const [password, setPassword] = useState("")
      
      const [invitedCode, setInvitedCode] = useState<string | string[] | null>('')
-     const [error, setError] = useState<RegisterErrorInfo | undefined>(Object);
+     const [error, setError] = useState(Object)
 
-     useEffect(() => {
-          console.log(error)
-     }, [error])
 
      useEffect(() => {
           if(share) {
@@ -129,93 +125,50 @@ export default function Registration() {
                     break
           }
      }
-          return (
-               <Container className={classes.authContainer} maxWidth="md">
-                    <div className={classes.authBox}>
-                         <img src={logo} width="80px"/>
-                         <h2>Daily Check ✔</h2>
-                         <p>매일이 행복한 투자<br/>
-                         <b>데일리펀딩이</b> 함께 합니다</p>
 
-                         <form className={classes.registerForm}>
-                              <FormControl className={classes.input}>
-                                   {/* 이름 */}
-                                   <InputLabel htmlFor="firstName">First Name</InputLabel>
-                                   <Input 
-                                   id="firstNameInput"
-                                   aria-describedby="firstName-text" 
-                                   type="string" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="firstName-text">Enter your first name.</FormHelperText>
-                              </FormControl>
-                              <FormControl className={classes.input}>
-                                   {/* 성 */}
-                                   <InputLabel htmlFor="lastName">Last Name</InputLabel>
-                                   <Input 
-                                   id="lastNameInput"
-                                   aria-describedby="lastName-text" 
-                                   type="string" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="lastName-text">Enter your last name.</FormHelperText>
-                              </FormControl>
+     const inputList = [
+          { id: "firstNameInput", helperId: "firstName-text", type:"string", labelContent: "First Name" },
+          { id: "lastNameInput", helperId: "firstName-text" , type:"string", labelContent: "Last Name"},
+          { id: "userIdInput", helperId: "firstName-text", type:"string", labelContent: "ID *", errorId: "username", },
+          { id: "emailInput", helperId: "firstName-text", type:"email", labelContent: "Email(ID) *", errorId: "email",  },
+          { id: "passwordInput", helperId: "firstName-text", type:"password", labelContent: "Password *", errorId: "password",  },
+          { id: "ucodeInput", helperId: "firstName-text", type:"ucode", labelContent: "Invited Code", errorId: "ucode",  },
 
-                              <FormControl error={error && (error.username? true : undefined)} id="username"className={classes.input}>
-                                   {/* 아이디 */}
-                                   <InputLabel htmlFor="firstName">ID *</InputLabel>
-                                   <Input 
-                                   id="userIdInput"
-                                   aria-describedby="userId-text" 
-                                   type="string" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="userId-text">
-                                        {error && (error.username? error.username : "Enter your ID")}
-                                   </FormHelperText>
-                              </FormControl>
+     ]
 
-                              <FormControl error={error && (error.email? true : undefined)}id="email" className={classes.input}>
-                                   {/* 이메일 */}
-                                   <InputLabel htmlFor="email">Email(ID) *</InputLabel>
-                                   <Input 
-                                   id="emailInput"
-                                   aria-describedby="email-text" 
-                                   type="email" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="email-text" className="email-text">
-                                        {error && (error.email? error.email : "Enter your email")}
-                                   </FormHelperText>
-                              </FormControl>
+     return (
+          <Container className={classes.authContainer} maxWidth="md">
+               <div className={classes.authBox}>
+                    <img src={logo} width="80px"/>
+                    <h2>Daily Check ✔</h2>
+                    <p>매일이 행복한 투자<br/>
+                    <b>데일리펀딩이</b> 함께 합니다</p>
+                    <form className={classes.registerForm}>
 
-                              <FormControl  error={error && (error.password? true : undefined)} id="password"  className={classes.input}>
-                                   {/* 비밀번호*/}
-                                   <InputLabel htmlFor="password">Password *</InputLabel>
-                                   <Input 
-                                   id="passwordInput" 
-                                   aria-describedby="password-text" 
-                                   type="password" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="password-text" className="password-text">
-                                        {error && (error.password? error.password : "Enter your password")}
-                                   </FormHelperText>
-                              </FormControl>
+                         {inputList.map(item => {
+                              return (
+                                   <FormControl 
+                                   error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
+                                   className={classes.input}
+                                   >
+                                        <InputLabel>{item.labelContent}</InputLabel>
+                                        <Input 
+                                        id={item.id}
+                                        type={item.type} 
+                                        onChange={onChange}/>
+                                        <FormHelperText>
+                                             {error && item.errorId && error.hasOwnProperty(item.errorId) 
+                                             ? error[`${item.errorId}`] : `Enter your ${item.labelContent}`}
+                                        </FormHelperText>
+                                   </FormControl>
+                              )
+                         })}
 
-                              <FormControl error={error && (error.ucode? true : undefined)} id="ucode"  className={classes.input}>
-                                   {/* 초대 코드 */}
-                                   <InputLabel htmlFor="ucode">Invited Code</InputLabel>
-                                   <Input 
-                                   defaultValue={share === "TRUE" ? ucode : ""}
-                                   id="ucodeInput" 
-                                   aria-describedby="ucode-text" 
-                                   type="ucode" 
-                                   onChange={onChange}/>
-                                   <FormHelperText id="ucode-text" className="ucode-text">
-                                        {error && (error.ucode? error.ucode : "Enter your invited code")}
-                                   </FormHelperText>
-                              </FormControl>
-                              <div className={classes.button}>
-                                   <Button type="submit" onClick={onSubmit}>함께하기</Button>
-                              </div>
-                         </form>
-                    </div>
-               </Container>
-          )
+                         <div className={classes.button}>
+                              <Button type="submit" onClick={onSubmit}>함께하기</Button>
+                         </div>
+                    </form>
+               </div>
+          </Container>
+     )
 }
