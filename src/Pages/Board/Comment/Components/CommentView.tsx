@@ -11,6 +11,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { commentInfo } from '../../../../Interface/Board'
 import { userInfo } from '../../../../Interface/User';
+import { createDate } from '../../Post/DetailPost';
 
 const useStyles = makeStyles({
      commentContainer : {
@@ -166,7 +167,7 @@ function CommentView(props: viewProps) {
           {/* 내용 */}   <li style={{margin: '20px 0'}}>{item.comment_content}</li>
           {/* 시간 */}   <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
                
-                              <span style={{color: '#9e9e9e'}}>{item.date.split('T')[0].replaceAll('-','. ')}</span>
+                              <span style={{color: '#9e9e9e'}}>{createDate(item.date)}</span>
 
           {/* 공감, 비공감 */}               
                           <Typography component="span" className={classes.handButton}>
@@ -188,8 +189,9 @@ function CommentView(props: viewProps) {
                               
                     </li>
 
+{/* fixme: 답글 개수 */}
                          <div  style={{display:"flex", justifyContent: "space-between",}}>
-               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글</Button>}
+               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글 {item.num_child} </Button>}
                          </div>
                </div>
 

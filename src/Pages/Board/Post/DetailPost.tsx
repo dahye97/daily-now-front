@@ -51,13 +51,20 @@ const useStyles = makeStyles({
 interface Column {
      id: 'date' | 'title' | 'author' | 'visited' | 'like' | 'unlike';
      label: string | number;
-     maxWidth?: number;
+     maxWidth?: string;
      align?: 'left' | 'right';
 }
 
 interface stateType {
      post_id : number
 }
+export const createDate = ( date : string ) => {
+     const splitData = date.split('T')
+     const newDate = splitData[0].replaceAll('-', '.')
+     const newTime = splitData[1].split('.')[0]
+     return newDate + ' ' + newTime
+}
+
 export default function DetailPost(props: {userObj: userInfo | null,}) {
      const location = useLocation<stateType>()
      const classes = useStyles();
@@ -67,12 +74,12 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      // 선택한 게시물 행 데이터 만들기 
      const [columns, setColumns] = useState<Column[]>([])
      const createRow = ( start: number, end : number,) => {
-          return (<TableRow style={{display:"table-row"}}>
+          return (<TableRow style={{display:"flex", justifyContent: 'flex-start'}}>
                {columns.slice(start,end).map( column => {
                     return (<TableCell
                          component="th" scope="row"
                          key={column.id}
-                         style={{ maxWidth: column.maxWidth , border: "none", padding: "10px", }}
+                         style={{ width: column.maxWidth , border: "none", padding: "10px", }}
                          align={column.align}
                          >
                          {column.label}
@@ -80,7 +87,6 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                })}
           </TableRow>)
      }
-
      // 선택한 게시물 작성 정보 데이터 불러오기 
      const [detailPost, setDetailPost] = useState<detailPostInfo>(Object)
      const [isLoading, setIsLoading] = useState(true)
@@ -102,12 +108,12 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                setDetailPost(res.data)
                console.log(res.data)
                setColumns ( [
-                    { id: 'title', align:'left',label: res.data.title, maxWidth: 100 },
-                    { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: 30 },
-                    { id: 'like', align:'right',label: '공감 '+res.data.like, maxWidth: 30 },
-                    { id: 'unlike', align:'right',label: '비공감 '+res.data.dislike, maxWidth: 30 },
-                    { id: 'author', align:'left',label: res.data.user.slice(0,4) + '****',maxWidth: 30},
-                    { id: 'date', align:'right', label: res.data.date, maxWidth:300},
+                    { id: 'title', align:'left',label: res.data.title, maxWidth: "70%" },
+                    { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "10%" },
+                    { id: 'like', align:'right',label: '공감 '+res.data.like, maxWidth: "10%" },
+                    { id: 'unlike', align:'right',label: '비공감 '+res.data.dislike, maxWidth: "10%" },
+                    { id: 'author', align:'left',label: res.data.user.slice(0,4) + '****',maxWidth: '50%'},
+                    { id: 'date', align:'right', label: createDate(res.data.date), maxWidth:"50%"},
                ]);
                setIsLoading(false)
           })
