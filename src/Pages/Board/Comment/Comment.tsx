@@ -49,10 +49,11 @@ function Comment(props:CommentProps) {
      // 답글 리스트 가져오는 함수
      const [isExpanded, setIsExpanded] = useState('')
      const [recommentList, setRecommentList] = useState<commentInfo[]>([])
-     const getReComment = (parent_id: number | null) => {
+     const getReComment = (parent_id: number | null, numberOfRecomment? : number) => {
+
           setIsExpanded('panel'+parent_id)
 
-          if(userObj!==null) {
+          if( userObj!==null && numberOfRecomment !== 0) {
                axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
                     post_id: postId,
                     parent_comment: parent_id
@@ -116,9 +117,6 @@ function Comment(props:CommentProps) {
                '댓글이 없습니다.' 
                : 
                     <Card>
-                         {/* <span style={{display: 'inline-block', background: 'green'}}>
-                              <img src="https://guest.goodchoice.kr/img/asset/icn_1_info_64x64.png" />
-                         </span> */}
                          <ul style={{padding: '20px', listStyle: 'none'}}>
                          {commentList.map( commentItem => {
                          return (

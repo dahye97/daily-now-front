@@ -43,7 +43,7 @@ interface viewProps {
      handleEdit: (commendId? :number) => void,
      handleDelete : (commendId : number) => void,
      handleUpdateComment: () => void,
-     getReComment: (parentId: number | null) => void
+     getReComment: (parentId: number | null, numberOfRecomment? : number) => void
 }
 interface stateProps {
      post_id: number
@@ -189,9 +189,8 @@ function CommentView(props: viewProps) {
                               
                     </li>
 
-{/* fixme: 답글 개수 */}
                          <div  style={{display:"flex", justifyContent: "space-between",}}>
-               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id)}>답글 {item.num_child} </Button>}
+               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id, item.num_child)}>답글 {item.num_child} </Button>}
                          </div>
                </div>
 
