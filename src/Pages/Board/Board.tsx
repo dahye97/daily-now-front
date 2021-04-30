@@ -12,8 +12,15 @@ import NewPost from './NewPost';
 import { userInfo } from '../../Interface/User';
 import { detailPostInfo,categoryInfo } from '../../Interface/Board';
 
+import board_holy from '../../asset/img/board_holy.png'
+
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({
+     boardHeader : {
+         display: 'flex',
+          alignItems: "center",
+           padding: '10px'
+     },
      boardContainer : {
           padding: "20px",
 		marginTop: "80px",
@@ -129,7 +136,10 @@ export default function Board (props: BoardProps){
      }
      return (
           <Container maxWidth="md" className={classes.boardContainer}>
-			<h1>💬 토론해요 </h1>
+			<div className={classes.boardHeader}>
+                    <h1 style={{marginRight: '10px'}}>💬 토론해요 </h1>
+                    <div><img src={board_holy} alt="holy" width="60px"/></div>
+               </div>
                <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판
                          <>
