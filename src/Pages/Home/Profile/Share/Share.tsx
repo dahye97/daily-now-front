@@ -36,7 +36,7 @@ export default function Share(props: ShareProps) {
      const [isInitialized, setIsInitialized] = useState(false)
      const handleClickInvite = () => {
           if( userObj !== null) {
-               axios.get(`http://192.168.0.69:8000/api/join/create_code`, 
+               axios.get(`${process.env.REACT_APP_SERVER}/api/join/create_code`, 
                {
                     headers : {
                     "Authorization": "Token " + userObj.auth_token,
@@ -44,7 +44,7 @@ export default function Share(props: ShareProps) {
                })
                .then(res => {
                     console.log(res.data)// 유저 초대 코드 
-                    setShareUrl(`http://localhost:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
+                    setShareUrl(`http://49.50.163.188:3000/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
                     setIsClicked(!isClicked)
                     // 친구 초대 포인트 적립 api 보내기 
                     getInvitedPoint()
@@ -57,7 +57,7 @@ export default function Share(props: ShareProps) {
      }
      const getInvitedPoint = () => {
           if( userObj !== null) {
-               axios.get(`http://192.168.0.69:8000/api/join/get_point`, 
+               axios.get(`${process.env.REACT_APP_SERVER}/api/join/get_point`, 
                {
                     headers : {
                     "Authorization": "Token " + userObj.auth_token,

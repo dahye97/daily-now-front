@@ -102,7 +102,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     }
                };
           }
-          axios.post('http://192.168.0.69:8000/api/notice/detail_post', {
+          axios.post(`${process.env.REACT_APP_SERVER}api/notice/detail_post`, {
                post_id: location.state.post_id
           }, headerData)
           .then(res => {
@@ -129,7 +129,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      const getCommentList = () => {
                if(userObj!==null){
-                    axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
+                    axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
                          post_id: location.state.post_id
                     },{
                          headers : {
@@ -190,7 +190,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     }
                 // add,cancel 결과 
                 if( likeDislike !== -1) {
-                     axios.post(`http://192.168.0.69:8000/api/notice/${queryString}`, {
+                     axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${queryString}`, {
                          post_id: location.state.post_id,
                          like_dislike : likeDislike
                     }, {
@@ -240,7 +240,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      }
      const handleDelete = () => {
           if(userObj !== null){
-               axios.post('http://192.168.0.69:8000/api/notice/delete_post', {
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/delete_post`, {
                     post_id:  detailPost.post_id,
                     title: detailPost.title,
                     content: detailPost.content

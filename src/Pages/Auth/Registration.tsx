@@ -71,7 +71,7 @@ export default function Registration() {
           };
 
           console.log(registerInfo)
-          fetch('http://192.168.0.69:8000/api/auth/register', {
+          fetch(`${process.env.REACT_APP_SERVER}/api/auth/register`, {
                method: "POST",
                headers: {
                     "Content-Type": "application/json; charset=utf-8",

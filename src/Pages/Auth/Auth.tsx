@@ -4,6 +4,7 @@ import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@m
 import logo from 'asset/img/logo.webp'
 import { useHistory } from 'react-router';
 import { userInfo } from 'Interface/User';
+
 // TODO: 로그인 페이지 
 
 const useStyles = makeStyles({
@@ -50,7 +51,7 @@ export default function Auth (Props:AuthProps) {
               "password" : password
           }
 
-          fetch('http://192.168.0.69:8000/api/auth/login', {
+          fetch(`${process.env.REACT_APP_SERVER}/api/auth/login`, {
                method: "POST",
                headers: {
                     "Content-Type": "application/json; charset=utf-8",

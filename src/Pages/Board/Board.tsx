@@ -84,7 +84,7 @@ export default function Board (props: BoardProps){
 
      // 카테고리 목록 불러오기 
      const getCategories = ()=> {
-          axios.get('http://192.168.0.69:8000/api/notice/category_list')
+          axios.get(`${process.env.REACT_APP_SERVER}/api/notice/category_list`)
                .then(res => {
                     setCategories(res.data)
                })
@@ -107,7 +107,7 @@ export default function Board (props: BoardProps){
      const [myPostList, setMyPostList] = useState<detailPostInfo[]> ([])
      const handleClickMyPost = () => {
           if( userObj !== null ){
-               axios.post('http://192.168.0.69:8000/api/notice/my_post', {
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/my_post`, {
                     page_size: 100
                }, {
                     headers : {

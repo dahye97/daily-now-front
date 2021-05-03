@@ -69,7 +69,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
 
           if(props.userObj !== null ) {
-               fetch('http://192.168.0.69:8000/api/register/company_register', {
+               fetch(`${process.env.REACT_APP_SERVER}/api/register/company_register`, {
                     method: "POST",
                     headers: {
                          "Content-Type": "application/json; charset=utf-8",

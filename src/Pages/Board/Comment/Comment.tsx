@@ -54,7 +54,7 @@ function Comment(props:CommentProps) {
           setIsExpanded('panel'+parent_id)
 
           if( userObj!==null && numberOfRecomment !== 0) {
-               axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
                     post_id: postId,
                     parent_comment: parent_id
                }, {
@@ -88,7 +88,7 @@ function Comment(props:CommentProps) {
      const handleDelete = (commentId : number, parentId?: number) => {
 
           if(userObj !== null){
-               axios.post('http://192.168.0.69:8000/api/notice/delete_comment', {
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/delete_comment`, {
                comment_id: commentId
           }, {
                     headers : {
@@ -101,7 +101,6 @@ function Comment(props:CommentProps) {
                          handleUpdateReComment(parentId)
                     }
                     handleUpdateComment()
-                    // fix 답글 삭제 시, 댓글의 답글 수가 업데이트 되지 않는 문제 
                })
                .catch(function(error) {
                     console.log(error);

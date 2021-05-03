@@ -74,7 +74,7 @@ export default function FundList(props: FundListProps) {
 	// 연동 회사 추가 시 홈에 알릴 수 있게 하는 핸들러 
 	useEffect(() => {
 			if(userObj !== null){
-				fetch('http://192.168.0.69:8000/api/register/registered_company', {
+				fetch(`${process.env.REACT_APP_SERVER}/api/register/registered_company`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json; charset=utf-8",
@@ -107,7 +107,7 @@ export default function FundList(props: FundListProps) {
 
 	const [allCompany, setAllCompany] = useState<companyInfo[]>([])
 	const getAllCompany = () => {
-		fetch('http://192.168.0.69:8000/api/register/company', {
+		fetch(`${process.env.REACT_APP_SERVER}/api/register/company`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json; charset=utf-8",

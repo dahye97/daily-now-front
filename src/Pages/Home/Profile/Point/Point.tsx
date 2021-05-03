@@ -59,7 +59,7 @@ export default function Point(props: PointProps) {
      {
           console.log('nextUrl:', nextUrl)
 
-          let url = "http://192.168.0.69:8000/api/auth/my_point_list"
+          let url = `${process.env.REACT_APP_SERVER}/api/auth/my_point_list`
           // 더보기 url 처리 변수 
           if(nextUrl !== 'false' && nextUrl !== '') {
                     url = nextUrl

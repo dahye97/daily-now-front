@@ -40,7 +40,7 @@ export default function MyPage( props: MyPageProps) {
           if (props.userObj !== null) {
                // 회원 탈퇴 
                if (button === "withDrawButton") {
-                    fetch('http://192.168.0.69:8000/api/auth/withdrawal', {
+                    fetch(`${process.env.REACT_APP_SERVER}/api/auth/withdrawal`, {
                          method: "POST",
                          headers: {
                               "Content-Type": "application/json; charset=utf-8",
@@ -62,7 +62,7 @@ export default function MyPage( props: MyPageProps) {
                          "new_password": newPassword
                     }
 
-                    fetch('http://192.168.0.69:8000/api/auth/password_change', {
+                    fetch(`${process.env.REACT_APP_SERVER}/api/auth/password_change`, {
                          method: "POST",
                          headers: {
                               "Content-Type": "application/json; charset=utf-8",

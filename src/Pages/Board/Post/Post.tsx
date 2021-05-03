@@ -61,7 +61,7 @@ export default function Post(props: PostProps) {
      // 카테고리 ID와 rowsPerPage 값에 따른 게시글 가져오기 
      const getPostList = (url: string) => {
           if(url.length === 0){
-               url = "http://192.168.0.69:8000/api/notice/post_list"
+               url = `${process.env.REACT_APP_SERVER}/api/notice/post_list`
           }
           axios.post(url, {
                "category_id": categoryId,

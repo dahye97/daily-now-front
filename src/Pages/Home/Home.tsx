@@ -142,7 +142,7 @@ export default function Home(props: HomeProps) {
 	const getAccountData =  (p2pID: { company_id: number, refresh: number}) => {
 		console.log('getaccountdata')
 		if (userObj !== null){
-			fetch(`http://192.168.0.69:8000/api/${nickName}/account`, {
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickName}/account`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json; charset=utf-8",
@@ -167,7 +167,7 @@ export default function Home(props: HomeProps) {
 	const getBalanceData = (p2pID: { company_id: number, refresh: number}) => {
 
 		if(userObj !== null) {
-			fetch(`http://192.168.0.69:8000/api/${nickName}/balance`, {
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickName}/balance`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json; charset=utf-8",
@@ -230,8 +230,6 @@ export default function Home(props: HomeProps) {
 	}, [])
 	return (
 		<>
-		{/* fixme 무한 렌더의 이유 */}
-		{console.log('here')}
 			<Grid container spacing={3} className={classes.home}>
 
 				{/* 마이 페이지 */}

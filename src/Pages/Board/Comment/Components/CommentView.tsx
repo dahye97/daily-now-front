@@ -117,7 +117,7 @@ function CommentView(props: viewProps) {
                }
                //  add,cancel 결과 
                 if( likeDislike !== -1) {
-                     axios.post(`http://192.168.0.69:8000/api/notice/${queryString}`, {
+                     axios.post(`${process.env.REACT_APP_SERVER}api/notice/${queryString}`, {
                          comment_id: commentId,
                          like_dislike : likeDislike
                     }, {
@@ -148,7 +148,7 @@ function CommentView(props: viewProps) {
       // fix 특정 댓글,답글 정보 불러오기 : 공감 비공감 처리시에만 유용함.
       const getDetailComment = (commentId: number) => {
           if(userObj!==null){
-               axios.post('http://192.168.0.69:8000/api/notice/detail_comment', {
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/detail_comment`, {
                     comment_id: commentId
                },{
                     headers : {

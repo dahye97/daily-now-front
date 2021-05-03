@@ -96,7 +96,7 @@ export default function Profile(props:ProfileProps) {
 	// 마이 포인트 가져오기 
 	useEffect(() => {
 		if( userObj !== null) {
-			axios.get('http://192.168.0.69:8000/api/auth/my_point', 
+			axios.get(`${process.env.REACT_APP_SERVER}/api/auth/my_point`, 
 			{
 				headers : {
 				"Authorization": "Token " + userObj.auth_token,

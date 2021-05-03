@@ -20,7 +20,7 @@ export default function FAQ() {
 
      const [faqList, setFaqList] = useState<faqInfo[]>([])
      const getFAQData = () => {
-          axios.post('http://192.168.0.69:8000/api/notice/faq_list', {
+          axios.post(`${process.env.REACT_APP_SERVER}/api/notice/faq_list`, {
                page_size: 10
           }).then(res => {
                console.log(res.data)

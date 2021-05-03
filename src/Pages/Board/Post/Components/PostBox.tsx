@@ -48,7 +48,7 @@ export default function PostBox(props: PostBoxProps) {
 
      // 게시글 조회수 업데이트 및 상세 게시글 페이지로 이동 
      const handleClickPost = (postId : number) : void => {
-          axios.post('http://192.168.0.69:8000/api/notice/update_view', {
+          axios.post(`${process.env.REACT_APP_SERVER}/api/notice/update_view`, {
                     post_id: postId
                }).then(res => {
                history.push(`/board/detail/${postId}`, {

@@ -53,7 +53,7 @@ export default function NewPost(props: newPostProps) {
                }
           }
           if (userObj !== null ){
-               axios.post(`http://192.168.0.69:8000/api/notice/${url}`, 
+               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${url}`, 
                     data, {
                     headers : {
                          "Authorization": "Token " + userObj.auth_token,
