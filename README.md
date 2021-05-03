@@ -1,6 +1,3 @@
-# 🚀 About Project
-> 개인 맞춤화 뱅킹 서비스
-
 # ⚙ Front & Back Tech
 
 - Front : React, Typescript
