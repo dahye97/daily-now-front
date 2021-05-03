@@ -145,9 +145,10 @@ export default function Registration() {
                     <b>데일리펀딩이</b> 함께 합니다</p>
                     <form className={classes.registerForm}>
 
-                         {inputList.map(item => {
+                         {inputList.map((item, index) => {
                               return (
                                    <FormControl 
+                                   key={index}
                                    error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
                                    className={classes.input}
                                    >
