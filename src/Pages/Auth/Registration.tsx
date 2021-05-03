@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
-import logo from '../../asset/img/logo.webp'
+import logo from 'asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
 import { useHistory, useLocation } from "react-router";

@@ -4,8 +4,8 @@ import axios from 'axios';
 
 import { Button,TextField, Typography} from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
-import { userInfo } from '../../Interface/User';
-import { detailPostInfo } from '../../Interface/Board';
+import { userInfo } from 'Interface/User';
+import { detailPostInfo } from 'Interface/Board';
 
 const useStyles = makeStyles({
      postContent : {

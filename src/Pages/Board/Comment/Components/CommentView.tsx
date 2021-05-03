@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios';
-import { useLocation } from 'react-router';
 
 import {IconButton,Typography,Button} from '@material-ui/core/';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
@@ -9,9 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-import { commentInfo } from '../../../../Interface/Board'
-import { userInfo } from '../../../../Interface/User';
-import { createDate } from '../../Post/DetailPost';
+import { commentInfo } from 'Interface/Board'
+import { userInfo } from 'Interface/User';
+import { createDate } from 'Pages/Board/Post/DetailPost';
 
 const useStyles = makeStyles({
      commentContainer : {
@@ -41,18 +40,22 @@ interface viewProps {
      recommentItem?: commentInfo,
      
      handleEdit: (commendId? :number) => void,
-     handleDelete : (commendId : number) => void,
+     handleDelete : (commendId : number, parentId?: number) => void,
      handleUpdateComment: () => void,
      getReComment: (parentId: number | null, numberOfRecomment? : number) => void
+
 }
-interface stateProps {
-     post_id: number
+
+type curCommentType = { 
+     like: number,
+     dislike : number,
+     num_child: number
 }
 function CommentView(props: viewProps) {
      const classes = useStyles();
-     const location = useLocation<stateProps>();
      const { userObj, commentItem, recommentItem, 
-          handleEdit,handleDelete,getReComment,handleUpdateComment } = props;
+          handleEdit,handleDelete,getReComment
+           } = props;
 
      const [item, setItem] = useState<commentInfo>()
 
@@ -61,9 +64,14 @@ function CommentView(props: viewProps) {
       const [pressableLike, setPressableLike] = useState(true)
       const [pressableDislike, setPressableDislike] = useState(true)
 
+     // 댓글 or 답글 객체 item에 저장 
+     useEffect(() => {
+          if( commentItem !== undefined ) setItem(commentItem)
+           else if( recommentItem !== undefined ) setItem(recommentItem)
+     }, [commentItem, recommentItem])
 
      useEffect(() => {
-          if( item ) {
+          if( item !== undefined ) {
                if(item.like_dislike === 1) { 
                     setPressableDislike(false)
                }
@@ -72,6 +80,7 @@ function CommentView(props: viewProps) {
                }
           }
      }, [item])
+
       // 댓글 공감 비공감 처리 함수 
      const handleLikeDisLike = (event: React.MouseEvent, commentId: number) => {
           let queryString; // like, dislike 별 지정 url 값 저장
@@ -118,12 +127,11 @@ function CommentView(props: viewProps) {
                     })
                     .then(res => {
                          console.log(res)
-                         if (commentItem) {
-                              handleUpdateComment()
-                         }else if( recommentItem ) {
-                              if(recommentItem.parent_comment !== null){
-                                   getReComment(recommentItem.parent_comment)
-                              }
+                         if (commentItem) { // 댓글에 대한 공감, 비공감
+                              getDetailComment(commentId)
+
+                         }else if( recommentItem ) { // 답글에 대한 공감, 비공감
+                             getDetailComment(commentId)
                          }
                          setIsClicked(!isClicked)
 
@@ -137,12 +145,25 @@ function CommentView(props: viewProps) {
           }
      }
 
-      // 댓글 or 답글 객체 item에 저장 
-      useEffect(() => {
-          if( commentItem ) setItem(commentItem)
-          else if(recommentItem) setItem(recommentItem)
+      // fix 특정 댓글,답글 정보 불러오기 : 공감 비공감 처리시에만 유용함.
+      const getDetailComment = (commentId: number) => {
+          if(userObj!==null){
+               axios.post('http://192.168.0.69:8000/api/notice/detail_comment', {
+                    comment_id: commentId
+               },{
+                    headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+               } )
+               .then(res => {
+                    setItem(res.data)
+               })
+               .catch(function(error) {
+                    console.log(error);
+               })
+          }
+     }
 
-     }, [commentItem, recommentItem])
      return (
           <>
           {item &&
@@ -150,7 +171,7 @@ function CommentView(props: viewProps) {
                <div className ={ classes.commentContainer}>
           {/* 작성자 */} <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
                               <span><b>{item.user.substr(0,4) + "****"}</b></span>
-                              
+                                
           {/* 수정, 삭제 버튼 */}
                                    { item.editable &&
                                         <span>
@@ -158,9 +179,13 @@ function CommentView(props: viewProps) {
                                                   handleEdit(item.comment_id)
                                                   }}><EditIcon /></IconButton>
                                              <IconButton onClick={() => {
-                                                  handleDelete(item.comment_id)
+                                                  if(recommentItem) {
+                                                       handleDelete(item.comment_id, item.parent_comment)
+                                                  }
+                                                  else handleDelete(item.comment_id)
                                                   }}><DeleteForeverIcon /></IconButton>
                                         </span>  
+                                        // fix 댓글 삭제 시 업데이트 문제
                                    }
 
                          </li>      
@@ -190,7 +215,9 @@ function CommentView(props: viewProps) {
                     </li>
 
                          <div  style={{display:"flex", justifyContent: "space-between",}}>
-               {/* 답글 */}  {commentItem && <Button onClick={() => getReComment(item.comment_id, item.num_child)}>답글 {item.num_child} </Button>}
+               {/* 답글 */}  {commentItem && <Button 
+                              onClick={() => getReComment(item.comment_id, item.num_child)}>
+                                   답글 {item.num_child} </Button>}
                          </div>
                </div>
 

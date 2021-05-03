@@ -7,8 +7,8 @@ import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 
-import PostBox from './Components/PostBox';
-import { postInfo,categoryInfo } from '../../../Interface/Board';
+import PostBox from 'Pages/Board/Post/Components/PostBox';
+import { postInfo,categoryInfo } from 'Interface/Board';
 const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,

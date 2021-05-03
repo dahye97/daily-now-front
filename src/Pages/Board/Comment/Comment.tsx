@@ -3,10 +3,10 @@ import axios from 'axios';
 
 import {Paper,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import { commentInfo } from '../../../Interface/Board';
-import { userInfo } from '../../../Interface/User';
-import CommentForm from './Components/CommentForm';
-import CommentView from './Components/CommentView';
+import { commentInfo } from 'Interface/Board';
+import { userInfo } from 'Interface/User';
+import CommentForm from 'Pages/Board/Comment/Components/CommentForm';
+import CommentView from 'Pages/Board/Comment/Components/CommentView';
 
 const useStyles = makeStyles({
      
@@ -85,7 +85,7 @@ function Comment(props:CommentProps) {
      const handleEdit = (commentId? : number) => {
           setIsEditing('panel'+commentId)
      }
-     const handleDelete = (commentId : number) => {
+     const handleDelete = (commentId : number, parentId?: number) => {
 
           if(userObj !== null){
                axios.post('http://192.168.0.69:8000/api/notice/delete_comment', {
@@ -96,20 +96,29 @@ function Comment(props:CommentProps) {
                     }
                })
                .then(res => {
+                    // 댓글/답글 리스트 업데이트
+                    if(parentId) {
+                         handleUpdateReComment(parentId)
+                    }
                     handleUpdateComment()
+                    // fix 답글 삭제 시, 댓글의 답글 수가 업데이트 되지 않는 문제 
                })
                .catch(function(error) {
                     console.log(error);
                })
           }
-
-
      }
+
      return (
           <>
            {/* ✅ 댓글 */}
-           <Paper className={classes.commentPaper}>
-               <p>댓글 <b style={{color: 'red'}}>{commentList.length + recommentList.length}</b></p>  
+           <Paper className={classes.commentPaper}> 
+               <p>댓글 <b style={{color: 'red'}}>{commentList.length 
+                                        + commentList.reduce(( sum, cur, i) => {
+                                             return sum + cur.num_child
+                                        }, 0)}
+                         </b>
+               </p>  
                {/* 댓글 입력 폼 */}  
                <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj}/>
                {/* 댓글 리스트  */}
@@ -142,7 +151,7 @@ function Comment(props:CommentProps) {
                                         handleEdit={handleEdit} 
                                         handleUpdateComment={handleUpdateComment}
                                         commentItem={commentItem} 
-                                        handleDelete={handleDelete} getReComment={getReComment}
+                                        handleDelete={handleDelete} getReComment={getReComment} 
                                         userObj={userObj} />
                                    }
 

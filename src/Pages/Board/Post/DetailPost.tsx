@@ -2,8 +2,8 @@ import React , {useState,useEffect,useCallback} from 'react'
 import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
-import { commentInfo, detailPostInfo } from '../../../Interface/Board'
-import { userInfo } from '../../../Interface/User';
+import { commentInfo, detailPostInfo } from 'Interface/Board'
+import { userInfo } from 'Interface/User';
 import Comment from '../Comment/Comment';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,6 +16,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+
 const useStyles = makeStyles({
      root: {
        width: '100%',
@@ -125,8 +126,8 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      // 댓글 리스트 불러오기 
      const [commentList, setCommentList] = useState<commentInfo[]>([])
-     const getCommentList = useCallback(
-          () => {
+
+     const getCommentList = () => {
                if(userObj!==null){
                     axios.post('http://192.168.0.69:8000/api/notice/comment_list', {
                          post_id: location.state.post_id
@@ -141,9 +142,8 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     .catch(function(error) {
                          console.log(error);
                     })
-               }},  [location.state.post_id],
-     )
-
+               }
+          }
      useEffect(() => {
           getCommentList()   
      }, [])
@@ -228,7 +228,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      // 댓글 추가 실시간 업데이트 처리 함수
      const handleUpdateComment = () => {
-          getCommentList()
+         getCommentList()
      }
 
      // 게시글 수정, 삭제 함수 

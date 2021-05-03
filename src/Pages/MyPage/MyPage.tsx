@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router';
 
-import {userInfo} from '../../Interface/User'
+import {userInfo} from 'Interface/User'
 import { Container,makeStyles,FormControl,InputLabel,Input,FormHelperText,Button,Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({

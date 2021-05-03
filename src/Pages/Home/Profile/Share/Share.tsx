@@ -3,7 +3,7 @@ import { BottomNavigation,BottomNavigationAction } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { useHistory } from 'react-router';
-import { userInfo } from '../../../../Interface/User';
+import { userInfo } from 'Interface/User';
 
 const useStyles = makeStyles({
      root: {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography } from "@material-ui/core";
 import { makeStyles  } from "@material-ui/core/styles";
-import { accountInfo } from '../../../../Interface/User';
+import { accountInfo } from 'Interface/User';
 
 const useStyles = makeStyles({
 	accountContainer: {

@@ -1,15 +1,15 @@
 /** @format */
 import { useState,useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Home from "./Pages/Home/Home";
-import Board from "./Pages/Board/Board";
-import Randing from "./Pages/Randing/Randing";
-import Auth from "./Pages/Auth/Auth";
-import FAQ from "./Pages/FAQ/FAQ";
-import Registration from "./Pages/Auth/Registration";
-import MyPage from "./Pages/MyPage/MyPage";
-import Navigation from "./Components/Navigation";
-import {p2pInfo, userInfo} from './Interface/User';
+import Home from "Pages/Home/Home";
+import Board from "Pages/Board/Board";
+import Randing from "Pages/Randing/Randing";
+import Auth from "Pages/Auth/Auth";
+import FAQ from "Pages/FAQ/FAQ";
+import Registration from "Pages/Auth/Registration";
+import MyPage from "Pages/MyPage/MyPage";
+import Navigation from "Components/Navigation";
+import {p2pInfo, userInfo} from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
 
 const useStyles = makeStyles({

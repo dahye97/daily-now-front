@@ -6,16 +6,15 @@ import { makeStyles, } from "@material-ui/styles";
 import { Typography,Grid,IconButton } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-import { p2pInfo, userInfo, accountInfo, fundInfo } from "../../Interface/User";
-import Share from './Profile/Share/Share';
-
-import Profile from "./Profile/Profile";
-import P2PList from "./Profile/Funding/P2P/P2PList"
-import Balance from './Profile/Funding/Balance';
-import Transaction from './Profile/Funding/Transaction';
-import Funding from './Profile/Funding/Funding';
-import Point from './Profile/Point/Point';
-import Account from './Profile/Funding/Account';
+import { p2pInfo, userInfo, accountInfo, fundInfo } from "Interface/User";
+import Share from 'Pages/Home/Profile/Share/Share';
+import Profile from "Pages/Home/Profile/Profile";
+import P2PList from "Pages/Home/Profile/Funding/P2P/P2PList"
+import Balance from 'Pages/Home/Profile/Funding/Balance';
+import Transaction from 'Pages/Home/Profile/Funding/Transaction';
+import Funding from 'Pages/Home/Profile/Funding/Funding';
+import Point from 'Pages/Home/Profile/Point/Point';
+import Account from 'Pages/Home/Profile/Funding/Account';
 
 const useStyles = makeStyles({
 	home: {
@@ -187,7 +186,8 @@ export default function Home(props: HomeProps) {
 							total_investment : "-",
 							number_of_investing_products : "-",
 							residual_investment_price : "-"
-						})					}
+						})					
+					}
 				})
 				.catch(error =>  console.log('투자 정보가 없습니다.'));
 		}
@@ -230,6 +230,8 @@ export default function Home(props: HomeProps) {
 	}, [])
 	return (
 		<>
+		{/* fixme 무한 렌더의 이유 */}
+		{console.log('here')}
 			<Grid container spacing={3} className={classes.home}>
 
 				{/* 마이 페이지 */}

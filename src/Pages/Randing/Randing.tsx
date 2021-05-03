@@ -1,5 +1,6 @@
-import {makeStyles, Card, Typography} from "@material-ui/core";
-import randingImage from '../../asset/img/randing_img.jpg'
+import {useState} from 'react'
+import {makeStyles, Card, Typography, Button} from "@material-ui/core";
+import randingImage from 'asset/img/randing_img.jpg'
 
 const useStyles = makeStyles({
      randingContainer: {
@@ -30,9 +31,13 @@ const useStyles = makeStyles({
           fontSize: "48px",
           lineHeight: "1.3125"
      },
-     content: {
-          // color: "#198BFB"
-     },
+     img: {
+          height: 255,
+          display: 'block',
+          maxWidth: 400,
+          overflow: 'hidden',
+          width: '100%',
+        },
      '@media(max-width: 1320px)' : {
 		title: {
                display: 'none'
@@ -42,7 +47,9 @@ const useStyles = makeStyles({
 
 export default function Randing () {
      const classes = useStyles()
-          return (
+
+    
+     return (
                <div className={classes.randingContainer}>
                     <Card className={classes.randing} elevation={3}>
                          <div className={classes.header}>
@@ -51,6 +58,7 @@ export default function Randing () {
                               </Typography>
                          </div>
 				</Card>
+
                </div>
           )
 }

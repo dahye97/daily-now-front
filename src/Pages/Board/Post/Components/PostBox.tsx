@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/styles';
 import {Table, TableBody , TableCell, TableContainer ,TableHead ,TablePagination ,TableRow }
           from '@material-ui/core';
-import {postInfo} from '../../../../Interface/Board'
+import {postInfo} from 'Interface/Board'
 
 const useStyles = makeStyles({
      root: {

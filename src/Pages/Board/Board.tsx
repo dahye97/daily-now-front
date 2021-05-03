@@ -5,14 +5,14 @@ import { useHistory, } from 'react-router';
 import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle } from '@material-ui/core';
 import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
 
-import Post from './Post/Post';
-import DetailPost from './Post/DetailPost';
-import NewPost from './NewPost';
+import Post from 'Pages/Board/Post/Post';
+import DetailPost from 'Pages/Board/Post/DetailPost';
+import NewPost from 'Pages/Board/NewPost';
 
-import { userInfo } from '../../Interface/User';
-import { detailPostInfo,categoryInfo } from '../../Interface/Board';
+import { userInfo } from 'Interface/User';
+import { detailPostInfo,categoryInfo } from 'Interface/Board';
 
-import board_holy from '../../asset/img/board_holy.png'
+import board_holy from 'asset/img/board_holy.png'
 
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({

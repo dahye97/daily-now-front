@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import {Typography ,TextField,Button} from '@material-ui/core/';
-import { userInfo } from '../../../../Interface/User';
+import { userInfo } from 'Interface/User';
 import axios from 'axios';
-import { commentInfo } from '../../../../Interface/Board';
+import { commentInfo } from 'Interface/Board';
 
 interface formProps {
      postId? : number // 게시글 id
@@ -91,8 +91,8 @@ export default function CommentForm(props: formProps) {
                     }
                })
                .then(res => {
-                    setRecomment("")
                     if(parentId && handleUpdateReComment) { // 답글일 경우 답글 초기화 및 업데이트
+                         setRecomment("")
                          if(handleEdit) handleEdit()
                          if(handleUpdateReComment) handleUpdateReComment(parentId)
                     }else {
@@ -110,7 +110,7 @@ export default function CommentForm(props: formProps) {
      }
 
      useEffect(() => {
-          if(commentItem) {
+          if(commentItem ) {
                setComment(commentItem.comment_content)
           } else if(recommentItem) {
                setRecomment(recommentItem.comment_content)
@@ -119,13 +119,15 @@ export default function CommentForm(props: formProps) {
 
      return (
           <>
+                    {console.log('여기도')}
+
                {/* 댓글, 답글 폼 */}
                <Typography component="div" style={{border: '1px solid #D0D0D0', padding: '15px'}}>
                               <b>{userObj?.email.split('@')[0]}</b>
                               <TextField
                                    value={comment? comment : recomment}
                                    id="contentField"
-                                   label="내용"
+                                   label="무관한 내용이나 악성 댓글은 삭제될 수 있습니다."
                                    multiline
                                    rows={3}
                                    fullWidth

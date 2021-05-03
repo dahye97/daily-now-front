@@ -5,10 +5,10 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 
 import { useHistory } from "react-router";
-import { userInfo } from "../../../Interface/User";
+import { userInfo } from "Interface/User";
 import {useEffect,useState} from 'react'
 import axios from 'axios'
-import jiyeon from '../../../asset/img/jiyeon.png'
+import jiyeon from 'asset/img/jiyeon.png'
 // TODO: 프로필 
 const useStyles = makeStyles({
 	card: {

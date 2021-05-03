@@ -1,8 +1,7 @@
 import React from 'react'
-import {Container,Typography,Accordion,AccordionSummary,AccordionDetails  } from '@material-ui/core';
-import { makeStyles, } from "@material-ui/core/styles";
+import {Typography,Accordion,AccordionSummary,AccordionDetails  } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { faqInfo } from '../../../Interface/FAQ';
+import { faqInfo } from 'Interface/FAQ';
 interface FAQItemProps {
      faq: faqInfo
 }

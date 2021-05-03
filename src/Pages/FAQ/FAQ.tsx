@@ -3,8 +3,8 @@ import axios from 'axios';
 
 import {Container,Typography } from '@material-ui/core';
 import { makeStyles, } from "@material-ui/core/styles";
-import { faqInfo } from '../../Interface/FAQ';
-import FAQItem from './Components/FAQItem'
+import { faqInfo } from 'Interface/FAQ';
+import FAQItem from 'Pages/FAQ/Components/FAQItem'
 
 const useStyles = makeStyles({
      faqContainer: {
