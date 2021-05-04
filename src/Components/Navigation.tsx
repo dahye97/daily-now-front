@@ -27,10 +27,15 @@ export default function Navigation(props: NavProps) {
 	const classes = useStyles();
 
 	return (
-		<div>
+		<header>
 			<AppBar position="fixed" className={classes.appbar}>
 				<Toolbar className={classes.toolbar}>
-					<Link to="/"><img src={logo} alt="daily logo" className={classes.logo} /></Link>
+					<Link to="/">
+						<img 
+						src={logo} 
+						alt="데일리나우와 함께해요!" 
+						className={classes.logo} />
+					</Link>
 					<div>
 						<Button color="inherit" onClick={ () => history.push('/board')}>커뮤니티</Button>
 						<Button color="inherit" onClick={ () => history.push('/faq')}>FAQ</Button>
@@ -51,6 +56,6 @@ export default function Navigation(props: NavProps) {
 					</div>
 				</Toolbar>
 			</AppBar>
-		</div>
+		</header>
 	);
 }

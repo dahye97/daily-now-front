@@ -138,7 +138,7 @@ export default function Board (props: BoardProps){
           <Container maxWidth="md" className={classes.boardContainer}>
 			<div className={classes.boardHeader}>
                     <h1 style={{marginRight: '10px'}}>💬 토론해요 </h1>
-                    <div><img src={board_holy} alt="holy" width="60px"/></div>
+                    <div><img src={board_holy} alt="종목토론" width="60px"/></div>
                </div>
                <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판

@@ -78,8 +78,8 @@ export default function Auth (Props:AuthProps) {
      return (
                <Container className={classes.authContainer} maxWidth="sm">
                     <div className={classes.authBox}>
-                         <img src={logo} width="80px"/>
-                         <h2>Daily Check ✔</h2>
+                         <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
+                         <h2>Daily Now 💙</h2>
                          <p>매일이 행복한 투자<br/>
                          <b>데일리펀딩이</b> 함께 합니다</p>
 
