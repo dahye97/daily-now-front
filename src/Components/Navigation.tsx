@@ -17,6 +17,12 @@ const useStyles = makeStyles({
 	toolbar: {
 		display: "flex",
 		justifyContent: "flex-end",
+
+		'& a' : {
+			textDecoration : 'none',
+			color: "#ffffff",
+			marginRight: '10px'
+		}
 	},
 });
 interface NavProps {
@@ -37,20 +43,14 @@ export default function Navigation(props: NavProps) {
 						className={classes.logo} />
 					</Link>
 					<div>
-						<Button color="inherit" onClick={ () => history.push('/board')}>커뮤니티</Button>
-						<Button color="inherit" onClick={ () => history.push('/faq')}>FAQ</Button>
+						<Link to="/board">커뮤니티</Link>
+						<Link to="/faq">FAQ</Link>
 						{props.isLoggedIn ? (
-							<Button color="inherit" onClick={() => history.push('/home?tabName=MY_FUNDING')}>
-								마이페이지
-							</Button>
+							<Link to="/home?tabName=MY_FUNDING">마이페이지</Link>
 						) : (
 							<>
-								<Button color="inherit" onClick={() => history.push('/auth')}>
-									로그인
-								</Button>
-								<Button color="inherit" onClick={() => history.push('/registration?share=FALSE')}>
-									회원가입
-								</Button>
+								<Link to="/auth">로그인</Link>
+								<Link to="/registration?share=FALSE">회원가입</Link>
 							</>
 						)}
 					</div>

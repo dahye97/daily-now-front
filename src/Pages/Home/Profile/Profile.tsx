@@ -132,7 +132,7 @@ export default function Profile(props:ProfileProps) {
 						}
 						></CardHeader>
 						<CardMedia>
-			{/* 새로고침 */}	<IconButton onClick={handleClickRefresh}><UpdateIcon  className={classes.controlButton}/></IconButton>
+			{/* 새로고침 */}	<IconButton onClick={handleClickRefresh}><UpdateIcon className={classes.controlButton}/></IconButton>
 		{/* 회원 정보 수정 */}	<IconButton onClick={handleClickSetting}><SettingsIcon className={classes.controlButton} /></IconButton>
 			{/* 로그아웃 */}	<IconButton onClick={handleLogOut}><ExitToAppIcon className={classes.controlButton} /></IconButton>
 						</CardMedia>

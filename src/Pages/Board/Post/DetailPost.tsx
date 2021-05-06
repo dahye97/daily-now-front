@@ -102,7 +102,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     }
                };
           }
-          axios.post(`${process.env.REACT_APP_SERVER}api/notice/detail_post`, {
+          axios.post(`${process.env.REACT_APP_SERVER}/api/notice/detail_post`, {
                post_id: location.state.post_id
           }, headerData)
           .then(res => {
