@@ -117,7 +117,7 @@ function CommentView(props: viewProps) {
                }
                //  add,cancel 결과 
                 if( likeDislike !== -1) {
-                     axios.post(`${process.env.REACT_APP_SERVER}api/notice/${queryString}`, {
+                     axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${queryString}`, {
                          comment_id: commentId,
                          like_dislike : likeDislike
                     }, {
