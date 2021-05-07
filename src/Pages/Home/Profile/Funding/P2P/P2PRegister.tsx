@@ -90,18 +90,21 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          .then(res => {
                               if(res.ok) {
                                    res.json().then( data => {
-                                        if ( data[0] === "Information registration completed!") {
+                                        let value = Object.keys(data)[0]
+                                        // todo: 스트링 보다는 넘버링으로 관리하도록 수정함! 
+                                        // 0 : 등록 완료
+                                        if( value === "0" ) {
+                                             console.log('등록완료')
                                              setRegistrationError({
                                                   open: true,
                                                   isTrue : false,
                                                   message: ""
                                              })
-                                             console.log('등록완료!')
                                              getUserDataOfCompany(1, P2PId)
                                              handleP2PUpdated()
                                              handleClose()
-     
-                                        }else {
+                                        } else { // 1 or 2 : 등록 실패 
+                                             console.log('등록실패')
                                              setRegistrationError({
                                                   open: true,
                                                   isTrue : true,
@@ -118,6 +121,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
           }
 
+     // 회원 정보 유효성 검사 함수 
      const handleAuth = () => {
           if( userObj !== null ) {
                axios.post(`${process.env.REACT_APP_SERVER}/api/${P2PName}/is_valid`, {
@@ -242,7 +246,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          />
                     <TextField onChange={handleChange} value={userName} id="email" label="Email(ID)" type="email" fullWidth/>
                     <TextField onChange={handleChange} value={password} id="password" label="Password" type="password" fullWidth/>
-                    <Button onClick={handleAuth}>회원 인증</Button>
+                    <Button style={{display:'block', margin:'0 auto'}} onClick={handleAuth} color="primary">회원 인증 (필수)</Button>
                </DialogContent>
                <DialogActions>
                     <Button type="submit" onClick={handleSubmit} color="primary">
