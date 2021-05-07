@@ -11,7 +11,6 @@ import Share from 'Pages/Home/Profile/Share/Share';
 import Profile from "Pages/Home/Profile/Profile";
 import P2PList from "Pages/Home/Profile/Funding/P2P/P2PList"
 import Balance from 'Pages/Home/Profile/Funding/Balance';
-import Transaction from 'Pages/Home/Profile/Funding/Transaction';
 import Funding from 'Pages/Home/Profile/Funding/Funding';
 import Point from 'Pages/Home/Profile/Point/Point';
 import Account from 'Pages/Home/Profile/Funding/Account';
@@ -21,7 +20,6 @@ const useStyles = makeStyles({
 		display:"flex",
 		justifyContent: "center",
 		margin:" 0 auto",
-		background: "linear-gradient(145deg, #ffffff, #ECF0F3)",
 		minWidth: '680px',
 	},
 	homeContainer: {
@@ -63,10 +61,6 @@ const useStyles = makeStyles({
 		overflow: "hidden",
 
 	},
-	productList: {
-		display: "flex",
-	},
-
 	contentList: {
 		paddingLeft: "0"
 	},
@@ -100,9 +94,11 @@ const useStyles = makeStyles({
 
 interface HomeProps {
 	userObj: userInfo | null,
-	P2PList: Array<p2pInfo>
+	registeredP2PList: p2pInfo[]
 	handleLogOut: () => void,
-	handleAddP2P : (data: Array<p2pInfo>) => void
+	handleAddP2P : (data: p2pInfo[]) => void,
+
+	isP2PReady: boolean
 }
 export default function Home(props: HomeProps) {
 	const classes = useStyles();
@@ -111,7 +107,7 @@ export default function Home(props: HomeProps) {
 	const queryObj = queryString.parse(location.search);
 	const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
-	const { userObj, handleLogOut, handleAddP2P} = props;
+	const { userObj, handleLogOut, handleAddP2P, registeredP2PList, isP2PReady} = props;
 
 	const [company, setCompany] = useState("all")
 	const [companyID, setCompanyID] = useState(0)
@@ -210,7 +206,6 @@ export default function Home(props: HomeProps) {
 		}
 	}
 	useEffect(() => {
-		console.log(companyID)
 		if( companyID !== 0){
 			getUserDataOfCompany(0, companyID)
 		}
@@ -244,29 +239,36 @@ export default function Home(props: HomeProps) {
 						<>
 							<P2PList 
 							getUserDataOfCompany={getUserDataOfCompany}
-							P2PList={props.P2PList} userObj={userObj} 
+							P2PList={registeredP2PList} userObj={userObj} 
 							handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
 							handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
-							<ul className={classes.contentList}>
-								<h2 style={{textAlign: 'center'}}>{company !== "all" && `🏬 ${company}`}</h2>
-			{/* 보유 예치금 */} 	<li className={classes.contentItem}>
-									<Typography className={classes.deposit} variant="h5">
-										💰 {company === "all"? "총" : "현"} 보유 예치금
-										
-										<span>{company === "all"? 0 : account?.deposit} 원</span>
-									</Typography>	
-								</li>
-								{company !== "all" && account !== undefined ?
-									<li className={classes.contentItem}><Account account={account}/></li>
-								: null
-								}
-				{/* 잔고 */}			<li className={classes.contentItem}><Balance fund={fund}/></li>
-				{/* 입출금 내역 */}	{company !== "all" && 
-									<li className={classes.contentItem}><Transaction /></li>
-								}
-			{/* 투자 내역 관리 */}		<li className={classes.contentItem}><Funding company={company}/></li>
-							</ul>
-						</>						
+
+							{isP2PReady ? // 연동 회사가 존재할 때
+							
+								company === "all" // 현재 위치 : HOME 
+								?
+									<div style={{textAlign:'center', color: '#616161', marginTop: '10px'}}>DAILY NOW</div>
+								: // 현재 위치 : 특정 P2P 회사 
+									<ul className={classes.contentList}>
+									<h2 style={{textAlign: 'center'}}>{company !== "all" && `🏬 ${company}`}</h2>
+					{/* 보유 예치금 */} 	<li className={classes.contentItem}>
+										<Typography className={classes.deposit} variant="h5">
+											💰 현 보유 예치금<span>{account?.deposit} 원</span>
+										</Typography>
+									</li>
+									{account !== undefined 
+									? <li className={classes.contentItem}><Account account={account}/></li>
+									: '보유 계좌 없음'
+									}
+					{/* 잔고 */}			<li className={classes.contentItem}><Balance fund={fund}/></li>
+					{/* 투자내역 관리 */}		<li className={classes.contentItem}><Funding company={company}/></li>
+								</ul>
+							: // 연동한 회사가 존재하지 않을 때
+								<div style={{textAlign:'center', color: '#616161', marginTop: '10px'}}>회사를 연동해주세요!</div>
+							}
+							
+						</>
+												
 						: tabName === "POINT_TOTAL" ? 
 							<Point userObj={userObj}/>
 						: tabName === "INVITE" ? 
