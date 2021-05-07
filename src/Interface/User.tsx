@@ -11,7 +11,8 @@ export interface p2pInfo {
      uid: number,
      company_name:string,
      nickname: string,
-     company_id: number
+     company_id: number,
+     email: string, // 연동 회사 당 유저 이메일 정보
 }
 
 export interface accountInfo {

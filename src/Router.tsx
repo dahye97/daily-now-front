@@ -15,6 +15,7 @@ import { makeStyles, } from "@material-ui/styles";
 const useStyles = makeStyles({
 	routeContainer : {
 		// display:"flex"
+		height: '100%'
 	},
 	boardContainer : {
 			padding: "20px",
@@ -31,8 +32,9 @@ const useStyles = makeStyles({
 export default function AppRouter() {
 	const classes = useStyles()
 	const [isLoggedIn, setisLoggedIn] = useState(false);
+	const [isP2PReady, setIsP2PReady] = useState(false)
 	const [userObj, setUserObj] = useState<userInfo | null>(null)
-	const [P2PList, setP2PList] = useState<Array<p2pInfo>>(Object)
+	const [P2PList, setP2PList] = useState<p2pInfo[]>([])
 
 	// 로그인 함수 
 	const handleLogIn = ( data: userInfo) => {
@@ -62,6 +64,11 @@ export default function AppRouter() {
 		console.log('현재 로그인한 유저 정보', userObj)
 	}, [userObj])
 
+	useEffect(() => {
+		if(P2PList.length !== 0) {
+			setIsP2PReady(true)
+		}
+	}, [P2PList])
 	return (
 	
 	<BrowserRouter>
@@ -72,7 +79,12 @@ export default function AppRouter() {
 					{isLoggedIn &&
 						<>
 							<Route path="/home" render=
-								{() => <Home handleLogOut={handleLogOut} handleAddP2P={handleAddP2P} userObj={userObj} P2PList={P2PList}/>}
+								{() => <Home 
+									isP2PReady={isP2PReady} 
+									handleLogOut={handleLogOut} 
+									handleAddP2P={handleAddP2P} 
+									userObj={userObj} 
+									registeredP2PList={P2PList}/>}
 							/>
 						
 							<Route exact path="/mypage"render=

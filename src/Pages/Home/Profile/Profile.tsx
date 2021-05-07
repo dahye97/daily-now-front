@@ -9,12 +9,19 @@ import { userInfo } from "Interface/User";
 import {useEffect,useState} from 'react'
 import axios from 'axios'
 import jiyeon from 'asset/img/jiyeon.png'
+import holypig from 'asset/img/holypig.png'
 // TODO: 프로필 
 const useStyles = makeStyles({
 	card: {
 		background: "linear-gradient(145deg, #177de2, #1b95ff)",
 		color: "white",
 		borderRadius: "20px",
+		position: 'relative'
+	},
+	profileHoly: {
+		position: 'absolute',
+		right: "5%",
+		bottom: 0
 	},
 	headerContent: {
 		padding: "0 16px"
@@ -143,9 +150,17 @@ export default function Profile(props:ProfileProps) {
 						<h2>{myPoint ? myPoint : 0} P</h2>
 					</CardContent>
 					<CardActions>
-						<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>
-						<Button onClick={handleClickPoint} className={classes.button}>포인트 내역</Button>
-						<Button onClick={handleClickShare} className={classes.button}>공유하기</Button>
+						<div>
+							<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>
+							<Button onClick={handleClickPoint} className={classes.button}>포인트 내역</Button>
+							<Button onClick={handleClickShare} className={classes.button}>공유하기</Button>
+						</div>
+						<div>
+							<img 
+							className={classes.profileHoly}
+							src={holypig} width="220px"
+							alt="사용자님의 프로필을 확인합니다."/> 
+						</div>
 					</CardActions>
 				</Card>
 			</div>
