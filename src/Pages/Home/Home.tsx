@@ -13,7 +13,8 @@ import P2PList from "Pages/Home/Profile/Funding/P2P/P2PList"
 import Balance from 'Pages/Home/Profile/Funding/Balance';
 import Funding from 'Pages/Home/Profile/Funding/Funding';
 import Point from 'Pages/Home/Profile/Point/Point';
-import Account from 'Pages/Home/Profile/Funding/Account';
+import BankAccount from 'Pages/Home/Profile/Funding/BankAccount';
+import UserAccount from './Profile/Funding/Accounts/UserAccount';
 
 const useStyles = makeStyles({
 	home: {
@@ -134,7 +135,8 @@ export default function Home(props: HomeProps) {
 	const handleFund = (fund: fundInfo) => {
 		setFund(fund)
 	}
-
+	
+	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	const getAccountData =  (p2pID: { company_id: number, refresh: number}) => {
 		console.log('getaccountdata')
 		if (userObj !== null){
@@ -159,7 +161,6 @@ export default function Home(props: HomeProps) {
 					.catch(error =>  console.log('계좌 정보가 없습니다.'));
 			}
 	}
-
 	const getBalanceData = (p2pID: { company_id: number, refresh: number}) => {
 
 		if(userObj !== null) {
@@ -188,7 +189,6 @@ export default function Home(props: HomeProps) {
 				.catch(error =>  console.log('투자 정보가 없습니다.'));
 		}
 	}
-	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	const getUserDataOfCompany = (refresh: number, id?: number) => {
 		let idValue = companyID;
 		if(id) {
@@ -211,6 +211,7 @@ export default function Home(props: HomeProps) {
 		}
 	}, [companyID])
 
+	// 위로가기 기능 
 	const handleClickUpButton = () => {
 		window.scrollTo(0, 0);
 	}
@@ -223,6 +224,32 @@ export default function Home(props: HomeProps) {
 	useEffect(() => {
 		window.addEventListener('scroll', handleScroll, { passive: true });
 	}, [])
+
+	// 연동 회사 추가 시 업데이트 state 
+	const [P2PUpdated, setP2PUpdated] = useState(false)
+	const handleP2PUpdated = () => {
+		setP2PUpdated(!P2PUpdated)
+	}
+
+	// 연동 회사 추가 시 업데이트 할 수 있게 하는 핸들러
+	useEffect(() => {
+		if(userObj !== null){
+			fetch(`${process.env.REACT_APP_SERVER}/api/register/registered_company`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+					"Authorization": "Token " + userObj.auth_token
+				},
+			}).then((res) => res.json())
+			.then((res) => {
+				console.log('p2pupdated: ', res)
+				handleAddP2P(res)
+			})
+			.catch(error =>  console.log(error));
+		}
+	},[P2PUpdated])
+
+
 	return (
 		<>
 			<Grid container spacing={3} className={classes.home}>
@@ -241,27 +268,44 @@ export default function Home(props: HomeProps) {
 							getUserDataOfCompany={getUserDataOfCompany}
 							P2PList={registeredP2PList} userObj={userObj} 
 							handleCompanyID={handleCompanyID} handleCompany={handleCompany} 
-							handleAddP2P={handleAddP2P} handleNickName={handleNickName} />
+							handleAddP2P={handleAddP2P} handleNickName={handleNickName} 
+							handleP2PUpdated={handleP2PUpdated}
+							/>
 
 							{isP2PReady ? // 연동 회사가 존재할 때
 							
 								company === "all" // 현재 위치 : HOME 
 								?
-									<div style={{textAlign:'center', color: '#616161', marginTop: '10px'}}>DAILY NOW</div>
+								<div style={{padding: '20px', marginTop: '20px'}}>
+									<Typography variant="h5" style={{textAlign:'center', color: '#616161'}}>
+										DAILY NOW
+									</Typography>
+									<p style={{ textAlign:'center', color: '#616161', fontSize:'15px'}}>
+										💁🏻‍♀️ 아이디나 비밀번호가 변경되었을 경우, 회사 검색을 통해 업데이트 해주세요. 
+									</p>
+									<UserAccount 
+										userObj={userObj} 
+										allAccounts={registeredP2PList}
+										handleP2PUpdated={handleP2PUpdated} />
+									
+								</div>
 								: // 현재 위치 : 특정 P2P 회사 
 									<ul className={classes.contentList}>
-									<h2 style={{textAlign: 'center'}}>{company !== "all" && `🏬 ${company}`}</h2>
-					{/* 보유 예치금 */} 	<li className={classes.contentItem}>
-										<Typography className={classes.deposit} variant="h5">
-											💰 현 보유 예치금<span>{account?.deposit} 원</span>
-										</Typography>
-									</li>
-									{account !== undefined 
-									? <li className={classes.contentItem}><Account account={account}/></li>
-									: '보유 계좌 없음'
+										<h2 style={{textAlign: 'center'}}>{company !== "all" && `🏬 ${company}`}</h2>
+										{account !== undefined // 보유 계좌가 있을 때
+										? 
+										<>
+						{/* 보유 예치금 */} 	<li className={classes.contentItem}>
+												<Typography className={classes.deposit} variant="h5">
+													💰 현 보유 예치금<span>{account?.deposit} 원</span>
+												</Typography>
+											</li>
+											<li className={classes.contentItem}><BankAccount account={account}/></li>
+							{/* 잔고  */}		<li className={classes.contentItem}><Balance fund={fund}/></li>
+						{/*  투자내역 관리 	*/}	<li className={classes.contentItem}><Funding company={company}/></li>
+										</>
+										: <div style={{textAlign: 'center', color: '#616161'}}>보유하신 계좌가 존재하지 않습니다.</div>
 									}
-					{/* 잔고 */}			<li className={classes.contentItem}><Balance fund={fund}/></li>
-					{/* 투자내역 관리 */}		<li className={classes.contentItem}><Funding company={company}/></li>
 								</ul>
 							: // 연동한 회사가 존재하지 않을 때
 								<div style={{textAlign:'center', color: '#616161', marginTop: '10px'}}>회사를 연동해주세요!</div>

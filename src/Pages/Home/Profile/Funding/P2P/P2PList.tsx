@@ -24,7 +24,8 @@ const useStyles = makeStyles({
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
-		width: '80px'
+		width: '83px',
+		maxHeight:'80px'
 	},
 });
 
@@ -35,7 +36,8 @@ interface FundListProps {
 	handleNickName : (name: string ) => void
 	getUserDataOfCompany : (refresh: number, id?: number) => void,
 	userObj : userInfo | null,
-	P2PList: Array<p2pInfo>
+	P2PList: Array<p2pInfo>,
+	handleP2PUpdated : () => void, // 회사 추가 여부 
 }
 
 // 회사 id를 가져오기 위한 회사 정보 인터페이스 
@@ -47,10 +49,9 @@ export interface companyInfo {
 
 export default function FundList(props: FundListProps) {
 	const classes = useStyles()
-	const {handleCompanyID, handleCompany, handleNickName, handleAddP2P, userObj, P2PList, getUserDataOfCompany} = props;
+	const {handleCompanyID, handleCompany, handleNickName, handleP2PUpdated, userObj, P2PList, getUserDataOfCompany} = props;
 	// STATE
 	const [open, setOpen] = useState(false)
-	const [P2PUpdated, setP2PUpdated] = useState(false)
 
      const [isExist, setIsExist] = useState(false)
 
@@ -68,27 +69,6 @@ export default function FundList(props: FundListProps) {
 		setOpen(false);
 		setIsExist(false)
 	}	
-	const handleP2PUpdated = () => {
-		setP2PUpdated(!P2PUpdated)
-	}
-
-	// 연동 회사 추가 시 홈에 알릴 수 있게 하는 핸들러 
-	useEffect(() => {
-			if(userObj !== null){
-				fetch(`${process.env.REACT_APP_SERVER}/api/register/registered_company`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json; charset=utf-8",
-						"Authorization": "Token " + userObj.auth_token
-					},
-				}).then((res) => res.json())
-				.then((res) => {
-					console.log('p2pupdated: ', res)
-					handleAddP2P(res)
-				})
-				.catch(error =>  console.log(error));
-			}
-	},[P2PUpdated])
 
 	// 회사 선택 시, 회사 이름과 id 보내기  
 	const onP2PClick = (company: p2pInfo | string | null) => {
