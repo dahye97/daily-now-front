@@ -41,7 +41,8 @@ interface FundListProps {
 // 회사 id를 가져오기 위한 회사 정보 인터페이스 
 export interface companyInfo {
      id : number,
-     company_name: string
+     company_name: string,
+	nickname: string
 }
 
 export default function FundList(props: FundListProps) {
@@ -92,9 +93,10 @@ export default function FundList(props: FundListProps) {
 	// 회사 선택 시, 회사 이름과 id 보내기  
 	const onP2PClick = (company: p2pInfo | string | null) => {
 		//name: string | null
+		console.log(company)
 		if (company !== null){
 			if (typeof(company) === "string") {
-				if( company === "모든 투자") {
+				if( company === "HOME") {
 					handleCompany("all")
 				}
 			}else{ 
@@ -141,7 +143,7 @@ export default function FundList(props: FundListProps) {
 					<IconButton 
 					onClick={(e) => onP2PClick(e.currentTarget.textContent)} 
 					className={classes.iconBody}>
-						<span><HomeIcon fontSize="large"/><p>모든 투자</p></span>
+						<div><HomeIcon style={{fontSize:'40px'}}/><p>HOME</p></div>
 					</IconButton>
 
 					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
