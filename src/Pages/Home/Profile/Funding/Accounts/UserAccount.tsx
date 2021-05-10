@@ -186,7 +186,7 @@ export default function UserAccount(props: AccountItemProps) {
                     <DialogContentText id="alert-dialog-slide-description">
                          변경하시려는 아이디나 비밀번호를 입력해주세요.
                     </DialogContentText>
-                    <TextField onChange={handleChange} type="email" label="ID" id="email" value={userName} fullWidth/>
+                    <TextField onChange={handleChange} type="email" label="Email(ID)" id="email" value={userName} fullWidth/>
                     <TextField onChange={handleChange} type="password" label="Password" id="password" value={password} fullWidth/>
                     {/* 비밀번호보기옵션 */}
                     <Button style={{display:'block', margin:'0 auto'}} onClick={handleAuth} color="primary">회원 인증 (필수)</Button>

@@ -152,7 +152,7 @@ export default function Profile(props:ProfileProps) {
 					<CardActions>
 						<div>
 							<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>
-							<Button onClick={handleClickPoint} className={classes.button}>포인트 내역</Button>
+							<Button onClick={handleClickPoint} className={classes.button}>포인트내역</Button>
 							<Button onClick={handleClickShare} className={classes.button}>공유하기</Button>
 						</div>
 						<div>

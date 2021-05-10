@@ -138,12 +138,14 @@ export default function Point(props: PointProps) {
                                         value={startDate}
                                         onChange={date => handleStartDate(date)}
                                         format="yyyy/MM/dd"
+                                        label="조회시작일"
                                    />
                                    <KeyboardDatePicker
                                         placeholder="2018/10/10"
                                         value={endDate}
                                         onChange={date => handleEndDate(date)}
                                         format="yyyy/MM/dd"
+                                        label="조회종료일"
                                    />
                               </div>
                               <Button 

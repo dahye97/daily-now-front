@@ -164,6 +164,7 @@ function Comment(props:CommentProps) {
                                                             <CommentForm 
                                                             key={recommentItem.comment_id}
                                                             handleEdit={handleEdit} 
+                                                            handleUpdateComment={handleUpdateComment}
                                                             handleUpdateReComment={handleUpdateReComment} 
                                                             recommentItem={recommentItem} 
                                                             userObj={userObj} 
@@ -186,6 +187,7 @@ function Comment(props:CommentProps) {
                                              })}
                                         </div>
                                         <CommentForm 
+                                         handleUpdateComment={handleUpdateComment}
                                         handleUpdateReComment={handleUpdateReComment}
                                         postId={postId} 
                                         userObj={userObj} 

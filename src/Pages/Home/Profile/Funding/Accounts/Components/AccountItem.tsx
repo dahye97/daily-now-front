@@ -59,7 +59,7 @@ export default function AccountItem(props: AccountItemProps) {
                     "Authorization": "Token " + userObj.auth_token,
                }
                }).then(res => {
-                    console.log('삭제완료')
+                    alert('계정 삭제가 완료되었습니다.')
                     handleP2PUpdated()
                })
                .catch(function(error) {

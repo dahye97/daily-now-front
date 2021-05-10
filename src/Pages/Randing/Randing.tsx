@@ -54,7 +54,7 @@ export default function Randing () {
                     <Card className={classes.randing} elevation={3}>
                          <div className={classes.header}>
                               <Typography className={classes.title}variant="h1" component="h1">
-                                        <p>Daily Check</p>
+                                        <p>Daily Now</p>
                               </Typography>
                          </div>
 				</Card>

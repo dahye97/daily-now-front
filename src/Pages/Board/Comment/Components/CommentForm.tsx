@@ -8,7 +8,7 @@ interface formProps {
      postId? : number // 게시글 id
      parentId? : number  // 답글 상위 댓글 id 
      userObj: userInfo | null, 
-     handleUpdateComment? : () => void, // 댓글 업데이트 함수 
+     handleUpdateComment : () => void, // 댓글 업데이트 함수 
      handleEdit?:(commentId?: number) => void,
      handleUpdateReComment? : (parendId: number) => void, // 답글 업데이트 함수 
 
@@ -95,13 +95,14 @@ export default function CommentForm(props: formProps) {
                          setRecomment("")
                          if(handleEdit) handleEdit()
                          if(handleUpdateReComment) handleUpdateReComment(parentId)
+                         
                     }else {
                          setComment("")
                          if(commentItem && handleEdit){ // 댓글일 경우 댓글 초기화 및 업데이트
                               handleEdit()
                          }
-                         if(handleUpdateComment) handleUpdateComment()
                     }
+                    handleUpdateComment()
                })
                .catch(function(error) {
                     console.log(error);

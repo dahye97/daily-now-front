@@ -11,7 +11,6 @@ import Share from 'Pages/Home/Profile/Share/Share';
 import Profile from "Pages/Home/Profile/Profile";
 import P2PList from "Pages/Home/Profile/Funding/P2P/P2PList"
 import Balance from 'Pages/Home/Profile/Funding/Balance';
-import Funding from 'Pages/Home/Profile/Funding/Funding';
 import Point from 'Pages/Home/Profile/Point/Point';
 import BankAccount from 'Pages/Home/Profile/Funding/BankAccount';
 import UserAccount from './Profile/Funding/Accounts/UserAccount';
@@ -302,7 +301,6 @@ export default function Home(props: HomeProps) {
 											</li>
 											<li className={classes.contentItem}><BankAccount account={account}/></li>
 							{/* 잔고  */}		<li className={classes.contentItem}><Balance fund={fund}/></li>
-						{/*  투자내역 관리 	*/}	<li className={classes.contentItem}><Funding company={company}/></li>
 										</>
 										: <div style={{textAlign: 'center', color: '#616161'}}>보유하신 계좌가 존재하지 않습니다.</div>
 									}

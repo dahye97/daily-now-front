@@ -48,10 +48,10 @@ export default function MyPage( props: MyPageProps) {
                          },
                     }).then(res => {
                          if( res.ok ){               
-                              alert("탈퇴 완료");
+                              alert("탈퇴가 완료되었습니다.");
                               props.handleWithdrawal()
                               history.push("/")
-                         }else alert('탈퇴 실패')
+                         }else alert('탈퇴에 실패했습니다.')
                     })
                     .catch(error =>  console.log(error));
 
