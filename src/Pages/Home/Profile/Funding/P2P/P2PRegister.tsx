@@ -91,7 +91,6 @@ export default function P2PRegister(props: P2PRegisterProps) {
                               if(res.ok) {
                                    res.json().then( data => {
                                         let value = Object.keys(data)[0]
-                                        // todo: 스트링 보다는 넘버링으로 관리하도록 수정함! 
                                         // 0 : 등록 완료
                                         if( value === "0" ) {
                                              console.log('등록완료')
@@ -123,7 +122,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
 
      // 회원 정보 유효성 검사 함수 
      const handleAuth = () => {
-          if( userObj !== null ) {
+          if( userObj !== null && userName && password ) {
                axios.post(`${process.env.REACT_APP_SERVER}/api/${P2PName}/is_valid`, {
                     id : userName,
                     pwd: password
@@ -150,6 +149,8 @@ export default function P2PRegister(props: P2PRegisterProps) {
                     })
                     initializeForm()
                })
+          } else {
+               alert('잘못된 입력입니다. 정확히 작성해주세요.')
           }
      }
      const initializeForm = () => {

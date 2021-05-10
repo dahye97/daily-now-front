@@ -13,10 +13,10 @@ interface AccountItemProps {
 export default function UserAccount(props: AccountItemProps) {
      const { allAccounts,userObj,handleP2PUpdated } = props;
      
+     // 회사 검색 결과 핸들러 함수
      const [value, setValue] = useState<string | null>(null);
      const [inputValue, setInputValue] = useState('');
 
-     // 회사 검색 결과 핸들러 함수
      const [filteredCompany, setFilteredCompany] = useState<p2pInfo[]>([])
      useEffect(() => {
           if(value !== null && typeof(value) === 'string'){
@@ -27,8 +27,10 @@ export default function UserAccount(props: AccountItemProps) {
      }
      , [value])
 
+     // 수정하려는 회사명, 수정창 토글
      const [open, setOpen] = React.useState(false);
      const [editingCompany, setEditingCompany] = useState<p2pInfo>()
+
      const handleClickOpen = (company : p2pInfo) => {
           setEditingCompany(company)
           setOpen(true);
@@ -37,9 +39,10 @@ export default function UserAccount(props: AccountItemProps) {
        setOpen(false);
      };
 
-         // INPUT
+     // 수정하려는 아이디, 비밀번호 
 	const [userName, setUserName] = useState("")
 	const [password, setPassword] = useState("")
+
      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
@@ -52,6 +55,7 @@ export default function UserAccount(props: AccountItemProps) {
           }
      }
 
+     // 회원 인증 에러 처리 함수
      const [isAuthentic, setIsAuthentic] = useState(false)
      const [isAuthError, setAuthError] = useState({
 		open: false,
@@ -59,7 +63,7 @@ export default function UserAccount(props: AccountItemProps) {
 		message: ""
 	})
      const handleAuth = () => {
-          if( userObj !== null ) {
+          if( userObj !== null && userName && password ) {
                axios.post(`${process.env.REACT_APP_SERVER}/api/${editingCompany?.nickname}/is_valid`, {
                     id : userName,
                     pwd: password
@@ -86,8 +90,11 @@ export default function UserAccount(props: AccountItemProps) {
                     setUserName('')
                     setPassword('')
                })
+          } else {
+               alert('잘못된 입력입니다. 정확히 작성해주세요.')
           }
      }
+     
      // 연동 계정 정보 변경 함수
      const handleSubmit = () => {
           // 입력한 아이디 or 비밀번호
