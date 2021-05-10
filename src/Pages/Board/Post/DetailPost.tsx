@@ -150,8 +150,8 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
 
      // 공감 비공감 처리 함수 
      const [isClicked, setIsClicked] = useState(false)
-     const [pressableLike, setPressableLike] = useState(true)
-     const [pressableDislike, setPressableDislike] = useState(true)
+     const [pressableLike, setPressableLike] = useState(false)
+     const [pressableDislike, setPressableDislike] = useState(false)
 
      const handleLikeDisLike = (event: React.MouseEvent) => {
           let queryString; // like, dislike 별 지정 url 값 저장

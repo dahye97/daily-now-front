@@ -61,8 +61,8 @@ function CommentView(props: viewProps) {
 
       // 공감 비공감 처리 함수 
       const [isClicked, setIsClicked] = useState(false)
-      const [pressableLike, setPressableLike] = useState(true)
-      const [pressableDislike, setPressableDislike] = useState(true)
+      const [pressableLike, setPressableLike] = useState(false)
+      const [pressableDislike, setPressableDislike] = useState(false)
 
      // 댓글 or 답글 객체 item에 저장 
      useEffect(() => {
