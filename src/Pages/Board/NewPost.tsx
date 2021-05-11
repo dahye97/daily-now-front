@@ -37,7 +37,7 @@ export default function NewPost(props: newPostProps) {
      const handleSave = () => {
           let url;
           let data;
-          if(detailPost) { // 글 수정 시 \
+          if(detailPost) { // 글 수정 시 
                url = "update_post" 
                data = {
                     "title" : title,
@@ -53,20 +53,30 @@ export default function NewPost(props: newPostProps) {
                }
           }
           if (userObj !== null ){
-               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${url}`, 
-                    data, {
-                    headers : {
-                         "Authorization": "Token " + userObj.auth_token,
+               if( title.length >= 2 && content.length >= 3) {
+                    axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${url}`, 
+                         data, {
+                         headers : {
+                              "Authorization": "Token " + userObj.auth_token,
+                         }
+                    })
+                    .then(res => {
+                         console.log(res)
+                    })
+                    .catch(function(error) {
+                         console.log(error);
+                    })
+                    history.goBack();
+               } else {
+                    if( title.length < 2 && content.length < 3) {
+                         alert('제목은 2자 이상, 내용은 3자 이상 입력해주세요.')
+                    }else if ( title.length < 2 ) {
+                         alert('제목은 2자 이상 입력해주세요.')
+                    }else if( content.length < 3) {
+                         alert('내용은 3자 이상 입력해주세요.')
                     }
-               })
-               .then(res => {
-                    console.log(res)
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })
+               }
           }
-          history.goBack();
      }
      // 글 작성 취소
      const handleCancel = () => {
