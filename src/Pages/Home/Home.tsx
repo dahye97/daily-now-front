@@ -241,7 +241,7 @@ export default function Home(props: HomeProps) {
 				},
 			}).then((res) => res.json())
 			.then((res) => {
-				console.log('p2pupdated: ', res)
+				console.log('등록된 계정 리스트: ', res)
 				handleAddP2P(res)
 			})
 			.catch(error =>  console.log(error));

@@ -144,7 +144,6 @@ export default function Registration() {
                     <p>매일이 행복한 투자<br/>
                     <b>데일리펀딩이</b> 함께 합니다</p>
                     <form className={classes.registerForm}>
-
                          {inputList.map((item, index) => {
                               return (
                                    <FormControl 
@@ -156,7 +155,9 @@ export default function Registration() {
                                         <Input 
                                         id={item.id}
                                         type={item.type} 
-                                        onChange={onChange}/>
+                                        onChange={onChange}
+                                        value={ item.id === "ucodeInput" && ucode ? ucode : ''}
+                                        />
                                         <FormHelperText>
                                              {error && item.errorId && error.hasOwnProperty(item.errorId) 
                                              ? error[`${item.errorId}`] : `Enter your ${item.labelContent}`}
