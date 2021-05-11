@@ -63,12 +63,19 @@ export default function Auth (Props:AuthProps) {
                          if(res.ok) {
                                    Props.handleLogIn(data)
                                    alert("로그인 되었습니다.");
+
+                                   window.sessionStorage.setItem('email', email);
+                                   window.sessionStorage.setItem('id', data.id);
+                                   window.sessionStorage.setItem('first_name', data.first_name);
+                                   window.sessionStorage.setItem('last_name', data.last_name);
+                                   window.sessionStorage.setItem('auth_token', data.auth_token);
+
                                    history.push("/")
                               
                          }else {
                               alert('존재하지 않는 회원입니다.')
-                              // setEmail(" ")
-                              // setPassword(" ")                              
+                              setEmail('')
+                              setPassword('')                              
                          }
                     })
                })
@@ -87,13 +94,13 @@ export default function Auth (Props:AuthProps) {
                               <FormControl className={classes.input}>
                                    {/* 이메일 */}
                                    <InputLabel htmlFor="email">Email(ID)</InputLabel>
-                                   <Input onChange={onChange} id="email"aria-describedby="my-helper-text" type="email"/>
+                                   <Input onChange={onChange} value={email} id="email"aria-describedby="my-helper-text" type="email"/>
                                    <FormHelperText id="my-helper-text">Enter your email.</FormHelperText>
                               </FormControl>
                               <FormControl  className={classes.input}>
                                    {/* 비밀번호*/}
                                    <InputLabel htmlFor="password">Password</InputLabel>
-                                   <Input onChange={onChange}  id="password" aria-describedby="my-helper-text" type="password"/>
+                                   <Input onChange={onChange}  value={password} id="password" aria-describedby="my-helper-text" type="password"/>
                                    <FormHelperText id="my-helper-text">Enter your password.</FormHelperText>
                               </FormControl>
                               <div className={classes.button}>

@@ -1,9 +1,9 @@
 // User : 유저 정보, 연동 회사 정보, 계좌정보, 투자정보, 포인트 정보
 export interface userInfo {
 	email: string,
-     id: number,
-     first_name: string,
-     last_name: string,
+     id: number | null,
+     first_name: string | null,
+     last_name: string | null,
      auth_token: string
 }
 

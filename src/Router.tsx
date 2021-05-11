@@ -53,6 +53,7 @@ export default function AppRouter() {
 		setisLoggedIn(false);
 		setUserObj(null)
 		document.location.href="/";
+		window.sessionStorage.clear();
 	}
 	
 	// 연동 회사 리스트 저장 함수 
@@ -62,6 +63,24 @@ export default function AppRouter() {
 
 	useEffect(() => {
 		console.log('현재 로그인한 유저 정보', userObj)
+		if( userObj === null){
+			const email = window.sessionStorage.getItem('email');
+			const auth_token = window.sessionStorage.getItem('auth_token');
+			const id = Number(window.sessionStorage.getItem('id'));
+			const first_name = window.sessionStorage.getItem('first_name');
+			const last_name = window.sessionStorage.getItem('last_name');
+			if(email && auth_token ) {
+				const data = {
+					"email": email,
+					"id": id,
+					"first_name": first_name,
+					"last_name": last_name,
+					"auth_token": auth_token
+				}
+				handleLogIn(data)
+			}
+		}
+
 	}, [userObj])
 
 	useEffect(() => {
