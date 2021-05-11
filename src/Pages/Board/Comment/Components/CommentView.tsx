@@ -185,7 +185,6 @@ function CommentView(props: viewProps) {
                                                   else handleDelete(item.comment_id)
                                                   }}><DeleteForeverIcon /></IconButton>
                                         </span>  
-                                        // fix 댓글 삭제 시 업데이트 문제
                                    }
 
                          </li>      

@@ -102,28 +102,33 @@ export default function Registration() {
                .catch(error =>  console.log(error));
                
           }
+
+     const [value, setValue] = useState('')
+     const [editingValue, setEditingValue] = useState('')
      const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
-               case "firstNameInput":
+               case "firstName":
                     setFirstName(value)
                     break
-               case "lastNameInput":
+               case "lastName":
                     setLastName(value)
                     break
-               case "userIdInput":
+               case "userId":
                     setId(value)
                     break
-               case "emailInput":
+               case "email":
                     setEmail(value)
                     break
-               case "passwordInput":
+               case "password":
                     setPassword(value)
                     break
-               case "ucodeInput":
+               case "ucode":
                     setInvitedCode(value)
                     break
           }
+          setValue(value)
+          setEditingValue('value'+e.target.id)
      }
 
      const inputList = [
@@ -156,7 +161,7 @@ export default function Registration() {
                                         id={item.id}
                                         type={item.type} 
                                         onChange={onChange}
-                                        value={ item.id === "ucodeInput" && ucode ? ucode : ''}
+                                        // value={editingValue === ('value' + item.id) && value}
                                         />
                                         <FormHelperText>
                                              {error && item.errorId && error.hasOwnProperty(item.errorId) 

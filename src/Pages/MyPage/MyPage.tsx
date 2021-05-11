@@ -51,6 +51,7 @@ export default function MyPage( props: MyPageProps) {
                               alert("탈퇴가 완료되었습니다.");
                               props.handleWithdrawal()
                               history.push("/")
+                              window.sessionStorage.clear();
                          }else alert('탈퇴에 실패했습니다.')
                     })
                     .catch(error =>  console.log(error));
