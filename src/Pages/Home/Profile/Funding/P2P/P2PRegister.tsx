@@ -91,9 +91,11 @@ export default function P2PRegister(props: P2PRegisterProps) {
                               if(res.ok) {
                                    res.json().then( data => {
                                         let value = Object.keys(data)[0]
+                                        let message = Object.keys(data)[1]
+     
                                         // 0 : 등록 완료
                                         if( value === "0" ) {
-                                             console.log('등록완료')
+                                             alert('계정 등록이 완료되었습니다. ')
                                              setRegistrationError({
                                                   open: true,
                                                   isTrue : false,
@@ -103,11 +105,11 @@ export default function P2PRegister(props: P2PRegisterProps) {
                                              handleP2PUpdated()
                                              handleClose()
                                         } else { // 1 or 2 : 등록 실패 
-                                             console.log('등록실패')
+                                             alert('이미 동일한 계정이 존재합니다. ')
                                              setRegistrationError({
                                                   open: true,
                                                   isTrue : true,
-                                                  message: data
+                                                  message: message
                                              })
                                         }
                                    })
@@ -180,7 +182,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
                })
                setIsAuthentic(false)
           }
-     }, [open,isAuthError,isRegistrationError ])
+     }, [ open, isAuthError, isRegistrationError ])
      
 
      const [value, setValue] = useState<string | null>();
