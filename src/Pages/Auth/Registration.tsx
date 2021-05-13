@@ -139,6 +139,7 @@ export default function Registration() {
 
      return (
           <Container className={classes.authContainer} maxWidth="md">
+               {console.log('here')}
                <div className={classes.authBox}>
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
@@ -152,12 +153,13 @@ export default function Registration() {
                                    error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
                                    className={classes.input}
                                    >
+                                        {console.log('here',item.id, ucode)}
                                         <InputLabel>{item.labelContent}</InputLabel>
                                         <Input 
                                         id={item.id}
                                         type={item.type} 
                                         onChange={onChange}
-                                        {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {} }
+                                        {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
                                         />
                                         <FormHelperText>
                                              {error && item.errorId && error.hasOwnProperty(item.errorId) 
