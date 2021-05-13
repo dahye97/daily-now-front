@@ -57,14 +57,14 @@ export default function Point(props: PointProps) {
      const [isDisabled, setIsDisabled] = useState(false)
      const handleSearch = (event: React.MouseEvent<unknown> | null, nextUrl: string) => 
      {
-          console.log('nextUrl:', nextUrl)
-
           let url = `${process.env.REACT_APP_SERVER}/api/auth/my_point_list`
           // 더보기 url 처리 변수 
           if(nextUrl !== 'false' && nextUrl !== '') {
                     url = nextUrl
+          }else {
+               // 조회를 누르면 pointlist를 비워줘야한다. 
+               setPointList([])
           }
-          // 조회를 누르면 pointlist를 비워줘야한다. 
           if(startDate && endDate) {
                firstData = createDate(startDate)
                secondData = createDate(endDate) 
