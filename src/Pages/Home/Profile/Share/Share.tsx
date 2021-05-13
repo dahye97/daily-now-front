@@ -73,7 +73,7 @@ export default function Share(props: ShareProps) {
           window.Kakao.Link.sendDefault({
                objectType: 'feed', // 메시지 형식 : 피드 타입
                content: {
-                    title: '데일리펀딩에 초대합니다.',
+                    title: '데일리나우에 초대합니다.',
                     description: '매일이 행복한 투자 현황, 홀리랑 함께 해요!',
                     imageUrl: "https://postfiles.pstatic.net/MjAxOTExMTlfNTcg/MDAxNTc0MTI0NDc5MTY4.svckLGX-9eQGz5ysLhHa36hi_Diher0SMG6g1EDqBIMg.c7HwR2PoRYgD9buJ0QzUCD70OQveRZIbdPRbZq3gUGYg.PNG.daily-funding/holy-emo-with-deli2.png?type=w966", // 메인으로 보여질 이미지 주소
                     link: {

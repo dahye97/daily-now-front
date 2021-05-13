@@ -1,6 +1,6 @@
 /** @format */
 import {useState,useEffect} from 'react';
-import { useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
 import { makeStyles, } from "@material-ui/styles";
 import { Typography,Grid,IconButton } from "@material-ui/core";
@@ -116,8 +116,10 @@ export default function Home(props: HomeProps) {
 	const [account, setAccount] = useState<accountInfo | undefined>(Object);
 	const [fund, setFund] = useState<fundInfo>(Object)
 
+	const [isHomeRefresh, setIsHomeRefresh] = useState(false)
 	// 선택한 회사 정보 저장 
 	const handleCompany = (name: string) => {
+		if( name === "all") setIsHomeRefresh(!isHomeRefresh)
 		setCompany(name);
 	}
 	const handleCompanyID =(id: number ) => {
@@ -137,7 +139,6 @@ export default function Home(props: HomeProps) {
 	
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	const getAccountData =  (p2pID: { company_id: number, refresh: number}) => {
-		console.log('getaccountdata')
 		if (userObj !== null){
 			fetch(`${process.env.REACT_APP_SERVER}/api/${nickName}/account`, {
 							method: "POST",
@@ -198,7 +199,6 @@ export default function Home(props: HomeProps) {
 			refresh: refresh
 		};
 		
-		console.log('현재 company ', company)
 		if (userObj !== null) {
 			getAccountData(p2pID)
 			getBalanceData(p2pID)
@@ -248,7 +248,6 @@ export default function Home(props: HomeProps) {
 		}
 	},[P2PUpdated])
 
-
 	return (
 		<>
 			<Grid container spacing={3} className={classes.home}>
@@ -283,6 +282,7 @@ export default function Home(props: HomeProps) {
 										💁🏻‍♀️ 아이디나 비밀번호가 변경되었을 경우, 회사 검색을 통해 업데이트 해주세요. 
 									</p>
 									<UserAccount 
+										isHomeRefresh={isHomeRefresh}
 										userObj={userObj} 
 										allAccounts={registeredP2PList}
 										handleP2PUpdated={handleP2PUpdated} />

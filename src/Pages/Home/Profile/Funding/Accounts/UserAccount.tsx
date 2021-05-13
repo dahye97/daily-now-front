@@ -9,13 +9,13 @@ interface AccountItemProps {
      allAccounts: p2pInfo[]
      userObj : userInfo | null,
      handleP2PUpdated : () => void, // 회사 추가 여부 
+     isHomeRefresh: boolean
 }
 export default function UserAccount(props: AccountItemProps) {
-     const { allAccounts,userObj,handleP2PUpdated } = props;
+     const { allAccounts,userObj,handleP2PUpdated,isHomeRefresh } = props;
      
      // 회사 검색 결과 핸들러 함수
      const [value, setValue] = useState<string | null>(null);
-     const [inputValue, setInputValue] = useState('');
 
      const [filteredCompany, setFilteredCompany] = useState<p2pInfo[]>([])
      useEffect(() => {
@@ -139,6 +139,10 @@ export default function UserAccount(props: AccountItemProps) {
                alert('회원 인증을 먼저 해주세요.')
           }
      }
+
+     useEffect(() => {
+          setValue(null)
+     }, [isHomeRefresh])
      return (
           <div>
                 <Autocomplete
@@ -151,10 +155,6 @@ export default function UserAccount(props: AccountItemProps) {
                          renderInput={(params: any) => (
                               <TextField {...params} label="회사명을 검색해주세요." margin="normal" variant="outlined" />
                          )}
-                         inputValue={inputValue}
-                         onInputChange={(event, newInputValue) => {
-                              setInputValue(newInputValue)
-                         }}
                     />
                <div>
                     {(value === null ? allAccounts : filteredCompany).map( account => {

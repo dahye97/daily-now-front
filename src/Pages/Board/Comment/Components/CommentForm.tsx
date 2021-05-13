@@ -120,8 +120,6 @@ export default function CommentForm(props: formProps) {
 
      return (
           <>
-                    {console.log('여기도')}
-
                {/* 댓글, 답글 폼 */}
                <Typography component="div" style={{border: '1px solid #D0D0D0', padding: '15px'}}>
                               <b>{userObj?.email.split('@')[0]}</b>

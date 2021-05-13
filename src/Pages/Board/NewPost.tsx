@@ -61,12 +61,11 @@ export default function NewPost(props: newPostProps) {
                          }
                     })
                     .then(res => {
-                         console.log(res)
+                         history.goBack()
                     })
                     .catch(function(error) {
                          console.log(error);
                     })
-                    history.goBack();
                } else {
                     if( title.length < 2 && content.length < 3) {
                          alert('제목은 2자 이상, 내용은 3자 이상 입력해주세요.')

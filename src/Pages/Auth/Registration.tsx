@@ -52,7 +52,6 @@ export default function Registration() {
      const [invitedCode, setInvitedCode] = useState<string | string[] | null>('')
      const [error, setError] = useState(Object)
 
-
      useEffect(() => {
           if(share) {
                setInvitedCode(ucode)
@@ -96,7 +95,7 @@ export default function Registration() {
                               }
                          }
                          )
-                         alert('회원가입 실패')
+                         alert('회원가입을 실패하였습니다.')
                     }
                })
                .catch(error =>  console.log(error));
@@ -121,7 +120,7 @@ export default function Registration() {
                case "passwordInput":
                     setPassword(value)
                     break
-               case "ucode":
+               case "ucodeInput":
                     setInvitedCode(value)
                     break
           }
@@ -139,7 +138,6 @@ export default function Registration() {
 
      return (
           <Container className={classes.authContainer} maxWidth="md">
-               {console.log('here')}
                <div className={classes.authBox}>
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
@@ -153,7 +151,6 @@ export default function Registration() {
                                    error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
                                    className={classes.input}
                                    >
-                                        {console.log('here',item.id, ucode)}
                                         <InputLabel>{item.labelContent}</InputLabel>
                                         <Input 
                                         id={item.id}
@@ -163,7 +160,8 @@ export default function Registration() {
                                         />
                                         <FormHelperText>
                                              {error && item.errorId && error.hasOwnProperty(item.errorId) 
-                                             ? error[`${item.errorId}`] : `Enter your ${item.labelContent}`}
+                                             ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
+                                             : `Enter your ${item.labelContent}`}
                                         </FormHelperText>
                                    </FormControl>
                               )
