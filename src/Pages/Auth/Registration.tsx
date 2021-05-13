@@ -103,8 +103,6 @@ export default function Registration() {
                
           }
 
-     const [value, setValue] = useState('')
-     const [editingValue, setEditingValue] = useState('')
      const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
@@ -127,8 +125,6 @@ export default function Registration() {
                     setInvitedCode(value)
                     break
           }
-          setValue(value)
-          setEditingValue('value'+e.target.id)
      }
 
      const inputList = [
@@ -143,6 +139,7 @@ export default function Registration() {
 
      return (
           <Container className={classes.authContainer} maxWidth="md">
+               {console.log('here')}
                <div className={classes.authBox}>
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
@@ -156,12 +153,13 @@ export default function Registration() {
                                    error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
                                    className={classes.input}
                                    >
+                                        {console.log('here',item.id, ucode)}
                                         <InputLabel>{item.labelContent}</InputLabel>
                                         <Input 
                                         id={item.id}
                                         type={item.type} 
                                         onChange={onChange}
-                                        // value={editingValue === ('value' + item.id) && value}
+                                        {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
                                         />
                                         <FormHelperText>
                                              {error && item.errorId && error.hasOwnProperty(item.errorId) 
