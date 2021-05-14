@@ -2,7 +2,7 @@ import React , {useState,useEffect} from 'react'
 import { BottomNavigation,BottomNavigationAction } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { userInfo } from 'Interface/User';
 
 const useStyles = makeStyles({
@@ -21,11 +21,13 @@ const useStyles = makeStyles({
 
 interface ShareProps {
 	userObj : userInfo | null,
+     myPoint: number,
+     updatePoint : () => void
 }
 export default function Share(props: ShareProps) {
      const classes = useStyles();
-
-     const {userObj} = props;
+     const location = useLocation()
+     const {userObj,myPoint,updatePoint} = props;
      const history = useHistory()
      const [shareUrl, setShareUrl] = useState('')
 
@@ -45,9 +47,8 @@ export default function Share(props: ShareProps) {
                     console.log(res.data)// 유저 초대 코드 
                     setShareUrl(`${process.env.REACT_APP_REGISTRATION}/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
                     setIsClicked(!isClicked)
-                    // 친구 초대 포인트 적립 api 보내기 
+                // 친구 초대 포인트 적립 api 보내기 
                     getInvitedPoint()
-
                })
                .catch(function(error) {
                     console.log(error);
@@ -62,7 +63,7 @@ export default function Share(props: ShareProps) {
                     "Authorization": "Token " + userObj.auth_token,
                }
                }).then( res => {
-                    console.log(res)
+                    updatePoint()
                })
                .catch(function(error) {
                     console.log(error);

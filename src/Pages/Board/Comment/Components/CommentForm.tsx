@@ -50,7 +50,7 @@ export default function CommentForm(props: formProps) {
                     canSubmit = true;   
                }
                else {
-                    if( recomment.length <= 3) {
+                    if( recomment.length < 3) {
                          alert('3자 이상 입력해주세요.');
                     }else {
                          data = {
@@ -71,7 +71,7 @@ export default function CommentForm(props: formProps) {
                     } // 수정할 댓글 데이터 
                     canSubmit = true;   
                }else {
-                    if( comment.length <= 3) {
+                    if( comment.length < 3) {
                          alert('3자 이상 입력해주세요.');
                     }else {
                          data = {

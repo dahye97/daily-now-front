@@ -5,6 +5,7 @@ import queryString from 'query-string'
 import { makeStyles, } from "@material-ui/styles";
 import { Typography,Grid,IconButton } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+import axios from 'axios'
 
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "Interface/User";
 import Share from 'Pages/Home/Profile/Share/Share';
@@ -101,6 +102,7 @@ interface HomeProps {
 	isP2PReady: boolean
 }
 export default function Home(props: HomeProps) {
+	
 	const classes = useStyles();
 	
 	const location = useLocation()
@@ -219,14 +221,13 @@ export default function Home(props: HomeProps) {
 	const handleScroll = () => {
 		setScrollY(window.pageYOffset)
 	}
-	
-	useEffect(() => {
-		window.addEventListener('scroll', handleScroll, { passive: true });
-	}, [])
+
+	window.addEventListener('scroll', handleScroll, { passive: true });
 
 	// 연동 회사 추가 시 업데이트 state 
 	const [P2PUpdated, setP2PUpdated] = useState(false)
 	const handleP2PUpdated = () => {
+		getMyPoint() // 연동 회사 추가 시 포인트 획득 
 		setP2PUpdated(!P2PUpdated)
 	}
 
@@ -248,6 +249,25 @@ export default function Home(props: HomeProps) {
 		}
 	},[P2PUpdated])
 
+	const [myPoint, setMyPoint] = useState(0)
+	// 마이 포인트 가져오기 
+	const getMyPoint = () => {
+		if( userObj !== null) {
+			axios.get(`${process.env.REACT_APP_SERVER}/api/auth/my_point`, 
+			{
+				headers : {
+				"Authorization": "Token " + userObj.auth_token,
+			}
+			})
+			.then(res => {
+				setMyPoint(res.data.total_point) // 포인트 값  
+			})
+			.catch(function(error) {
+				console.log(error);
+			})
+		}		
+	}
+
 	return (
 		<>
 			<Grid container spacing={3} className={classes.home}>
@@ -256,7 +276,7 @@ export default function Home(props: HomeProps) {
 				<Grid item xs={6}>
 
 					<div className={classes.homeContainer}>
-						<Profile userObj={userObj} handleLogOut={handleLogOut} 
+						<Profile myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj} handleLogOut={handleLogOut} 
 						companyID={companyID} getUserDataOfCompany={getUserDataOfCompany}/>
 
 						{/* 나의투자, 포인트 내역, 초대하기 */}
@@ -314,12 +334,12 @@ export default function Home(props: HomeProps) {
 						: tabName === "POINT_TOTAL" ? 
 							<Point userObj={userObj}/>
 						: tabName === "INVITE" ? 
-							<Share userObj={userObj}/>
+							<Share myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj}/>
 						: null}
 						</div>
 				</Grid>
 			</Grid>
-			{tabName=="POINT_TOTAL" && ( scrollY > 500) &&
+			{( scrollY > 500) &&
 			<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
 				<UpIcon />
 			</IconButton>}

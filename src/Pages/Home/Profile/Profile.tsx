@@ -7,7 +7,6 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { useHistory } from "react-router";
 import { userInfo } from "Interface/User";
 import {useEffect,useState} from 'react'
-import axios from 'axios'
 import jiyeon from 'asset/img/jiyeon.png'
 import holypig from 'asset/img/holypig.png'
 // TODO: 프로필 
@@ -73,20 +72,25 @@ const StyledBadge = withStyles((theme) => ({
 interface ProfileProps {
 	userObj : userInfo | null,
 	companyID: number,
-	
+	myPoint : number
+
 	handleLogOut:() => void,
 	getUserDataOfCompany: (refresh: number, id?: number) => void
+	updatePoint : () => void
 }
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 	const classes = useStyles()
-	const {userObj, handleLogOut,companyID,getUserDataOfCompany} = props;
-	const [myPoint, setMyPoint] = useState()
+	const {handleLogOut,getUserDataOfCompany, myPoint, updatePoint} = props;
+
 	// mypage로 이동 
 	const handleClickSetting = () => {
 		history.push('/mypage');
 	}
 	
+	const handleClickFunding = () => {
+		history.push('/home?tabName=MY_FUNDING')
+	}
 	// 초대 코드 생성 함수 
 	const handleClickShare = () => {
 		history.push('/home?tabName=INVITE')
@@ -100,22 +104,9 @@ export default function Profile(props:ProfileProps) {
 	const handleClickRefresh = () => {
 		getUserDataOfCompany(1)
 	}
-	// 마이 포인트 가져오기 
+
 	useEffect(() => {
-		if( userObj !== null) {
-			axios.get(`${process.env.REACT_APP_SERVER}/api/auth/my_point`, 
-			{
-				headers : {
-				"Authorization": "Token " + userObj.auth_token,
-			}
-			})
-			.then(res => {
-				setMyPoint(res.data.total_point) // 포인트 값  
-			})
-			.catch(function(error) {
-				console.log(error);
-			})
-		}		
+		updatePoint()
 	}, [])
 
 		return (
@@ -151,9 +142,12 @@ export default function Profile(props:ProfileProps) {
 					</CardContent>
 					<CardActions>
 						<div>
-							<Button onClick={() => history.push('/home?tabName=MY_FUNDING')} className={classes.button}>나의투자</Button>
-							<Button onClick={handleClickPoint} className={classes.button}>포인트내역</Button>
-							<Button onClick={handleClickShare} className={classes.button}>공유하기</Button>
+							<Button 
+							onClick={handleClickFunding} className={classes.button}>나의투자</Button>
+							<Button 
+							onClick={handleClickPoint} className={classes.button}>포인트내역</Button>
+							<Button 
+							onClick={handleClickShare} className={classes.button}>공유하기</Button>
 						</div>
 						<div>
 							<img 
