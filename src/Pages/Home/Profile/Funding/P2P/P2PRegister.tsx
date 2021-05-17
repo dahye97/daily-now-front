@@ -16,7 +16,7 @@ interface P2PRegisterProps {
 
      allCompany: Array<companyInfo>
      handleChangeAllCompany: (company: companyInfo[]) => void
-     getUserDataOfCompany : (refresh: number, id?: number) => void
+     getUserDataOfCompany : (refresh: number, id?: number, nickname?: string) => void
 }
 
 const useStyles = makeStyles({
@@ -66,7 +66,6 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
      }
 	
-     // fixme: all company 에서 회사이름을 찾아 닉네임을 저장한 후 , getUserDataOfCompany에 함께 보내준다.
      // 연동 회사 등록 함수 
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
@@ -102,7 +101,9 @@ export default function P2PRegister(props: P2PRegisterProps) {
                                                   isTrue : false,
                                                   message: ""
                                              })
-                                             getUserDataOfCompany(1, P2PId)
+                                             // 계정 최초 등록 시, 최초 데이터를 자동으로 가져오게 해야한다.
+                                             // 1(실시간 데이터 flag), 회사 아이디, 닉네임을 보내 가져오도록 한다.
+                                             getUserDataOfCompany(1, P2PId, P2PName)
                                              handleP2PUpdated()
                                              handleClose()
                                         } else { // 1 or 2 : 등록 실패 

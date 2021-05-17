@@ -140,9 +140,10 @@ export default function Home(props: HomeProps) {
 	}
 	
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
-	const getAccountData =  (p2pID: { company_id: number, refresh: number}) => {
+	const getAccountData =  (p2pID: { company_id: number, refresh: number}, nickname?: string) => {
+
 		if (userObj !== null){
-			fetch(`${process.env.REACT_APP_SERVER}/api/${nickName}/account`, {
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickname? nickname : nickName}/account`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json; charset=utf-8",
@@ -163,10 +164,10 @@ export default function Home(props: HomeProps) {
 					.catch(error =>  console.log('계좌 정보가 없습니다.'));
 			}
 	}
-	const getBalanceData = (p2pID: { company_id: number, refresh: number}) => {
+	const getBalanceData = (p2pID: { company_id: number, refresh: number}, nickname?: string) => {
 
 		if(userObj !== null) {
-			fetch(`${process.env.REACT_APP_SERVER}/api/${nickName}/balance`, {
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickname? nickname : nickName}/balance`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json; charset=utf-8",
@@ -191,7 +192,7 @@ export default function Home(props: HomeProps) {
 				.catch(error =>  console.log('투자 정보가 없습니다.'));
 		}
 	}
-	const getUserDataOfCompany = (refresh: number, id?: number) => {
+	const getUserDataOfCompany = (refresh: number, id?: number, nickname?: string) => {
 		let idValue = companyID;
 		if(id) {
 			idValue = id
@@ -200,10 +201,15 @@ export default function Home(props: HomeProps) {
 			company_id : idValue,
 			refresh: refresh
 		};
-		
+
 		if (userObj !== null) {
-			getAccountData(p2pID)
-			getBalanceData(p2pID)
+			if( nickname ) { // 계정 최초 등록 시, 닉네임을 이용해 계정 정보 가져옴.
+				getAccountData(p2pID, nickname)
+				getBalanceData(p2pID, nickname)
+			}else {
+				getAccountData(p2pID)
+				getBalanceData(p2pID)
+			}
 		}
 	}
 	useEffect(() => {
