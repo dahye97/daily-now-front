@@ -107,7 +107,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }, headerData)
           .then(res => {
                setDetailPost(res.data)
-               console.log(res.data)
+               // console.log(res.data)
                setColumns ( [
                     { id: 'title', align:'left',label: res.data.title, maxWidth: "70%" },
                     { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "10%" },
@@ -159,7 +159,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           let likeDislike = -1; // 공감,비공감 여부 초기값
           
           if (userObj !== null) {
-               console.log('현재 :',detailPost.like_dislike)
+               // console.log('현재 :',detailPost.like_dislike)
                if( detailPost.like_dislike === -1 ) { // 공감, 비공감 저장 : -1 = 공감, 비공감이 없을 경우
                     queryString = "add_post_like"
                     if( label === "like") {
@@ -199,7 +199,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                          }
                     })
                     .then(res => {
-                         console.log(res)
+                         // console.log(res)
                          setIsClicked(!isClicked)
                     })
                     .catch(function(error) {

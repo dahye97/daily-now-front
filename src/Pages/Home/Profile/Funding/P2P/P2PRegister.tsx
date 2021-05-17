@@ -66,6 +66,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
           }
      }
 	
+     // fixme: all company 에서 회사이름을 찾아 닉네임을 저장한 후 , getUserDataOfCompany에 함께 보내준다.
      // 연동 회사 등록 함수 
 	const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();

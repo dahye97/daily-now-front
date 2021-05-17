@@ -23,7 +23,7 @@ export default function FAQ() {
           axios.post(`${process.env.REACT_APP_SERVER}/api/notice/faq_list`, {
                page_size: 10
           }).then(res => {
-               console.log(res.data)
+               // console.log(res.data)
                setFaqList(res.data.results)
           })
           .catch(function(error) {

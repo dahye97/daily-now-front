@@ -34,7 +34,7 @@ export default function Stepper(props: {index: indexInfo ,steps: number, handleP
      
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
           props.handleP2PIndex(props.index.end, props.index.end + 5 )
-          console.log(props.index)
+          // console.log(props.index)
           
         };
       
@@ -42,7 +42,7 @@ export default function Stepper(props: {index: indexInfo ,steps: number, handleP
              
              setActiveStep((prevActiveStep) => prevActiveStep - 1);
              props.handleP2PIndex(props.index.start - 5, props.index.start)
-             console.log(props.index)
+          //    console.log(props.index)
         };
 
         

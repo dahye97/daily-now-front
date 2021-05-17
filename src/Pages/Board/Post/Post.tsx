@@ -68,7 +68,7 @@ export default function Post(props: PostProps) {
                "page_size": rowsPerPage
           })
           .then(res => {
-               console.log('postlist',res.data)
+               // console.log('postlist',res.data)
                setpostList(res.data)
                setIsLoading(false)
           }) 

@@ -69,7 +69,7 @@ export default function Registration() {
                "code" : invitedCode
           };
 
-          console.log(registerInfo)
+          // console.log(registerInfo)
           fetch(`${process.env.REACT_APP_SERVER}/api/auth/register`, {
                method: "POST",
                headers: {

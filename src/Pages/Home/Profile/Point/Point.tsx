@@ -87,13 +87,13 @@ export default function Point(props: PointProps) {
                          } setPointList(result)
 
                          // 다음 포인트 내역이 존재할 때
-                         console.log(res.data)
+                         // console.log(res.data)
                          if( res.data.next !== null ) { 
-                              console.log('다음 내역이 존재해요')  
+                              // console.log('다음 내역이 존재해요')  
                               setIsDisabled(false)                           
                               setNextUrl(res.data.next)
                          }else {
-                              console.log('더이상 내역이 존재하지 않아요')
+                              // console.log('더이상 내역이 존재하지 않아요')
                               setNextUrl('false') // 다음 포인트 내역이 존재하지 않을 때
                               setIsDisabled(true) 
                          }

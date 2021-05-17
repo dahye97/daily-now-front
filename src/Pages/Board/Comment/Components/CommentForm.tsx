@@ -40,7 +40,7 @@ export default function CommentForm(props: formProps) {
           let data;
 
          if(parentId) { // 1. 답글
-          console.log(recommentItem)
+          // console.log(recommentItem)
                if( recommentItem) {
                     url = "update_comment"
                     data = {

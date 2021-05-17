@@ -88,7 +88,7 @@ function CommentView(props: viewProps) {
           let likeDislike = -1; // 공감,비공감 여부 초기값
           if (userObj !== null && item) {
                 if( item.like_dislike === -1 ) { // 공감, 비공감 저장 : -1 = 공감, 비공감이 없을 경우
-                    console.log('존재하는 공감비공감 없음 ')
+                    // console.log('존재하는 공감비공감 없음 ')
                     queryString = "add_comment_like"
                     if( label === "like") {
                          likeDislike = 1
@@ -126,7 +126,7 @@ function CommentView(props: viewProps) {
                          }
                     })
                     .then(res => {
-                         console.log(res)
+                         // console.log(res)
                          if (commentItem) { // 댓글에 대한 공감, 비공감
                               getDetailComment(commentId)
 

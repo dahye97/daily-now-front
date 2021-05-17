@@ -73,7 +73,7 @@ export default function FundList(props: FundListProps) {
 	// 회사 선택 시, 회사 이름과 id 보내기  
 	const onP2PClick = (company: p2pInfo | string | null) => {
 		//name: string | null
-		console.log(company)
+		// console.log(company)
 		if (company !== null){
 			if (typeof(company) === "string") {
 				if( company === "HOME") {

@@ -38,7 +38,7 @@ export default function AppRouter() {
 
 	// 로그인 함수 
 	const handleLogIn = ( data: userInfo) => {
-		console.log(data)
+		// console.log(data)
 		setisLoggedIn(true);
 		setUserObj( {
 			"email" : data.email,
@@ -62,7 +62,7 @@ export default function AppRouter() {
 	}
 
 	useEffect(() => {
-		console.log('현재 로그인한 유저 정보', userObj)
+		// console.log('현재 로그인한 유저 정보', userObj)
 		if( userObj === null){
 			const email = window.sessionStorage.getItem('email');
 			const auth_token = window.sessionStorage.getItem('auth_token');

@@ -44,7 +44,7 @@ export default function Share(props: ShareProps) {
                }
                })
                .then(res => {
-                    console.log(res.data)// 유저 초대 코드 
+                    // console.log(res.data)// 유저 초대 코드 
                     setShareUrl(`${process.env.REACT_APP_REGISTRATION}/registration?share=TRUE&ucode=${res.data}`) // 보내야 하는 url 
                     setIsClicked(!isClicked)
                 // 친구 초대 포인트 적립 api 보내기 
