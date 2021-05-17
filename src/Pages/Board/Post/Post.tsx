@@ -120,24 +120,26 @@ export default function Post(props: PostProps) {
                     })}
                </Tabs>
 
-                    {isLoading ? 
-                         '로딩중'
-                    :
-                    <>
-                         <TabPanel value={value} index={0}>
-                              <PostBox page={page} 
+               {isLoading ? 
+                    <div>Loading...</div>
+               :
+               <>
+                    <TabPanel value={value} index={0}>
+                         <PostBox 
+                              page={page} 
                               rowsPerPage={rowsPerPage} 
                               handleChangePage={handleChangePage} 
                               handleChangeRowsPerPage={handleChangeRowsPerPage}
-                               postList={postList}/>
-                         </TabPanel>
-                         <TabPanel value={value} index={1}>
-                              <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>
-                         </TabPanel>
-                         <TabPanel value={value} index={2}>
-                              <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>
-                         </TabPanel>
-                    </>}
+                              postList={postList}
+                         />
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                         <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                         <PostBox page={page} rowsPerPage={rowsPerPage} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} postList={postList}/>
+                    </TabPanel>
+               </>}
                     
           </Container>
      )

@@ -194,7 +194,7 @@ export default function P2PRegister(props: P2PRegisterProps) {
      const [filteredCompany, setFilteredCompany] = useState<companyInfo[]>([])
      useEffect(() => {
           if(value !== null && typeof(value) === 'string'){
-               console.log(allCompany)
+               // console.log(allCompany)
                setFilteredCompany(allCompany.filter( company => {
                     return company.company_name.includes(value)
                }))

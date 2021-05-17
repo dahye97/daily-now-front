@@ -142,8 +142,11 @@ export default function Home(props: HomeProps) {
 	// 선택된 회사 아이디에 따라 계좌, 투자 내역 정보 가져오기 
 	const getAccountData =  (p2pID: { company_id: number, refresh: number}, nickname?: string) => {
 
-		if (userObj !== null){
-			fetch(`${process.env.REACT_APP_SERVER}/api/${nickname? nickname : nickName}/account`, {
+		let nickNameValue = nickName;
+		if ( nickname ) nickNameValue = nickname
+
+		if (userObj !== null && nickNameValue){
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickNameValue}/account`, {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json; charset=utf-8",
@@ -166,8 +169,11 @@ export default function Home(props: HomeProps) {
 	}
 	const getBalanceData = (p2pID: { company_id: number, refresh: number}, nickname?: string) => {
 
-		if(userObj !== null) {
-			fetch(`${process.env.REACT_APP_SERVER}/api/${nickname? nickname : nickName}/balance`, {
+		let nickNameValue = nickName;
+		if ( nickname ) nickNameValue = nickname
+
+		if(userObj !== null && nickNameValue) {
+			fetch(`${process.env.REACT_APP_SERVER}/api/${nickNameValue}/balance`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json; charset=utf-8",

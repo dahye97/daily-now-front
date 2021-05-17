@@ -63,53 +63,50 @@ export default function PostBox(props: PostBoxProps) {
      return (
           <>
 
-               <div className={classes.root}>
-                    <TableContainer className={classes.container}>
-                         <Table stickyHeader aria-label="sticky table">
-                              <TableHead>
-                                   <TableRow>
-                                   {columns.map((column) => (
-                                        <TableCell
-                                        key={column.id}
-                                        style={{ minWidth: column.minWidth }}
-                                        >
-                                        {column.label}
-                                        </TableCell>
-                                   ))}
-                                   </TableRow>
-                              </TableHead>
+               <TableContainer className={classes.container}>
+                    <Table stickyHeader aria-label="sticky table">
+                         <TableHead>
+                              <TableRow>
+                              {columns.map((column) => (
+                                   <TableCell
+                                   key={column.id}
+                                   style={{ minWidth: column.minWidth }}
+                                   >
+                                   {column.label}
+                                   </TableCell>
+                              ))}
+                              </TableRow>
+                         </TableHead>
 
-                                   <TableBody>
-                                        {results.map((row) => {
-                                             return (
-                                                  <TableRow hover role="checkbox" tabIndex={-1} 
-                                                       key={row.post_id} onClick={() => handleClickPost(row.post_id)}
-                                                       style={{ cursor: "pointer"}}>
-                                                       <TableCell>{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
-                                                       <TableCell>{row.title}</TableCell>
-                                                       <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
-                                                       <TableCell align="center">{row.views}</TableCell>
-                                                       <TableCell align="center">{row.like}</TableCell>
-                                                       <TableCell align="center">{row.dislike}</TableCell>
-                                                  </TableRow>
-                                        );
-                                        })}
-                                   </TableBody>
-                              
-                         </Table>
-                    </TableContainer>
+                              <TableBody>
+                                   {results.map((row) => {
+                                        return (
+                                             <TableRow hover role="checkbox" tabIndex={-1} 
+                                                  key={row.post_id} onClick={() => handleClickPost(row.post_id)}
+                                                  style={{ cursor: "pointer"}}>
+                                                  <TableCell>{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
+                                                  <TableCell>{row.title}</TableCell>
+                                                  <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
+                                                  <TableCell align="center">{row.views}</TableCell>
+                                                  <TableCell align="center">{row.like}</TableCell>
+                                                  <TableCell align="center">{row.dislike}</TableCell>
+                                             </TableRow>
+                                   );
+                                   })}
+                              </TableBody>
+                         
+                    </Table>
+               </TableContainer>
 
-                    <TablePagination
-                         rowsPerPageOptions={[10, 25, 100]}
-                         component="div"
-                         count={count}
-                         rowsPerPage={rowsPerPage}
-                         page={page}
-                         onChangePage={handleChangePage}
-                         onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                    </div>
-
+               <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={count}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+               />
           </>
      )
 }

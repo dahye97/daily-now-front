@@ -8,7 +8,7 @@ import Comment from '../Comment/Comment';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper,IconButton,Typography,
-     Table, TableCell, TableContainer, TableHead, TableRow,
+     Table, TableCell, TableContainer, TableBody, TableRow,
 } from '@material-ui/core/';
 
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
@@ -263,14 +263,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           <Paper className={classes.root}>
                     <TableContainer className={classes.container}>
                          <Table stickyHeader aria-label="sticky table">
-                              <TableHead>
-                                   {isLoading? '로딩중 ' : 
-                                   <>
-                                        {createRow(0,4)}
-                                        {createRow(4,6)}
-                                   </>
+                              <TableBody>
+                                   {isLoading
+                                   ? <TableRow><TableCell>Loading...</TableCell></TableRow> 
+                                   : 
+                                        <>
+                                             {createRow(0,4)}
+                                             {createRow(4,6)}
+                                        </>
                                    }
-                              </TableHead>
+                              </TableBody>
                          </Table>
                     </TableContainer>
 
