@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react'
 import axios from 'axios';
-import { useHistory, } from 'react-router';
+import { useHistory, useLocation, } from 'react-router';
+import queryString from 'query-string'
 
 import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle } from '@material-ui/core';
 import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
@@ -68,6 +69,11 @@ export default function Board (props: BoardProps){
      const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 리스트 
      const [categoryId, setCategoryId] = useState(1) // 현재 카테고리 
 
+     const location = useLocation()
+	const queryObj = queryString.parse(location.search);
+	const category = queryObj.category; // url에서 현재 category id 받아오기 
+	const pageIndex = queryObj.page; // url에서 현재 page index 받아오기 
+
      // 새글 작성 함수
      const handleClickWrite = () => {
           if(userObj !== null) {
@@ -100,6 +106,11 @@ export default function Board (props: BoardProps){
 
      useEffect(() => {
           getCategories()
+
+          // 이전에 선택한 카테고리가 있을 경우 categoryId 값을 업데이트
+          if( category ) {
+               setCategoryId(Number(category))
+          }
      }, [])
 
      // 내 글 보기 처리 함수
@@ -143,7 +154,7 @@ export default function Board (props: BoardProps){
                <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판
                          <>
-                              <Post categories={categories} categoryId={categoryId} handleCategoryId={handleCategoryId}/>
+                              <Post categories={categories} pageIndex={Number(pageIndex)} categoryId={ category ? Number(category) : categoryId} handleCategoryId={handleCategoryId}/>
                               <div className={classes.boardBottom}>
                                    <Button onClick={handleClickMyPost} variant="outlined"color="primary">내 글보기</Button>
                                    <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
@@ -156,27 +167,27 @@ export default function Board (props: BoardProps){
                          : '로딩중'}
 
                          {/* 내 글 보기 */}
-                              <Dialog fullWidth={true} onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-                                   <DialogTitle id="simple-dialog-title"><h2>내가 작성한 글 📝</h2></DialogTitle>
-                                   <List className={classes.myPost} subheader={<div />}>
+                         <Dialog fullWidth={true} onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+                              <DialogTitle id="simple-dialog-title"><h2>내가 작성한 글 📝</h2></DialogTitle>
+                              <List className={classes.myPost} subheader={<div />}>
 
-                                   {categories.map((category) => (
-                                        <li key={category.category_id} className={classes.myPostSection}>
-                                             <ListSubheader><h1>{category.category_name}</h1></ListSubheader>
-                                             {myPostList.filter( mypost => 
-                                                  mypost.category_id === category.category_id)
-                                                  .map( (result,index) => {
-                                                       return (
-                                                       <ListItem className={classes.myPostItem} onClick={(e: React.MouseEvent) => handleClickMyPostItem(e, result.post_id)} key={index}>
-                                                            <ListItemText primary={result.title} />
-                                                            <ListItemText style={{textAlign: 'right'}}primary={result.date.split('T')[0].replaceAll('-','. ')} />
-                                                       </ListItem>)
-                                                  })
-                                             }
-                                        </li>
-                                   ))}
-                                   </List>
-                              </Dialog>
+                              {categories.map((category) => (
+                                   <li key={category.category_id} className={classes.myPostSection}>
+                                        <ListSubheader><h1>{category.category_name}</h1></ListSubheader>
+                                        {myPostList.filter( mypost => 
+                                             mypost.category_id === category.category_id)
+                                             .map( (result,index) => {
+                                                  return (
+                                                  <ListItem className={classes.myPostItem} onClick={(e: React.MouseEvent) => handleClickMyPostItem(e, result.post_id)} key={index}>
+                                                       <ListItemText primary={result.title} />
+                                                       <ListItemText style={{textAlign: 'right'}}primary={result.date.split('T')[0].replaceAll('-','. ')} />
+                                                  </ListItem>)
+                                             })
+                                        }
+                                   </li>
+                              ))}
+                              </List>
+                         </Dialog>
 
                </div>
           </Container>

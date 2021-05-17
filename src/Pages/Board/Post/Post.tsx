@@ -9,6 +9,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 
 import PostBox from 'Pages/Board/Post/Components/PostBox';
 import { postInfo,categoryInfo } from 'Interface/Board';
+import { useHistory } from 'react-router';
 const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,
@@ -23,11 +24,13 @@ interface PostProps {
      categories: categoryInfo[]
      categoryId :number
      handleCategoryId: any
+     pageIndex?: number | null 
 }
 // 카테고리탭 + 탭 패널 
 export default function Post(props: PostProps) {
      const classes = useStyles()
-     const {categories ,handleCategoryId,categoryId} = props;
+     const history = useHistory()
+     const {categories ,handleCategoryId,categoryId, pageIndex} = props;
      
      const  iconList = [<ChatIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
 
@@ -47,6 +50,7 @@ export default function Post(props: PostProps) {
                getPostList(postList.next)
           }
        setPage(newPage);
+       history.push(`/board?category=${categoryId}&page=${newPage}`)
      };
      const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
        setRowsPerPage(+event.target.value);
@@ -59,9 +63,12 @@ export default function Post(props: PostProps) {
      };
 
      // 카테고리 ID와 rowsPerPage 값에 따른 게시글 가져오기 
-     const getPostList = (url: string) => {
+     const getPostList = (url: string, pageIndex?:number) => {
           if(url.length === 0){
                url = `${process.env.REACT_APP_SERVER}/api/notice/post_list`
+          }
+          if(pageIndex) {
+               url = url + `?page=${pageIndex}`
           }
           axios.post(url, {
                "category_id": categoryId,
@@ -77,11 +84,24 @@ export default function Post(props: PostProps) {
                })
      }
 
-     // 카테고리 ID, 페이지 인덱스가 변경되면 LIST 업데이트
+     const onClickCategory = (categoryId : number) => {   
+          history.push(`/board?category=${categoryId}`)
+     }
+
+     // 카테고리, 페이지가 변경되면 업데이트
      useEffect(() => {
-          getPostList("")
-          setPage(0)
-     }, [categoryId, rowsPerPage])
+          // 선택한 카테고리가 있을 경우
+          if( categoryId && !pageIndex) {
+               getPostList("") // 카테고리의 게시물 불러오기
+               setPage(0) // 페이지 값 초기화
+          }
+          // 선택한 카테고리와 선택한 페이지가 있을 경우
+          else if( categoryId && pageIndex ){
+               getPostList("",pageIndex+1) // 카테고리의 선택 페이지 게시물 불러오기
+               setPage(pageIndex) // 페이지 값 업데이트
+          }
+          setValue(categoryId-1) // 현재 카테고리 위치 ui value 값 설정
+     }, [categoryId, rowsPerPage, pageIndex])
      return (
          
           <Container maxWidth="md" className={classes.postContainer}>
@@ -95,7 +115,7 @@ export default function Post(props: PostProps) {
                >
                     {categories.map( (category,index) => {
                          return (
-                              <Tab key={index} label={category.category_name} icon={iconList[index]} {...a11yProps(index)} />
+                              <Tab key={index} onClick={() => onClickCategory(category.category_id)} label={category.category_name} icon={iconList[index]} {...a11yProps(index)} />
                          )
                     })}
                </Tabs>

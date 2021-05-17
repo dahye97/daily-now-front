@@ -302,7 +302,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                          </>
                          }
                          {/* 목록 버튼 */}
-                             <IconButton onClick={()=> history.goBack()}><KeyboardBackspaceIcon /></IconButton>
+                             <IconButton onClick={()=>history.goBack()} ><KeyboardBackspaceIcon /></IconButton>
                          </Typography>
                     </Paper>
 
