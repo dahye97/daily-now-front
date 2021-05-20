@@ -137,11 +137,23 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      // 댓글 리스트 불러오기 
      const [commentList, setCommentList] = useState<commentInfo[]>([])
 
+     // 로그인 되어있으면 헤더를 보내고,
+     // 로그인 안되어있으면 헤더 안보냄 
      const getCommentList = () => {
+          let headerData;
+          if (userObj !== null) {
+               headerData = {
+                         "Authorization": "Token " + userObj.auth_token,
+               };
+          }
+
           axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
                post_id: location.state.post_id
-          },)
+          }, {
+               headers : headerData 
+          })
           .then(res => {
+               console.log(res.data)
                setCommentList(res.data)
           })
           .catch(function(error) {

@@ -49,10 +49,19 @@ function Comment(props:CommentProps) {
 
           setIsExpanded('panel'+parent_id)
 
+          let headerData;
+          if (userObj !== null) {
+               headerData = {
+                         "Authorization": "Token " + userObj.auth_token,
+               };
+          }
+
           if( numberOfRecomment !== 0) {
                axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
                     post_id: postId,
                     parent_comment: parent_id
+               },{
+                    headers: headerData
                })
                .then(res => {
                     setRecommentList(res.data)
