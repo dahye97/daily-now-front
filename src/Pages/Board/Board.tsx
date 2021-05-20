@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useHistory, useLocation, } from 'react-router';
 import queryString from 'query-string'
 
-import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle } from '@material-ui/core';
+import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle ,useMediaQuery} from '@material-ui/core';
 import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
 
 import Post from 'Pages/Board/Post/Post';
@@ -18,9 +18,9 @@ import board_holy from 'asset/img/board_holy.png'
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({
      boardHeader : {
-         display: 'flex',
+          display: 'flex',
           alignItems: "center",
-           padding: '10px'
+          paddingLeft: '48px'
      },
      boardContainer : {
           padding: "20px",
@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
 		boxShadow: "0 5px 15px #b1b1b1, 0 5px 15px #ffffff",
 		minWidth : "580px",
 		overflow: "hidden",
+     },
+     boardContainerMobile : {
+          width: "100%",
+          height: "10%",
+          margin: '60px 0',
+          padding: 0
      },
      boardBottom : {
           display: "flex",
@@ -65,6 +71,8 @@ interface BoardProps {
 export default function Board (props: BoardProps){
      const classes = useStyles()
      const history = useHistory();
+     const isMobile = useMediaQuery("(max-width: 380px)");
+
      const { typeNum,userObj } = props;
      const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 리스트 
      const [categoryId, setCategoryId] = useState(1) // 현재 카테고리 
@@ -146,10 +154,10 @@ export default function Board (props: BoardProps){
           })
      }
      return (
-          <Container maxWidth="md" className={classes.boardContainer}>
+          <Container maxWidth="md" className={isMobile? classes.boardContainerMobile: classes.boardContainer}>
 			<div className={classes.boardHeader}>
-                    <h1 style={{marginRight: '10px'}}>💬 토론해요 </h1>
-                    <div><img src={board_holy} alt="종목토론" width="60px"/></div>
+                    <h2 style={{marginRight: '10px'}}>💬 토론해요 </h2>
+                    <div><img src={board_holy} alt="종목토론" width="50px"/></div>
                </div>
                <div style={{height: '100%'}}>
                          { typeNum === "01" ? // 게시판

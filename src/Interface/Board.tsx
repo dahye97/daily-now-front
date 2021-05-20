@@ -36,7 +36,8 @@ export interface postResultInfo {
      post_id: number, // 글 id 
      title: string // 제목 
      user: string // 이메일 
-     views: number // 조회수
+     views: number // 조회수,
+     comment_count: number // 댓글 수 
 }
 
 export interface commentInfo {
