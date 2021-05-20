@@ -1,4 +1,4 @@
-import {Card,CardHeader,CardMedia,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar } from "@material-ui/core";
+import {Card,CardHeader,CardMedia,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar,useMediaQuery } from "@material-ui/core";
 import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -7,7 +7,6 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { useHistory } from "react-router";
 import { userInfo } from "Interface/User";
 import {useEffect,useState} from 'react'
-import jiyeon from 'asset/img/jiyeon.png'
 import holypig from 'asset/img/holypig.png'
 // TODO: 프로필 
 const useStyles = makeStyles({
@@ -17,6 +16,9 @@ const useStyles = makeStyles({
 		borderRadius: "20px",
 		position: 'relative'
 	},
+	profile: {
+		width: '100%'
+	}, 
 	profileHoly: {
 		position: 'absolute',
 		right: "5%",
@@ -81,6 +83,7 @@ interface ProfileProps {
 export default function Profile(props:ProfileProps) {
 	const history = useHistory();
 	const classes = useStyles()
+	const isMobile = useMediaQuery("(max-width: 380px)");
 	const {handleLogOut,getUserDataOfCompany, myPoint, updatePoint} = props;
 
 	// mypage로 이동 
@@ -125,7 +128,7 @@ export default function Profile(props:ProfileProps) {
 								}}
 								variant="dot"
 								>
-								<Avatar src={jiyeon}/>
+								<Avatar/>
 							</StyledBadge>
 						}
 						></CardHeader>
@@ -141,7 +144,7 @@ export default function Profile(props:ProfileProps) {
 						<h2>{myPoint ? myPoint : 0} P</h2>
 					</CardContent>
 					<CardActions>
-						<div>
+						<div style={{zIndex: 2}}>
 							<Button 
 							onClick={handleClickFunding} className={classes.button}>나의투자</Button>
 							<Button 
@@ -152,8 +155,9 @@ export default function Profile(props:ProfileProps) {
 						<div>
 							<img 
 							className={classes.profileHoly}
-							src={holypig} width="220px"
-							alt="사용자님의 프로필을 확인합니다."/> 
+							src={holypig} width= {isMobile? "180px": "220px"}
+							alt="저금통과 홀리"
+							style={{zIndex: 1}}/> 
 						</div>
 					</CardActions>
 				</Card>

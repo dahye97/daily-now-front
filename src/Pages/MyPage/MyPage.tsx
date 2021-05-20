@@ -3,12 +3,16 @@ import { useHistory } from 'react-router';
 
 import {userInfo} from 'Interface/User'
 import { Container,makeStyles,FormControl,InputLabel,Input,FormHelperText,Button,Typography,
-     Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle } from "@material-ui/core";
+     Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle, useMediaQuery } from "@material-ui/core";
 
 
 const useStyles = makeStyles({
      userContainer: {
           padding: "100px"
+     },
+     userContainerMobile : {
+          padding: "50px",
+          marginTop: "70px"
      },
      editPWForm: {
           display: "flex",
@@ -24,6 +28,7 @@ interface MyPageProps {
 // TODO: 탈퇴, 회원정보 수정
 export default function MyPage( props: MyPageProps) {
      const history = useHistory();
+	const isMobile = useMediaQuery("(max-width: 380px)");
 
      const [password, setPassword] = useState("")
      const [newPassword, setNewPassword] = useState("")
@@ -111,7 +116,7 @@ export default function MyPage( props: MyPageProps) {
      ]
 
           return (
-               <Container className={classes.userContainer} maxWidth="md">
+               <Container className={isMobile? classes.userContainerMobile : classes.userContainer} maxWidth="md">
                     <div> <Typography variant="h5">🔐 회원 정보 수정</Typography> </div>
 
                     {/* 비밀번호 변경 박스 */}

@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 		margin: "10px 0",
 		padding: "10px 0",
 		display:"flex",
-	
+		flexWrap: 'wrap'
 	},
 	iconBody: {
 		fontSize: "12px",

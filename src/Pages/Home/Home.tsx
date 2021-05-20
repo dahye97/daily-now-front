@@ -3,7 +3,7 @@ import {useState,useEffect} from 'react';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
 import { makeStyles, } from "@material-ui/styles";
-import { Typography,Grid,IconButton } from "@material-ui/core";
+import { Typography,Grid,IconButton,useMediaQuery,Container } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import axios from 'axios'
 
@@ -20,48 +20,28 @@ const useStyles = makeStyles({
 	home: {
 		display:"flex",
 		justifyContent: "center",
-		margin:" 0 auto",
-		minWidth: '680px',
+		alignContent: 'center',
 	},
 	homeContainer: {
 		padding: "20px",
 		marginTop: "80px",
-		marginLeft: '80px',
 		borderRadius: "50px",
 		background: "#ffffff",
 		boxShadow: "17px 17px 34px #b1b1b1, -17px -17px 34px #ffffff",
 		minWidth : "580px",
 		overflow: "hidden",
 	},
-	asideContainer : {
+	homeContainerMobile: {
+		margin: '0 auto',
+		width: '100%',
+		paddingTop:'80px'
+	},
+		asideContainer : {
 		position: "sticky",
 		top: "80px",
 		marginTop: "80px",
 	},
-	'@media(max-width: 1270px)' : {
-		home: {
-			display: 'block',
-			width: 'fit-content',
-			margin: '0 auto',
-			background: '#ffffff'
-		},
-		homeContainer : {
-			boxShadow: '#ffffff',
-			marginLeft: 0
-		}
 
-	},
-	asideItem : {
-		padding: "30px",
-		minWidth : "500px",
-		marginBottom: "20px",
-		borderRadius: "50px",
-		
-		background: "linear-gradient(100deg, #ffffff, #e6e6e6)",
-		boxShadow:  "9px 9px 18px #b1b1b1, -9px -9px 18px #ffffff",
-		overflow: "hidden",
-
-	},
 	contentList: {
 		paddingLeft: "0"
 	},
@@ -104,7 +84,8 @@ interface HomeProps {
 export default function Home(props: HomeProps) {
 	
 	const classes = useStyles();
-	
+	const isMobile = useMediaQuery("(max-width: 380px)");
+
 	const location = useLocation()
 	const queryObj = queryString.parse(location.search);
 	const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
@@ -282,12 +263,10 @@ export default function Home(props: HomeProps) {
 
 	return (
 		<>
-			<Grid container spacing={3} className={classes.home}>
+			<Container className={classes.home}>
 
 				{/* 마이 페이지 */}
-				<Grid item xs={6}>
-
-					<div className={classes.homeContainer}>
+					<div className={isMobile? classes.homeContainerMobile : classes.homeContainer}>
 						<Profile myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj} handleLogOut={handleLogOut} 
 						companyID={companyID} getUserDataOfCompany={getUserDataOfCompany}/>
 
@@ -349,8 +328,7 @@ export default function Home(props: HomeProps) {
 							<Share myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj}/>
 						: null}
 						</div>
-				</Grid>
-			</Grid>
+			</Container>
 			{( scrollY > 500) &&
 			<IconButton onClick={handleClickUpButton} className={classes.UpButton}>
 				<UpIcon />
