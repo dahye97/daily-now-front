@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
+import { Container,FormControl,InputLabel,Input,FormHelperText,Button,useMediaQuery } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
@@ -18,15 +18,25 @@ const useStyles = makeStyles({
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
           textAlign: "center",
+          minWidth: "350px"
 	},
+     authContainerMobile : {
+          width: "90%",
+          height: "10%",
+          paddingTop: "100px",
+     },
+     authBoxMobile: {
+          padding: "20px",
+          textAlign: "center",
+     },
      registerForm : {
           display: "flex",
           flexDirection: "column",
-          alignItems: "center"
+          alignItems: "center",
      },
      input: {
           margin: "8px",
-          maxWidth: "195px"
+          width: '350px'
      },
      button : {
           marginTop: "20px"
@@ -41,6 +51,8 @@ export default function Registration() {
 
      const classes = useStyles()
      const history = useHistory();
+     const isMobile = useMediaQuery("(max-width: 380px)");
+
      const [cookies, setCookie, removeCookie] = useCookies([]);
 
      const [firstName, setFirstName] = useState("")
@@ -126,44 +138,53 @@ export default function Registration() {
           }
      }
 
+     const handleVerifyEmail = () => {
+          console.log('이메일 인증 코드 받기')
+     }
      const inputList = [
-          { id: "firstNameInput", helperId: "firstName-text", type:"string", labelContent: "First Name" },
-          { id: "lastNameInput", helperId: "firstName-text" , type:"string", labelContent: "Last Name"},
-          { id: "userIdInput", helperId: "firstName-text", type:"string", labelContent: "ID *", errorId: "username", },
-          { id: "emailInput", helperId: "firstName-text", type:"email", labelContent: "Email(ID) *", errorId: "email",  },
-          { id: "passwordInput", helperId: "firstName-text", type:"password", labelContent: "Password *", errorId: "password",  },
-          { id: "ucodeInput", helperId: "firstName-text", type:"ucode", labelContent: "Invited Code", errorId: "ucode",  },
+          { id: "firstNameInput", type:"string", labelContent: "이름", description: "first name"},
+          { id: "lastNameInput" , type:"string", labelContent: "성",  description: "last name"},
+          { id: "userIdInput", type:"string", labelContent: "별명 *",  description: "id", errorId: "username", },
+          { id: "emailInput", type:"email", labelContent: "이메일 *",  description: "email", errorId: "email"},
+          { id: "passwordInput", type:"password", labelContent: "비밀번호 *",  description: "password", errorId: "password",  },
+          { id: "ucodeInput", type:"ucode", labelContent: "초대 코드",  description: "invited code", errorId: "ucode",  },
 
      ]
 
      return (
-          <Container className={classes.authContainer} maxWidth="md">
-               <div className={classes.authBox}>
+          <Container className={isMobile? classes.authContainerMobile : classes.authContainer} maxWidth="md">
+               <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
                     <p>매일이 행복한 투자<br/>
-                    <b>데일리펀딩이</b> 함께 합니다</p>
+                    <b>데일리나우가</b> 함께 합니다</p>
                     <form className={classes.registerForm}>
                          {inputList.map((item, index) => {
                               return (
-                                   <FormControl 
-                                   key={index}
-                                   error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
-                                   className={classes.input}
-                                   >
-                                        <InputLabel>{item.labelContent}</InputLabel>
-                                        <Input 
-                                        id={item.id}
-                                        type={item.type} 
-                                        onChange={onChange}
-                                        {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
-                                        />
-                                        <FormHelperText>
-                                             {error && item.errorId && error.hasOwnProperty(item.errorId) 
-                                             ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
-                                             : `Enter your ${item.labelContent}`}
-                                        </FormHelperText>
-                                   </FormControl>
+                                   <div style={{display:'flex', flexDirection:'row'}}>
+                                        <FormControl 
+                                        key={index}
+                                        error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
+                                        className={classes.input}
+                                        // {...(item.id === "emailInput") ? {style: {width: '250px'}} : {}}
+                                        >
+                                             <InputLabel>{item.labelContent}</InputLabel>
+                                             <Input 
+                                             id={item.id}
+                                             type={item.type} 
+                                             onChange={onChange}
+                                             {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
+                                             />
+                                             <FormHelperText>
+                                                  {error && item.errorId && error.hasOwnProperty(item.errorId) 
+                                                  ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
+                                                  : `Enter your ${item.description}`}
+                                             </FormHelperText>
+                                        </FormControl>
+{/* 
+                                        { item.id === "emailInput" && <Button color="primary" style={{minWidth: '100px', padding: 0}} onClick={handleVerifyEmail} >인증코드 받기</Button> }
+                                                  */}
+                                   </div>
                               )
                          })}
 
@@ -171,7 +192,7 @@ export default function Registration() {
                               <Button type="submit" onClick={onSubmit}>함께하기</Button>
                          </div>
                     </form>
-               </div>
+               </Container>
           </Container>
      )
 }

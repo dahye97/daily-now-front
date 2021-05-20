@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
-import { Container,FormControl,InputLabel,Input,FormHelperText,Button } from "@material-ui/core";
+import { Container,FormControl,InputLabel,Input,FormHelperText,Button, useMediaQuery } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
 import { useHistory } from 'react-router';
 import { userInfo } from 'Interface/User';
@@ -9,7 +9,15 @@ import { userInfo } from 'Interface/User';
 
 const useStyles = makeStyles({
      authContainer: {
-          padding: "100px"
+          padding: "100px",
+          width: "80%",
+          height: "20%"
+
+     },
+     authContainerMobile : {
+          width: "90%",
+          height: "10%",
+          paddingTop: "100px",
      },
 	authBox: {
 		padding: "20px",
@@ -17,9 +25,14 @@ const useStyles = makeStyles({
 		background: "#ffffff",
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
-
           textAlign: "center",
 	},
+     authBoxMobile: {
+          width: "90%",
+          height: "10%",
+          padding: '20px',
+          textAlign: "center",
+     },
      input: {
           margin: "8px"
      },
@@ -33,17 +46,18 @@ interface AuthProps {
 }
 export default function Auth (Props:AuthProps) {
      const classes = useStyles()
+     const isMobile = useMediaQuery("(max-width: 380px)");
      const history = useHistory();
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
 
-     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           if (e.target.id === "email") {
                setEmail(value)
           }else setPassword(value)
      }
-     const onSubmit = (e: React.MouseEvent) => {
+     const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
      
           const loginInfo = {
@@ -82,33 +96,37 @@ export default function Auth (Props:AuthProps) {
                .catch(error =>  console.log(error));
                
           }
+
+     const handleFindPW = () => {
+          console.log('비밀번호 재발급')
+     }
      return (
-               <Container className={classes.authContainer} maxWidth="sm">
-                    <div className={classes.authBox}>
+               <Container className={ isMobile? classes.authContainerMobile : classes.authContainer} maxWidth="sm">
+                    <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
                          <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                          <h2>Daily Now 💙</h2>
                          <p>매일이 행복한 투자<br/>
-                         <b>데일리펀딩이</b> 함께 합니다</p>
+                         <b>데일리나우가</b> 함께 합니다</p>
 
                          <form>
                               <FormControl className={classes.input}>
                                    {/* 이메일 */}
                                    <InputLabel htmlFor="email">Email(ID)</InputLabel>
-                                   <Input onChange={onChange} value={email} id="email"aria-describedby="my-helper-text" type="email"/>
+                                   <Input onChange={handleChange} value={email} id="email"aria-describedby="my-helper-text" type="email"/>
                                    <FormHelperText id="my-helper-text">Enter your email.</FormHelperText>
                               </FormControl>
                               <FormControl  className={classes.input}>
                                    {/* 비밀번호*/}
                                    <InputLabel htmlFor="password">Password</InputLabel>
-                                   <Input onChange={onChange}  value={password} id="password" aria-describedby="my-helper-text" type="password"/>
+                                   <Input onChange={handleChange}  value={password} id="password" aria-describedby="my-helper-text" type="password"/>
                                    <FormHelperText id="my-helper-text">Enter your password.</FormHelperText>
                               </FormControl>
                               <div className={classes.button}>
-                                   <Button type="submit" onClick={onSubmit}>로그인</Button>
-                                   <Button>비밀번호 찾기</Button>
+                                   <Button type="submit" onClick={handleSubmit}>로그인</Button>
+                                   <Button disabled onClick={handleFindPW}>비밀번호 재발급</Button>
                          </div>
                          </form>
-                    </div>
+                    </Container>
                </Container>
           )
 }
