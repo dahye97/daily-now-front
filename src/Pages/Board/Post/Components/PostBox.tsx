@@ -2,17 +2,55 @@ import axios from 'axios';
 import { useHistory } from 'react-router';
 
 import { makeStyles } from '@material-ui/styles';
-import {Table, TableBody , TableCell, TableContainer ,TableHead ,TablePagination ,TableRow }
+import { Icon, Table, TableBody , TableCell, TableContainer ,TableHead ,TablePagination ,TableRow,
+     useMediaQuery}
           from '@material-ui/core';
 import {postInfo} from 'Interface/Board'
+import ForumTwoToneIcon from '@material-ui/icons/ForumTwoTone';
+import ThumbUpAltTwoToneIcon from '@material-ui/icons/ThumbUpAltTwoTone';
+import ThumbDownAltTwoToneIcon from '@material-ui/icons/ThumbDownAltTwoTone';
 
 const useStyles = makeStyles({
-     root: {
-       width: '100%',
-     },
-     container: {
+     postBox: {
        maxHeight: 600,
      },
+     postBoxMobile : {
+          width: "100%",
+          height: "10%",
+     },
+     postItem: {
+          display:'flex', 
+          flexDirection:'column', 
+          padding: '5px',
+          width: '100%',
+          borderBottom: '1px solid #cfcfcf',
+          '& td': {
+               padding: '10px',
+               border: 'none',
+          }
+     },
+     tdSet: {
+          display:'flex', 
+          flexDirection:'row',
+          justifyContent: 'flex-start',
+          '& td': {
+               color: '#9e9e9e',
+               '& span': {
+                    display:'inline-block',
+                    lineHeight: '25px',
+                    verticalAlign: 'top',
+                    marginLeft: '3px'
+               },
+          },
+     },
+     pagination : {
+          '& > div': {
+               padding: 0,
+               paddingTop: '10px',
+               flexWrap: "wrap",
+               justifyContent: 'center'
+          }
+     }
    });
 
 interface Column {
@@ -32,6 +70,8 @@ interface PostBoxProps {
 // 실제 탭 패널 내용 
 export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
+     const isMobile = useMediaQuery("(max-width: 380px)");
+
      const history = useHistory();
      const { postList, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;
      const { count, results } = postList;
@@ -62,43 +102,82 @@ export default function PostBox(props: PostBoxProps) {
      
      return (
           <>
-
-               <TableContainer className={classes.container}>
+               <TableContainer className={isMobile? classes.postBoxMobile : classes.postBox}>
                     <Table stickyHeader aria-label="sticky table">
-                         <TableHead>
-                              <TableRow>
-                              {columns.map((column) => (
-                                   <TableCell
-                                   key={column.id}
-                                   style={{ minWidth: column.minWidth }}
-                                   >
-                                   {column.label}
-                                   </TableCell>
-                              ))}
-                              </TableRow>
-                         </TableHead>
+                         { !isMobile && 
+                              <TableHead>
+                                   <TableRow>
+                                   {columns.map((column) => (
+                                        <TableCell
+                                        key={column.id}
+                                        style={{ minWidth: column.minWidth }}
+                                        >
+                                        {column.label}
+                                        </TableCell>
+                                   ))}
+                                   </TableRow>
+                              </TableHead>
+                         }
+                         <TableBody>
+                              {results.map((row) => {
+                                   return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} 
+                                        key={row.post_id} onClick={() => handleClickPost(row.post_id)}
+                                        style={{ cursor: "pointer",}}>
 
-                              <TableBody>
-                                   {results.map((row) => {
-                                        return (
-                                             <TableRow hover role="checkbox" tabIndex={-1} 
-                                                  key={row.post_id} onClick={() => handleClickPost(row.post_id)}
-                                                  style={{ cursor: "pointer"}}>
+                                             {isMobile ? 
+                                             <div className={classes.postItem}>
+                                                  <TableCell>{row.title}</TableCell>
+                                                  <div className={classes.tdSet}>
+                                                       <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
+                                                       <TableCell>{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
+                                                       <TableCell align="center">조회수 {row.views}</TableCell>
+                                                  </div>
+                                                  <div className={classes.tdSet}>
+                                                       <div>
+                                                            <TableCell align="center">
+                                                                 <Icon color={row.like !== 0 ? 'action' : 'disabled'}>
+                                                                      <ThumbUpAltTwoToneIcon fontSize="small"/>
+                                                                 </Icon>
+                                                                 <span>{row.like}</span>
+                                                            </TableCell>
+                                                            <TableCell align="center">
+                                                                 <Icon color={row.dislike !== 0 ? 'action' : 'disabled'}>
+                                                                      <ThumbDownAltTwoToneIcon fontSize="small"/>
+                                                                 </Icon>
+                                                                 <span>{row.dislike}</span>
+                                                            </TableCell>
+                                                       </div>
+                                                       <div>
+                                                            <TableCell>
+                                                                 <Icon color={row.comment_count !== 0 ? 'action' : 'disabled'}>
+                                                                      <ForumTwoToneIcon fontSize="small"/>
+                                                                 </Icon>
+                                                                 <span>{row.comment_count}</span>
+                                                            </TableCell>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                             :
+                                             <>
                                                   <TableCell>{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
                                                   <TableCell>{row.title}</TableCell>
                                                   <TableCell>{row.user.slice(0,4) + '****'}</TableCell>
                                                   <TableCell align="center">{row.views}</TableCell>
                                                   <TableCell align="center">{row.like}</TableCell>
                                                   <TableCell align="center">{row.dislike}</TableCell>
-                                             </TableRow>
-                                   );
-                                   })}
-                              </TableBody>
+                                             </>
+                                             }
+                                        </TableRow>
+                                   )
+                              })}
+                         </TableBody>
                          
                     </Table>
                </TableContainer>
 
                <TablePagination
+                    className={isMobile? classes.pagination: ""}
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
                     count={count}

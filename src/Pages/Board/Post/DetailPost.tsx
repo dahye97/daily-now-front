@@ -1,4 +1,4 @@
-import React , {useState,useEffect,useCallback} from 'react'
+import React , {useState,useEffect} from 'react'
 import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
@@ -8,7 +8,7 @@ import Comment from '../Comment/Comment';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper,IconButton,Typography,
-     Table, TableCell, TableContainer, TableBody, TableRow,
+     Table, TableCell, TableContainer, TableBody, TableRow,useMediaQuery
 } from '@material-ui/core/';
 
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
@@ -23,16 +23,17 @@ const useStyles = makeStyles({
      },
      container: {
        maxHeight: 600,
-       background: "#fafafa"
+       background: "#fafafa",
+       '& th': {
+            color: '#9e9e9e',
+       },
      },
      contentPaper: {
           padding: '30px',
           margin: '10px'
      },
-     commentPaper : {
-          margin: '10px',
-          padding: "10px",
-          boxShadow: 'none'
+     contentPaperMobile: {
+          padding: '30px',
      },
      commentItem: {
           borderBottom: '3px solid #fafafa'
@@ -68,20 +69,23 @@ export const createDate = ( date : string ) => {
 
 export default function DetailPost(props: {userObj: userInfo | null,}) {
      const location = useLocation<stateType>()
+     const isMobile = useMediaQuery("(max-width: 380px)");
      const classes = useStyles();
      const history= useHistory();
      const { userObj } = props;
 
      // 선택한 게시물 행 데이터 만들기 
      const [columns, setColumns] = useState<Column[]>([])
+     const [mobileCol, setMobileCol] = useState<Column[]>([])
      const createRow = ( start: number, end : number,) => {
           return (<TableRow style={{display:"flex", justifyContent: 'flex-start'}}>
-               {columns.slice(start,end).map( column => {
+               {(isMobile? mobileCol : columns).slice(start,end).map( column => {
                     return (<TableCell
                          component="th" scope="row"
                          key={column.id}
                          style={{ width: column.maxWidth , border: "none", padding: "10px", }}
                          align={column.align}
+                         { ...(column.id === "title") ? {style: {width: column.maxWidth , border: "none", padding: "10px",color: 'black'}}: {}}
                          >
                          {column.label}
                          </TableCell>)
@@ -107,15 +111,21 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }, headerData)
           .then(res => {
                setDetailPost(res.data)
-               // console.log(res.data)
+               console.log(res.data)
                setColumns ( [
                     { id: 'title', align:'left',label: res.data.title, maxWidth: "70%" },
-                    { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "10%" },
+                    { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "30%" },
                     { id: 'like', align:'right',label: '공감 '+res.data.like, maxWidth: "10%" },
                     { id: 'unlike', align:'right',label: '비공감 '+res.data.dislike, maxWidth: "10%" },
                     { id: 'author', align:'left',label: res.data.user.slice(0,4) + '****',maxWidth: '50%'},
                     { id: 'date', align:'right', label: createDate(res.data.date), maxWidth:"50%"},
                ]);
+               setMobileCol([
+                    { id: 'title', align:'left',label: res.data.title, maxWidth: "70%" },
+                    { id: 'author', align:'left',label: res.data.user.slice(0,4) + '****',maxWidth: '20%'},
+                    { id: 'date', align:'right', label: createDate(res.data.date), maxWidth:"40%"},
+                    { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "20%" },
+               ])
                setIsLoading(false)
           })
           .catch(function(error) {
@@ -128,22 +138,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const [commentList, setCommentList] = useState<commentInfo[]>([])
 
      const getCommentList = () => {
-               if(userObj!==null){
-                    axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
-                         post_id: location.state.post_id
-                    },{
-                         headers : {
-                              "Authorization": "Token " + userObj.auth_token,
-                         }
-                    } )
-                    .then(res => {
-                        setCommentList(res.data)
-                    })
-                    .catch(function(error) {
-                         console.log(error);
-                    })
-               }
-          }
+          axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
+               post_id: location.state.post_id
+          },)
+          .then(res => {
+               setCommentList(res.data)
+          })
+          .catch(function(error) {
+               console.log(error);
+          })
+     }
      useEffect(() => {
           getCommentList()   
      }, [])
@@ -264,20 +268,25 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     <TableContainer className={classes.container}>
                          <Table stickyHeader aria-label="sticky table">
                               <TableBody>
-                                   {isLoading
-                                   ? <TableRow><TableCell>Loading...</TableCell></TableRow> 
-                                   : 
+                                   {!isLoading ?
+                                   ( isMobile ? 
+                                        <>
+                                             {createRow(0,1)}
+                                             {createRow(1,4)}
+                                        </>
+                                        :
                                         <>
                                              {createRow(0,4)}
                                              {createRow(4,6)}
                                         </>
-                                   }
+                                   )
+                                        : <TableRow><TableCell>Loading...</TableCell></TableRow>}
                               </TableBody>
                          </Table>
                     </TableContainer>
 
                     {/* 글 내용 */}
-                    <Paper className={classes.contentPaper}>
+                    <Paper className={isMobile? classes.contentPaperMobile : classes.contentPaper}>
                          {detailPost.content}
 
                          {/* 공감,비공감 버튼 */}

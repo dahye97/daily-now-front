@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 
-import {IconButton,Typography,Button} from '@material-ui/core/';
+import {IconButton,Typography,Button, useMediaQuery} from '@material-ui/core/';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,10 +15,9 @@ import { createDate } from 'Pages/Board/Post/DetailPost';
 const useStyles = makeStyles({
      commentContainer : {
           padding: '20px',
-          
           '& li' : {
                padding: '3px'
-          }
+          },
      },
      handButton: {
           textAlign: "center",
@@ -53,6 +52,8 @@ type curCommentType = {
 }
 function CommentView(props: viewProps) {
      const classes = useStyles();
+     const isMobile = useMediaQuery("(max-width: 380px)");
+
      const { userObj, commentItem, recommentItem, 
           handleEdit,handleDelete,getReComment
            } = props;
@@ -168,11 +169,11 @@ function CommentView(props: viewProps) {
           <>
           {item &&
                <>
-               <div className ={ classes.commentContainer}>
+               <div className ={classes.commentContainer}>
           {/* 작성자 */} <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
                               <span><b>{item.user.substr(0,4) + "****"}</b></span>
                                 
-          {/* 수정, 삭제 버튼 */}
+          {/* 수정, 삭제 버튼 */}{console.log(item)}
                                    { item.editable &&
                                         <span>
                                              <IconButton onClick={() => {
@@ -215,6 +216,7 @@ function CommentView(props: viewProps) {
 
                          <div  style={{display:"flex", justifyContent: "space-between",}}>
                {/* 답글 */}  {commentItem && <Button 
+                              style={{padding: '3px', justifyContent:'flex-start'}}
                               onClick={() => getReComment(item.comment_id, item.num_child)}>
                                    답글 {item.num_child} </Button>}
                          </div>

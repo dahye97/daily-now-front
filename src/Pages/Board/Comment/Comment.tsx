@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import axios from 'axios';
 
-import {Paper,Button,Card,Accordion,AccordionDetails  } from '@material-ui/core/';
+import {Paper,Button,Card,Accordion,AccordionDetails ,useMediaQuery } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import { commentInfo } from 'Interface/Board';
 import { userInfo } from 'Interface/User';
@@ -9,18 +9,13 @@ import CommentForm from 'Pages/Board/Comment/Components/CommentForm';
 import CommentView from 'Pages/Board/Comment/Components/CommentView';
 
 const useStyles = makeStyles({
-     
-     contentPaper: {
-          padding: '30px',
-          margin: '10px'
-     },
      commentPaper : {
           margin: '10px',
           padding: "10px",
           boxShadow: 'none'
      },
-     commentItem: {
-          borderBottom: '3px solid #fafafa'
+     commentPaperMobile : {
+          padding: "10px",
      },
      handButton: {
           textAlign: "center",
@@ -44,6 +39,7 @@ interface CommentProps {
 }
 function Comment(props:CommentProps) {
      const classes = useStyles();
+     const isMobile = useMediaQuery("(max-width: 380px)");
      const {userObj , commentList, postId, handleUpdateComment } = props;
 
      // 답글 리스트 가져오는 함수
@@ -53,14 +49,10 @@ function Comment(props:CommentProps) {
 
           setIsExpanded('panel'+parent_id)
 
-          if( userObj!==null && numberOfRecomment !== 0) {
+          if( numberOfRecomment !== 0) {
                axios.post(`${process.env.REACT_APP_SERVER}/api/notice/comment_list`, {
                     post_id: postId,
                     parent_comment: parent_id
-               }, {
-                    headers : {
-                         "Authorization": "Token " + userObj.auth_token,
-                    }
                })
                .then(res => {
                     setRecommentList(res.data)
@@ -111,7 +103,7 @@ function Comment(props:CommentProps) {
      return (
           <>
            {/* ✅ 댓글 */}
-           <Paper className={classes.commentPaper}> 
+           <Paper className={isMobile? classes.commentPaperMobile : classes.commentPaper}> 
                <p>댓글 <b style={{color: 'red'}}>{commentList.length 
                                         + commentList.reduce(( sum, cur, i) => {
                                              return sum + cur.num_child
@@ -125,13 +117,13 @@ function Comment(props:CommentProps) {
                '댓글이 없습니다.' 
                : 
                     <Card>
-                         <ul style={{padding: '20px', listStyle: 'none'}}>
+                         <ul style={{padding: '0', listStyle: 'none'}}>
                          {commentList.map( commentItem => {
                          return (
                               // 💡 댓글은 선택된 comment만 접히도록 하기 위해 Accordion 태그를 map 함수 안에 두어 commentItem 마다 Accordion을 감싸도록 한다.
                              <Accordion 
                                    expanded={isExpanded === ('panel'+commentItem.comment_id)} 
-                                   className={classes.commentItem} 
+                                   elevation={0}
                                    key={commentItem.comment_id}
                              >
                               {isEditing === 'panel' + commentItem.comment_id ? 

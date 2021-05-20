@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 
 import { makeStyles, } from "@material-ui/core/styles";
-import {Container, Tabs,Tab,Typography,Box} from '@material-ui/core';
+import {Container, Tabs,Tab,Typography,Box, useMediaQuery} from '@material-ui/core';
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -15,8 +15,15 @@ const useStyles = makeStyles({
           flexGrow: 1,
           width: '100%',
      },
-     tabPanel: {
+     postContainerMobile: {
+         padding: 0,
+         margin: 0,
+     },
 
+     tabsMobile :{
+          '& div': {
+               justifyContent: 'space-evenly',
+          }
      }
    
 })
@@ -30,6 +37,8 @@ interface PostProps {
 export default function Post(props: PostProps) {
      const classes = useStyles()
      const history = useHistory()
+     const isMobile = useMediaQuery("(max-width: 380px)");
+
      const {categories ,handleCategoryId,categoryId, pageIndex} = props;
      
      const  iconList = [<ChatIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
@@ -51,6 +60,7 @@ export default function Post(props: PostProps) {
           }
        setPage(newPage);
        history.push(`/board?category=${categoryId}&page=${newPage}`)
+       window.scrollTo(0, 0);
      };
      const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
        setRowsPerPage(+event.target.value);
@@ -75,7 +85,7 @@ export default function Post(props: PostProps) {
                "page_size": rowsPerPage
           })
           .then(res => {
-               // console.log('postlist',res.data)
+               console.log('postlist',res.data)
                setpostList(res.data)
                setIsLoading(false)
           }) 
@@ -104,18 +114,23 @@ export default function Post(props: PostProps) {
      }, [categoryId, rowsPerPage, pageIndex])
      return (
          
-          <Container maxWidth="md" className={classes.postContainer}>
+          <Container maxWidth="md" className={isMobile ? classes.postContainerMobile : classes.postContainer}>
                <Tabs
                     value={value}
                     onChange={handleChange}
-                    variant="scrollable"
-                    scrollButtons="on"
                     indicatorColor="primary"
                     textColor="primary"
+                    className={isMobile? classes.tabsMobile: ""}
+                    { ...isMobile? {} : {variant : "scrollable", scrollButtons : "on"}}
                >
                     {categories.map( (category,index) => {
                          return (
-                              <Tab key={index} onClick={() => onClickCategory(category.category_id)} label={category.category_name} icon={iconList[index]} {...a11yProps(index)} />
+                              <Tab 
+                                   key={index} 
+                                   onClick={() => onClickCategory(category.category_id)} 
+                                   label={category.category_name} 
+                                   icon={iconList[index]} {...a11yProps(index)} 
+                              />
                          )
                     })}
                </Tabs>
