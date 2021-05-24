@@ -111,7 +111,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
           }, headerData)
           .then(res => {
                setDetailPost(res.data)
-               console.log(res.data)
+               // console.log(res.data)
                setColumns ( [
                     { id: 'title', align:'left',label: res.data.title, maxWidth: "70%" },
                     { id: 'visited', align:'right',label: '조회 '+res.data.views, maxWidth: "30%" },
@@ -153,7 +153,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                headers : headerData 
           })
           .then(res => {
-               console.log(res.data)
+               // console.log(res.data)
                setCommentList(res.data)
           })
           .catch(function(error) {

@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Icon, Table, TableBody , TableCell, TableContainer ,TableHead ,TablePagination ,TableRow,
      useMediaQuery}
           from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
+
 import {postInfo} from 'Interface/Board'
 import ForumTwoToneIcon from '@material-ui/icons/ForumTwoTone';
 import ThumbUpAltTwoToneIcon from '@material-ui/icons/ThumbUpAltTwoTone';
@@ -64,7 +66,7 @@ interface PostBoxProps {
      postList : postInfo
      rowsPerPage: number
      page:number
-     handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void
+     handleChangePage: (event: React.ChangeEvent<unknown> , newPage: number) => void
      handleChangeRowsPerPage:(event: React.ChangeEvent<HTMLInputElement>) => void
 }
 // 실제 탭 패널 내용 
@@ -176,7 +178,16 @@ export default function PostBox(props: PostBoxProps) {
                     </Table>
                </TableContainer>
 
-               <TablePagination
+               <Pagination 
+               style={{display:'flex', justifyContent: 'center', margin: '20px'}}
+               count={Math.floor(count / rowsPerPage) + 1} 
+               variant="outlined" 
+               color="primary" 
+               page={page}
+               onChange={handleChangePage}
+               />
+
+               {/* <TablePagination
                     className={isMobile? classes.pagination: ""}
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
@@ -185,7 +196,7 @@ export default function PostBox(props: PostBoxProps) {
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
-               />
+               /> */}
           </>
      )
 }

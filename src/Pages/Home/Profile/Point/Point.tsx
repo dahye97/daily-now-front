@@ -24,6 +24,11 @@ const useStyles= makeStyles( {
           justifyContent:'space-around', 
           textAlign: "center",
           padding: 0,
+     },
+     viewForm: {
+          margin: "20px" ,
+          display: 'flex', 
+          alignItems:'flex-end',
      }
 })
 function createDate(date: Date) : string { 
@@ -157,22 +162,24 @@ export default function Point(props: PointProps) {
                <>
                
                     {/* 리스트 size 선택 */}
-                    <FormControl style={{ margin: '0 10px', display: 'flex', alignItems:'flex-end'}}>
-                         <InputLabel htmlFor="view-label">View</InputLabel>
-                         <Select
-                              native
-                              inputProps={{
-                                   name: 'View',
-                                   id: 'view-label'
-                              }}
-                              // id="demo-customized-select"
-                              value={page}
-                              onChange={handleChange}
-                         >
-                              <option value={10}>10</option >
-                              <option value={20}>20</option >
-                              <option value={30}>30</option >
-                         </Select>
+                    <FormControl className={classes.viewForm}>
+                         <div>
+                              <Select
+                                   native
+                                   inputProps={{
+                                        name: 'View',
+                                        id: 'view-label'
+                                   }}
+                                   // id="demo-customized-select"
+                                   value={page}
+                                   onChange={handleChange}
+                              >
+                                   <option value={10}>10</option >
+                                   <option value={20}>20</option >
+                                   <option value={30}>30</option >
+                              </Select>
+                              <label style={{ color: "#0000008A", fontSize: '13px' }}>개씩 보기</label>
+                         </div>
                     </FormControl>
 
                     {/* 포인트 카드 매핑 */}
