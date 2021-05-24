@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 	homeContainerMobile: {
 		margin: '0 auto',
 		width: '100%',
-		paddingTop:'80px'
+		paddingTop:'80px',
 	},
 		asideContainer : {
 		position: "sticky",
@@ -43,16 +43,25 @@ const useStyles = makeStyles({
 	},
 
 	contentList: {
-		paddingLeft: "0"
+		paddingLeft: "0",
+		width: '100%',
 	},
 	contentItem: {
 		color: "#616161",
 		listStyle: "none",
-		padding:"20px",
-		margin: "20px",
+		padding:"20px 0",
+		margin: "20px 0",
 		borderRadius: "42px",
 		background: "#ffffff",
-		boxShadow:  "10px 10px 20px #bfbfbf, -10px -10px 20px #ffffff"
+		boxShadow:  "10px 10px 20px #bfbfbf, -10px -10px 20px #ffffff",
+	
+				
+		'& h5' :
+		{
+			padding: '20px'
+		}
+	
+	
 	},
 	deposit: {
 		display: "flex",
