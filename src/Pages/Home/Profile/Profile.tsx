@@ -196,7 +196,7 @@ export default function Profile(props:ProfileProps) {
 				<Card className={classes.card} elevation={3}>
 					<div style={{display:'flex', 'justifyContent':'space-between'}}>
 						<CardHeader 
-						title={ (props.userObj?.first_name && 
+						title={ (props.userObj?.first_name && isMobile &&
 							(props.userObj.first_name.length > 3) ? (props.userObj?.first_name.substring(0,3) + "..." )
 							: props.userObj?.first_name) + " 님의"}
 						component="span"
