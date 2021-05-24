@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button, useMediaQuery } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
+import Alert from '@material-ui/lab/Alert';
 import { useHistory } from 'react-router';
 import { userInfo } from 'Interface/User';
 
@@ -57,6 +58,8 @@ export default function Auth (Props:AuthProps) {
                setEmail(value)
           }else setPassword(value)
      }
+     
+     const [isLoggedIn, setIsLoggedIn] = useState('')
      const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
      
@@ -76,7 +79,7 @@ export default function Auth (Props:AuthProps) {
                     res.json().then( data => {
                          if(res.ok) {
                                    Props.handleLogIn(data)
-                                   alert("로그인 되었습니다.");
+                                   setIsLoggedIn("true")
 
                                    window.sessionStorage.setItem('email', email);
                                    window.sessionStorage.setItem('id', data.id);
@@ -87,9 +90,9 @@ export default function Auth (Props:AuthProps) {
                                    history.push("/")
                               
                          }else {
-                              alert('존재하지 않는 회원입니다.')
                               setEmail('')
-                              setPassword('')                              
+                              setPassword('')     
+                              setIsLoggedIn("false")                         
                          }
                     })
                })
@@ -97,9 +100,6 @@ export default function Auth (Props:AuthProps) {
                
           }
 
-     const handleFindPW = () => {
-          console.log('비밀번호 재발급')
-     }
      return (
                <Container className={ isMobile? classes.authContainerMobile : classes.authContainer} maxWidth="sm">
                     <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
@@ -108,6 +108,10 @@ export default function Auth (Props:AuthProps) {
                          <p>매일이 행복한 투자<br/>
                          <b>데일리나우가</b> 함께 합니다</p>
 
+                         {isLoggedIn === "true" ? (<Alert severity="success">로그인 되었습니다</Alert>) 
+                                   : (isLoggedIn === "false") ? (<Alert severity="error">존재하지 않는 회원입니다.</Alert>)
+                                   : null}
+                                   
                          <form>
                               <FormControl className={classes.input}>
                                    {/* 이메일 */}
@@ -123,8 +127,7 @@ export default function Auth (Props:AuthProps) {
                               </FormControl>
                               <div className={classes.button}>
                                    <Button type="submit" onClick={handleSubmit}>로그인</Button>
-                                   <Button disabled onClick={handleFindPW}>비밀번호 재발급</Button>
-                         </div>
+                              </div>
                          </form>
                     </Container>
                </Container>
