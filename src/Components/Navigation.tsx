@@ -65,12 +65,13 @@ const useStyles = makeStyles((theme: Theme) =>
 	);
 interface NavProps {
 	isLoggedIn: boolean;
+	handleLogOut: () => void,
 	window?: () => Window;
 }
 export default function Navigation(props: NavProps) {
 	const classes = useStyles();
 	const history = useHistory()
-	const { window } = props;
+	const { window, handleLogOut } = props;
 	const theme = useTheme();
 	const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -82,6 +83,7 @@ export default function Navigation(props: NavProps) {
 		{ name: '커뮤니티', url: '/board'},
 		{ name: 'FAQ', url: '/faq'},
 		{ id: '0', name: '마이페이지', url: '/home?tabName=MY_FUNDING'},
+		{ id: '0', name: '로그아웃'},
 		{ id: '1', name: '로그인', url: '/auth'},
 		{ id: '1', name: '회원가입', url: '/registration?share=FALSE'},
 	]
@@ -100,7 +102,12 @@ export default function Navigation(props: NavProps) {
 			<List>
 				{menuList.map((menu, index) => {
 					const link =(
-						<ListItem button key={index} onClick={() => history.push(menu.url)}>
+						<ListItem button 
+							key={index} 
+							onClick={ menu.url 
+							? () => history.push(menu.url) 
+							: () => handleLogOut}
+						>
 							<ListItemIcon>{iconList[index]}</ListItemIcon>
 							<ListItemText primary={menu.name} />
 						</ListItem>
@@ -132,7 +139,11 @@ export default function Navigation(props: NavProps) {
 					</Link>
 					<div className={classes.menuList}>
 						{ menuList.map( (menu,index) => {
-							const link = <Link key={index} to={menu.url}>{menu.name}</Link>
+							const link = <Link 
+										key={index} 
+										{...menu.url? { to: menu.url} : { onClick: handleLogOut, to: "/"}}
+										>{menu.name}
+										</Link>
 							if( menu.id === "0") {
 								if( props.isLoggedIn ){
 									return link

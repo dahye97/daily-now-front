@@ -91,7 +91,7 @@ export default function AppRouter() {
 	return (
 	
 	<BrowserRouter>
-			<Navigation isLoggedIn={isLoggedIn} />
+			<Navigation isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
 			<Switch>
 				<>
 				<div className={classes.routeContainer}>
