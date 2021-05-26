@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect, useCallback} from 'react'
 import axios from 'axios';
 import { useHistory, useLocation, } from 'react-router';
 import queryString from 'query-string'
@@ -40,7 +40,20 @@ const useStyles = makeStyles((theme: Theme) =>
      },
      boardBottom : {
           display: "flex",
-          justifyContent: "space-evenly"
+          flexDirection: 'row',
+          justifyContent: "flex-end",
+          padding: '0 24px',
+
+          '& > button': {
+               borderRadius: '35px',
+               margin: '10px',
+               padding: '10px'
+          }
+     },
+     boardBottomMobile: {
+          display: "flex",
+          justifyContent: "space-around",
+          flexWrap: 'wrap'
      },
      myPost: {
       width: '100%',
@@ -68,7 +81,7 @@ interface BoardProps {
      typeNum: string, 
      typeName: string
 }
-export default function Board (props: BoardProps){
+export default React.memo(function Board (props: BoardProps){
      const classes = useStyles()
      const history = useHistory();
      const isMobile = useMediaQuery("(max-width: 380px)");
@@ -81,7 +94,7 @@ export default function Board (props: BoardProps){
 	const queryObj = queryString.parse(location.search);
 	const category = queryObj.category; // url에서 현재 category id 받아오기 
 	const pageIndex = queryObj.page; // url에서 현재 page index 받아오기 
-
+     const keyword = queryObj.keyword;
      // 새글 작성 함수
      const handleClickWrite = () => {
           if(userObj !== null) {
@@ -97,16 +110,17 @@ export default function Board (props: BoardProps){
      } 
 
      // 카테고리 목록 불러오기 
-     const getCategories = ()=> {
-          axios.get(`${process.env.REACT_APP_SERVER}/api/notice/category_list`)
+     const getCategories = useCallback(
+          () => {
+               axios.get(`${process.env.REACT_APP_SERVER}/api/notice/category_list`)
                .then(res => {
                     setCategories(res.data)
                })
                .catch(function(error) {
                     console.log(error);
-                })  
-     }
-
+               })  
+               },[categoryId],
+     )
      // 선택된 카테고리 id 저장하기 
      const handleCategoryId = (value:number) => {
           setCategoryId(value)
@@ -114,12 +128,11 @@ export default function Board (props: BoardProps){
 
      useEffect(() => {
           getCategories()
-
           // 이전에 선택한 카테고리가 있을 경우 categoryId 값을 업데이트
           if( category ) {
                setCategoryId(Number(category))
           }
-     }, [])
+     }, [categoryId])
 
      // 내 글 보기 처리 함수
      const [open, setOpen] = useState(false)
@@ -159,16 +172,22 @@ export default function Board (props: BoardProps){
                     <h2 style={{marginRight: '10px'}}>💬 토론해요 </h2>
                     <div><img src={board_holy} alt="종목토론" width="50px"/></div>
                </div>
-               <div style={{height: '100%'}}>
+               <div style={{height: 'auto'}}>
                          { typeNum === "01" ? // 게시판
                          <>
-                              <Post categories={categories} pageIndex={Number(pageIndex)} categoryId={ category ? Number(category) : categoryId} handleCategoryId={handleCategoryId}/>
+                              <Post 
+                                   categories={categories} 
+                                   pageIndex={Number(pageIndex)} 
+                                   categoryId={ category ? Number(category) : categoryId} 
+                                   handleCategoryId={handleCategoryId}
+                              />
+                              
                               <div className={classes.boardBottom}>
-                                   <Button onClick={handleClickMyPost} variant="outlined"color="primary">내 글보기</Button>
-                                   <Button onClick={handleClickWrite} variant="outlined"color="primary">글쓰기</Button>
+                                   <Button onClick={handleClickMyPost} variant="contained"color="primary">내 글보기</Button>
+                                   <Button onClick={handleClickWrite} variant="contained"color="primary">글쓰기</Button>
                               </div>
                          </>
-                         : typeNum === "02" || typeNum === "03" ? // 글쓰기
+                         : typeNum === "02" || typeNum === "03" ? // 새 글 쓰기 및 글 수정
                           <NewPost userObj={userObj}/>
                          : typeNum === "04" ? // 게시물 
                          <DetailPost userObj={userObj}/>
@@ -200,4 +219,4 @@ export default function Board (props: BoardProps){
                </div>
           </Container>
           )
-}
+})

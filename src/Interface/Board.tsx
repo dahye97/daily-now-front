@@ -54,3 +54,11 @@ export interface commentInfo {
      editable: boolean,
      like_dislike: number
  }
+
+ export interface searchInfo { 
+     category_id : number | string,
+     page_size: number| null,
+     search_type: string | string[] |null,
+     search_keyword: string | string[] | null, 
+     sort: string | string[] | null
+ }
