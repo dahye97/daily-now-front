@@ -196,9 +196,9 @@ export default function Profile(props:ProfileProps) {
 				<Card className={classes.card} elevation={3}>
 					<div style={{display:'flex', 'justifyContent':'space-between'}}>
 						<CardHeader 
-						title={ (props.userObj?.first_name && isMobile &&
-							(props.userObj.first_name.length > 3) ? (props.userObj?.first_name.substring(0,3) + "..." )
-							: props.userObj?.first_name) + " 님의"}
+						title={ (props.userObj?.username && isMobile &&
+							(props.userObj.username.length > 3) ? (props.userObj?.username.substring(0,3) + "..." )
+							: props.userObj?.username) + " 님의"}
 						component="span"
 						avatar={
 							<IconButton style={{padding: 0}} onClick={()=> setOpen(true)}>

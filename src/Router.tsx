@@ -42,9 +42,7 @@ export default function AppRouter() {
 		setisLoggedIn(true);
 		setUserObj( {
 			"email" : data.email,
-			"id": data.id,
-			"first_name": data.first_name,
-			"last_name": data.last_name,
+			"username": data.username,
 			"auth_token" : data.auth_token
 		})	
 	}
@@ -66,15 +64,11 @@ export default function AppRouter() {
 		if( userObj === null){
 			const email = window.sessionStorage.getItem('email');
 			const auth_token = window.sessionStorage.getItem('auth_token');
-			const id = Number(window.sessionStorage.getItem('id'));
-			const first_name = window.sessionStorage.getItem('first_name');
-			const last_name = window.sessionStorage.getItem('last_name');
+			const name = window.sessionStorage.getItem('username');
 			if(email && auth_token ) {
 				const data = {
 					"email": email,
-					"id": id,
-					"first_name": first_name,
-					"last_name": last_name,
+					"username": name,
 					"auth_token": auth_token
 				}
 				handleLogIn(data)
@@ -127,7 +121,7 @@ export default function AppRouter() {
 					<Route 
 					exact path="/board/write/:postId" 
 					render={() => (
-						<Board userObj={userObj} typeNum={"03"} typeName="글쓰기"/>
+						<Board userObj={userObj} typeNum={"03"} typeName="글수정"/>
 					)}/>
 					<Route
 					exact path="/board/detail/:postId" 
@@ -136,7 +130,10 @@ export default function AppRouter() {
 					)}/>
 					
 					<Route exact path="/auth" render={
-						() => <Auth handleLogIn={handleLogIn}/> }
+						() => <Auth handleLogIn={handleLogIn} typeNum={"01"} typeName="로그인" /> }
+					/>
+					<Route exact path="/auth/find_pw" render={
+						() => <Auth handleLogIn={handleLogIn} typeNum={"02"} typeName="비밀번호 재발급" /> }
 					/>
 					<Route path="/registration" component={Registration} />
 					<Route exact path="/faq" component={FAQ} />

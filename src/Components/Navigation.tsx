@@ -106,7 +106,7 @@ export default function Navigation(props: NavProps) {
 							key={index} 
 							onClick={ menu.url 
 							? () => history.push(menu.url) 
-							: () => handleLogOut}
+							: () => handleLogOut()}
 						>
 							<ListItemIcon>{iconList[index]}</ListItemIcon>
 							<ListItemText primary={menu.name} />
