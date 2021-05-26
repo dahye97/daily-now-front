@@ -43,6 +43,7 @@ interface viewProps {
      handleUpdateComment: () => void,
      getReComment: (parentId: number | null, numberOfRecomment? : number) => void
 
+     handleAlertClose: () => void
 }
 
 type curCommentType = { 
@@ -55,7 +56,7 @@ function CommentView(props: viewProps) {
      const isMobile = useMediaQuery("(max-width: 380px)");
 
      const { userObj, commentItem, recommentItem, 
-          handleEdit,handleDelete,getReComment
+          handleEdit,handleDelete,getReComment, handleAlertClose
            } = props;
 
      const [item, setItem] = useState<commentInfo>()
@@ -142,7 +143,7 @@ function CommentView(props: viewProps) {
                     })
                 }
           } else {
-               alert('로그인 먼저 해주세요.')
+               handleAlertClose()
           }
      }
 

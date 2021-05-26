@@ -14,6 +14,7 @@ import { userInfo } from 'Interface/User';
 import { detailPostInfo,categoryInfo } from 'Interface/Board';
 
 import board_holy from 'asset/img/board_holy.png'
+import WelcomeLoginAlert from 'Components/Alert/WelcomeLoginAlert';
 
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({
@@ -94,7 +95,12 @@ export default React.memo(function Board (props: BoardProps){
 	const queryObj = queryString.parse(location.search);
 	const category = queryObj.category; // url에서 현재 category id 받아오기 
 	const pageIndex = queryObj.page; // url에서 현재 page index 받아오기 
-     const keyword = queryObj.keyword;
+     
+     const [alertOpen, setAlertOpen] = useState(false)
+     const handleAlertClose = () => {
+          setAlertOpen(!alertOpen)
+      };
+
      // 새글 작성 함수
      const handleClickWrite = () => {
           if(userObj !== null) {
@@ -105,7 +111,7 @@ export default React.memo(function Board (props: BoardProps){
                     }
                })
           }else {
-               alert('로그인이 필요합니다.')
+               handleAlertClose()
           }
      } 
 
@@ -154,7 +160,7 @@ export default React.memo(function Board (props: BoardProps){
                     console.log(error);
                })
           }else {
-               alert('로그인 하셔야 볼 수 있습니다.')
+               handleAlertClose()
           }
         };
      const handleClose = () => {
@@ -215,7 +221,7 @@ export default React.memo(function Board (props: BoardProps){
                               ))}
                               </List>
                          </Dialog>
-
+                         <WelcomeLoginAlert open={alertOpen} />
                </div>
           </Container>
           )

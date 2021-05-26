@@ -16,6 +16,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import WelcomeLoginAlert from 'Components/Alert/WelcomeLoginAlert';
 
 const useStyles = makeStyles({
      root: {
@@ -60,6 +61,8 @@ interface Column {
 interface stateType {
      post_id : number
 }
+
+// todo: 세부 게시물 컴포넌트 
 export const createDate = ( date : string ) => {
      const splitData = date.split('T')
      const newDate = splitData[0].replaceAll('-', '.')
@@ -73,6 +76,11 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      const classes = useStyles();
      const history= useHistory();
      const { userObj } = props;
+
+     const [alertOpen, setAlertOpen] = useState(false)
+     const handleAlertClose = () => {
+          setAlertOpen(!alertOpen)
+      };
 
      // 선택한 게시물 행 데이터 만들기 
      const [columns, setColumns] = useState<Column[]>([])
@@ -223,7 +231,7 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     })
                 }
           } else {
-               alert('로그인 먼저 해주세요.')
+               handleAlertClose()
           }
      }
 
@@ -332,7 +340,11 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
                     {/* 댓글 창 */}
                     <Comment 
                     userObj={userObj} commentList={commentList} 
-                    postId={location.state.post_id} handleUpdateComment={handleUpdateComment}/>
+                    postId={location.state.post_id} handleUpdateComment={handleUpdateComment}
+                    handleAlertClose={handleAlertClose}/>
+          
+                    <WelcomeLoginAlert open={alertOpen} />
+
           </Paper>
      )
 }

@@ -35,12 +35,13 @@ interface CommentProps {
      userObj : userInfo | null,
      commentList: Array<commentInfo>,
      postId : number,
-     handleUpdateComment:() => void
+     handleUpdateComment:() => void,
+     handleAlertClose: () => void
 }
 function Comment(props:CommentProps) {
      const classes = useStyles();
      const isMobile = useMediaQuery("(max-width: 380px)");
-     const {userObj , commentList, postId, handleUpdateComment } = props;
+     const {userObj , commentList, postId, handleUpdateComment, handleAlertClose } = props;
 
      // 답글 리스트 가져오는 함수
      const [isExpanded, setIsExpanded] = useState('')
@@ -120,7 +121,7 @@ function Comment(props:CommentProps) {
                          </b>
                </p>  
                {/* 댓글 입력 폼 */}  
-               <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj}/>
+               <CommentForm handleUpdateComment={handleUpdateComment} postId={postId} userObj={userObj} handleAlertClose={handleAlertClose}/>
                {/* 댓글 리스트  */}
                {commentList.length === 0 ? 
                '댓글이 없습니다.' 
@@ -142,7 +143,8 @@ function Comment(props:CommentProps) {
                                    handleEdit={handleEdit} 
                                    handleUpdateComment={handleUpdateComment} 
                                    commentItem={commentItem} 
-                                   userObj={userObj}/>
+                                   userObj={userObj}
+                                   handleAlertClose={handleAlertClose}/>
                                    <Button onClick={() => setIsEditing('')}>취소</Button>
                               </>
                               : 
@@ -152,7 +154,8 @@ function Comment(props:CommentProps) {
                                         handleUpdateComment={handleUpdateComment}
                                         commentItem={commentItem} 
                                         handleDelete={handleDelete} getReComment={getReComment} 
-                                        userObj={userObj} />
+                                        userObj={userObj}
+                                        handleAlertClose={handleAlertClose} />
                                    }
 
                                    <AccordionDetails className={classes.recommentContainer}>
@@ -169,7 +172,8 @@ function Comment(props:CommentProps) {
                                                             handleUpdateReComment={handleUpdateReComment} 
                                                             recommentItem={recommentItem} 
                                                             userObj={userObj} 
-                                                            parentId={ recommentItem.parent_comment}/>
+                                                            parentId={ recommentItem.parent_comment}
+                                                            handleAlertClose={handleAlertClose}/>
                                                              
                                                             <Button onClick={() => setIsEditing('')}>취소</Button>
                                                        </>
@@ -182,7 +186,8 @@ function Comment(props:CommentProps) {
                                                             handleUpdateComment={handleUpdateComment}
                                                             recommentItem={recommentItem} 
                                                             handleDelete={handleDelete} getReComment={getReComment}
-                                                            userObj={userObj}/>
+                                                            userObj={userObj}
+                                                            handleAlertClose={handleAlertClose}/>
                                                        
                                                   )
                                              })}
@@ -192,7 +197,8 @@ function Comment(props:CommentProps) {
                                         handleUpdateReComment={handleUpdateReComment}
                                         postId={postId} 
                                         userObj={userObj} 
-                                        parentId={commentItem.comment_id}/>
+                                        parentId={commentItem.comment_id}
+                                        handleAlertClose={handleAlertClose}/>
                                         <Button onClick={handleCloseRecomment}>답글 접기</Button>
                                    </AccordionDetails>
                               </Accordion>

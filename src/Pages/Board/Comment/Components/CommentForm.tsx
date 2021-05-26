@@ -14,9 +14,11 @@ interface formProps {
 
      commentItem?: commentInfo // 수정 중인 댓글 데이터 
      recommentItem? : commentInfo // 수정 중인 답글 데이터 
+
+     handleAlertClose: () => void
 }
 export default function CommentForm(props: formProps) {
-     const { parentId,userObj,postId,handleUpdateComment,handleUpdateReComment,handleEdit, commentItem,recommentItem } = props;
+     const { parentId,userObj,postId,handleUpdateComment,handleUpdateReComment,handleEdit, commentItem,recommentItem,handleAlertClose } = props;
      const [comment, setComment] = useState("")
      const [recomment, setRecomment] = useState("")
 
@@ -24,7 +26,7 @@ export default function CommentForm(props: formProps) {
      const handleChange = (event: React.ChangeEvent<HTMLInputElement>, parent_Id?: number) => {
           // parentId 속성이 존재하면 답글, 없으면 댓글  
           if( userObj === null ) {
-               alert('로그인이 필요합니다.')
+               handleAlertClose()
           }else {
                if( parentId ) {
                   setRecomment(event.target.value)
@@ -39,74 +41,78 @@ export default function CommentForm(props: formProps) {
           let url = "write_comment"
           let data;
 
-         if(parentId) { // 1. 답글
-          // console.log(recommentItem)
-               if( recommentItem) {
-                    url = "update_comment"
-                    data = {
-                         comment_id: recommentItem.comment_id,
-                         comment_content: recomment
-                    }
-                    canSubmit = true;   
-               }
-               else {
-                    if( recomment.length < 3) {
-                         alert('3자 이상 입력해주세요.');
-                    }else {
-                         data = {
-                              post_id: postId,
-                              comment_content : recomment,
-                              parent_comment : parentId
-                         } // 답글 일때 보낼 데이터 
-                         canSubmit = true;
-                    }
-               }
-              
-         }else { // 2. 댓글
-               if(commentItem){
-                    url = "update_comment"
-                    data = {
-                         comment_id: commentItem.comment_id,
-                         comment_content: comment
-                    } // 수정할 댓글 데이터 
-                    canSubmit = true;   
-               }else {
-                    if( comment.length < 3) {
-                         alert('3자 이상 입력해주세요.');
-                    }else {
-                         data = {
-                              post_id: postId,
-                              comment_content : comment,
-                         }// 댓글 일때 보낼 데이터 
-                         canSubmit = true;   
-                    }
-               }
-         }
-
-          if( userObj !== null && canSubmit){
-               axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${url}`,
-                    data,{
-                    headers : {
-                         "Authorization": "Token " + userObj.auth_token,
-                    }
-               })
-               .then(res => {
-                    if(parentId && handleUpdateReComment) { // 답글일 경우 답글 초기화 및 업데이트
-                         setRecomment("")
-                         if(handleEdit) handleEdit()
-                         if(handleUpdateReComment) handleUpdateReComment(parentId)
-                         
-                    }else {
-                         setComment("")
-                         if(commentItem && handleEdit){ // 댓글일 경우 댓글 초기화 및 업데이트
-                              handleEdit()
+          if( userObj !== null){
+               if(parentId) { // 1. 답글
+                    // console.log(recommentItem)
+                         if( recommentItem) {
+                              url = "update_comment"
+                              data = {
+                                   comment_id: recommentItem.comment_id,
+                                   comment_content: recomment
+                              }
+                              canSubmit = true;   
                          }
-                    }
-                    handleUpdateComment()
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })
+                         else {
+                              if( recomment.length < 3) {
+                                   alert('3자 이상 입력해주세요.');
+                              }else {
+                                   data = {
+                                        post_id: postId,
+                                        comment_content : recomment,
+                                        parent_comment : parentId
+                                   } // 답글 일때 보낼 데이터 
+                                   canSubmit = true;
+                              }
+                         }
+                        
+                   }else { // 2. 댓글
+                         if(commentItem){
+                              url = "update_comment"
+                              data = {
+                                   comment_id: commentItem.comment_id,
+                                   comment_content: comment
+                              } // 수정할 댓글 데이터 
+                              canSubmit = true;   
+                         }else {
+                              if( comment.length < 3) {
+                                   alert('3자 이상 입력해주세요.');
+                              }else {
+                                   data = {
+                                        post_id: postId,
+                                        comment_content : comment,
+                                   }// 댓글 일때 보낼 데이터 
+                                   canSubmit = true;   
+                              }
+                         }
+                   }
+                   if( canSubmit){
+                    axios.post(`${process.env.REACT_APP_SERVER}/api/notice/${url}`,
+                         data,{
+                         headers : {
+                              "Authorization": "Token " + userObj.auth_token,
+                         }
+                    })
+                    .then(res => {
+                         if(parentId && handleUpdateReComment) { // 답글일 경우 답글 초기화 및 업데이트
+                              setRecomment("")
+                              if(handleEdit) handleEdit()
+                              if(handleUpdateReComment) handleUpdateReComment(parentId)
+                              
+                         }else {
+                              setComment("")
+                              if(commentItem && handleEdit){ // 댓글일 경우 댓글 초기화 및 업데이트
+                                   handleEdit()
+                              }
+                         }
+                         handleUpdateComment()
+                    })
+                    .catch(function(error) {
+                         console.log(error);
+                    })
+               }
+
+          }else {
+               handleAlertClose()
           }
      }
 
