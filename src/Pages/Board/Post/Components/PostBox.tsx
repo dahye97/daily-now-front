@@ -140,7 +140,7 @@ export default function PostBox(props: PostBoxProps) {
                                              <div className={classes.postItem}>
                                                   <TableCell>
                                                        <span>{row.title} </span>
-                                                       {row.comment_count !== 0 && <span className={classes.commentCount}> [<b>{row.comment_count}</b>]</span>}
+                                                       {row.comment_count !== 0 && <span className={classes.commentCount}> (<b>{row.comment_count}</b>)</span>}
                                                   </TableCell>
                                                   <div className={classes.tdSet}>
                                                        <TableCell align="center">{row.user.slice(0,4) + '****'}</TableCell>
@@ -177,7 +177,7 @@ export default function PostBox(props: PostBoxProps) {
                                                   <TableCell align="center">{row.date.split('T')[0].replaceAll('-','. ')}</TableCell>
                                                   <TableCell>
                                                        <span>{row.title} </span>
-                                                       {row.comment_count !== 0 && <span className={classes.commentCount}> [<b>{row.comment_count}</b>]</span>}     
+                                                       {row.comment_count !== 0 && <span className={classes.commentCount}> (<b>{row.comment_count}</b>)</span>}     
                                                   </TableCell>
                                                   <TableCell align="center">{row.user.slice(0,4) + '****'}</TableCell>
                                                   <TableCell align="center" style={{color: '#9e9e9e'}}>{row.views}</TableCell>

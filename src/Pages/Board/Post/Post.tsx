@@ -16,6 +16,7 @@ const useStyles = makeStyles({
      postContainer : {
           flexGrow: 1,
           width: '100%',
+          padding: 0
      },
      postContainerMobile: {
          padding: 0,
@@ -61,7 +62,8 @@ export default function Post(props: PostProps) {
      const [value, setValue] = React.useState(0);
      const [postList, setpostList] = useState<postInfo>(Object) // 글 목록 
      
-     // Pagination 상태 관리 및 메소드 
+     // Sort, Pagination 상태 관리 및 메소드 
+     const [sortInput, setSortInput] = useState("date")
      const [rowsPerPage, setRowsPerPage] = useState(10) // Rows per page 값 
      const [page, setPage] = React.useState(1);
      const keyword = queryObj.keyword;
@@ -81,6 +83,7 @@ export default function Post(props: PostProps) {
           }else history.push(`/board?category=${categoryId}&page=${newPage}`)
           window.scrollTo(0, 0);
      };
+     // rowsperpage 인풋 핸들러
      const handleChangeRowsPerPage = (event: React.ChangeEvent<{value: unknown}>) => {
        setRowsPerPage(+(event.target.value as number));
        setPage(1);
@@ -90,6 +93,11 @@ export default function Post(props: PostProps) {
           handleCategoryId(newValue+1)
           setValue(newValue);
      };
+
+     // sort 인풋 핸들러
+     const handleChangeSort = (event: React.ChangeEvent<{value: unknown}>) => {
+          setSortInput(event.target.value as string)
+        };
 
      // 카테고리 ID와 rowsPerPage 값에 따른 게시글 가져오기 
      const getPostList = (url: string, pageIndex?:number, searchData?: searchInfo) => {
@@ -105,7 +113,7 @@ export default function Post(props: PostProps) {
                page_size: rowsPerPage,
                search_type: null,
                search_keyword: null,
-               sort:"date"
+               sort:sortInput
           }
           if( searchData ) { // 검색 기능 O
                data = {
@@ -113,7 +121,7 @@ export default function Post(props: PostProps) {
                     search_type: searchData.search_type,
                     page_size: rowsPerPage,
                     search_keyword: searchData.search_keyword,
-                    sort: searchData.sort,
+                    sort: sortInput
                }
           }
           axios.post(url,data)
@@ -157,13 +165,13 @@ export default function Post(props: PostProps) {
                          page_size: rowsPerPage,
                          search_type: type,
                          search_keyword: keyword,
-                         sort: sort
+                         sort: sortInput
                     }
                     getPostList("",pageIndex,data)
                }
           }
           setValue(categoryId-1) // 현재 카테고리 위치 ui value 값 설정
-     }, [categoryId, rowsPerPage, pageIndex])
+     }, [categoryId, rowsPerPage, pageIndex, sortInput])
 
      useEffect(() => {
          if(keyword){
@@ -192,26 +200,47 @@ export default function Post(props: PostProps) {
                          )
                     })}
                </Tabs>
-
-               <FormControl className={classes.viewForm}>
-                    <div>
-                         <Select
-                              native
-                              inputProps={{
-                                   name: 'View',
-                                   id: 'view-label'
-                              }}
-                              // id="demo-customized-select"
-                              value={rowsPerPage}
-                              onChange={handleChangeRowsPerPage}
-                         >
-                              <option value={10}>10</option >
-                              <option value={20}>20</option >
-                              <option value={30}>30</option >
-                         </Select>
-                         <label style={{ color: "#0000008A", fontSize: '13px' }}>개씩 보기</label>
-                    </div>
-               </FormControl>
+               <div style={{display:'flex', justifyContent: 'space-between', paddingTop: '24px'}}>
+                    {/* 정렬기준 */}
+                    <FormControl className={classes.viewForm}>
+                         <div>
+                              <Select
+                                   native
+                                   inputProps={{
+                                        name: 'Sort',
+                                        id: 'sort-label'
+                                   }}
+                                   value={sortInput}
+                                   onChange={handleChangeSort}
+                                   >
+                                   <option value={"date"}>최신순</option >
+                                   <option value={"like"}>인기순</option >
+                                   <option value={"views"}>조회순</option >
+                                   <option value={"comment"}>댓글순</option >
+                              </Select>
+                              <label style={{ color: "#0000008A", fontSize: '13px' }}>으로 보기</label>
+                         </div>
+                    </FormControl>
+                    {/* 게시글 수 설정 */}
+                    <FormControl className={classes.viewForm}>
+                         <div>
+                              <Select
+                                   native
+                                   inputProps={{
+                                        name: 'View',
+                                        id: 'view-label'
+                                   }}
+                                   value={rowsPerPage}
+                                   onChange={handleChangeRowsPerPage}
+                                   >
+                                   <option value={10}>10</option >
+                                   <option value={20}>20</option >
+                                   <option value={30}>30</option >
+                              </Select>
+                              <label style={{ color: "#0000008A", fontSize: '13px' }}>개씩 보기</label>
+                         </div>
+                    </FormControl>
+               </div>
 
                {isLoading ? 
                     <div>Loading...</div>
