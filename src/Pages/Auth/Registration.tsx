@@ -1,15 +1,23 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Container,FormControl,InputLabel,Input,FormHelperText,Button,useMediaQuery } from "@material-ui/core";
+import { Container,FormControl,InputLabel,Input,FormHelperText,Button,useMediaQuery,
+     Select,MenuItem,InputAdornment,IconButton } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
 import React, {useState,useEffect} from "react";
 import { useCookies} from 'react-cookie';
 import { useHistory, useLocation } from "react-router";
 import queryString from 'query-string'
-
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 // 회원가입 페이지
 const useStyles = makeStyles({
      authContainer: {
           padding: "100px",
+          width: "100%",
+          height: "20%"
+     },
+     authContainerMobile : {
+          width: "100%",
+          height: "10%",
+          paddingTop: "100px",
      },
      authBox: {
 		padding: "20px",
@@ -18,15 +26,12 @@ const useStyles = makeStyles({
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
           textAlign: "center",
-          minWidth: "350px"
+          minWidth: "350px",
 	},
-     authContainerMobile : {
+     authBoxMobile: {
           width: "90%",
           height: "10%",
-          paddingTop: "100px",
-     },
-     authBoxMobile: {
-          padding: "20px",
+          padding: '20px',
           textAlign: "center",
      },
      registerForm : {
@@ -34,9 +39,21 @@ const useStyles = makeStyles({
           flexDirection: "column",
           alignItems: "center",
      },
+     inputBox: {
+          display:'flex', 
+          flexDirection:'row', 
+          flexWrap:'nowrap', 
+          alignItems:'baseline', 
+          maxWidth: "350px",
+          margin: '8px',
+          justifyContent:'flex-start'
+     },
      input: {
-          margin: "8px",
-          width: '350px'
+          width: '350px',
+     },
+     emailInput : {
+          width: "100%",
+          marginRight: '10px',
      },
      button : {
           marginTop: "20px"
@@ -55,13 +72,12 @@ export default function Registration() {
 
      const [cookies, setCookie, removeCookie] = useCookies([]);
 
-     const [firstName, setFirstName] = useState("")
-     const [lastName, setLastName] = useState("")
      const [id, setId] = useState("")
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
-     
+     const [checkPw, setCheckPw] = useState("")
      const [invitedCode, setInvitedCode] = useState<string | string[] | null>('')
+     
      const [error, setError] = useState(Object)
 
      useEffect(() => {
@@ -74,14 +90,11 @@ export default function Registration() {
           e.preventDefault();
           let registerInfo = {
                "username": id,
-               "email": email,
+               "email": email+'@'+domain,
                "password": password,
-               "first_name": firstName,
-               "last_name": lastName,
                "code" : invitedCode
           };
 
-          // console.log(registerInfo)
           fetch(`${process.env.REACT_APP_SERVER}/api/auth/register`, {
                method: "POST",
                headers: {
@@ -117,12 +130,6 @@ export default function Registration() {
      const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           switch(e.target.id) {
-               case "firstNameInput":
-                    setFirstName(value)
-                    break
-               case "lastNameInput":
-                    setLastName(value)
-                    break
                case "userIdInput":
                     setId(value)
                     break
@@ -132,58 +139,157 @@ export default function Registration() {
                case "passwordInput":
                     setPassword(value)
                     break
+               case "checkpasswordInput":
+                    setCheckPw(value)
+                    break
                case "ucodeInput":
                     setInvitedCode(value)
                     break
           }
      }
 
-     const handleVerifyEmail = () => {
-          console.log('이메일 인증 코드 받기')
+     useEffect(() => {
+          if(checkPw.length !== 0){
+               checkPassword()
+          }
+     }, [checkPw])
+
+     const [checkError, setCheckError] = useState(false)
+     const checkPassword = () => {
+          if( password !== checkPw) {
+               setCheckError(true)
+          }else {
+               setCheckError(false)
+          }
+     }
+     // '직접 입력' 필드 토글러
+     const [open, setOpen] = useState(false)
+     const handleOpen = () => {
+          setOpen(!open)
+          setDomain('')
+     }
+
+     // email select list 토글러
+     const [selectOpen, setSelectOpen] = useState(false)
+     const handleOpenSelect  = () => {
+          setSelectOpen(!selectOpen)
      }
      const inputList = [
-          { id: "firstNameInput", type:"string", labelContent: "이름", description: "first name"},
-          { id: "lastNameInput" , type:"string", labelContent: "성",  description: "last name"},
-          { id: "userIdInput", type:"string", labelContent: "별명 *",  description: "id", errorId: "username", },
-          { id: "emailInput", type:"email", labelContent: "이메일 *",  description: "email", errorId: "email"},
+          { id: "userIdInput", type:"string", labelContent: "이름",  description: "name", errorId: "username", },
+          { id: "emailInput", type:"string", labelContent: "이메일 *", width: '100%', description: "email", errorId: "email"},
           { id: "passwordInput", type:"password", labelContent: "비밀번호 *",  description: "password", errorId: "password",  },
+          { id: "checkpasswordInput", type:"password", labelContent: "비밀번호 재확인 *",  description: "password"  },
           { id: "ucodeInput", type:"ucode", labelContent: "초대 코드",  description: "invited code", errorId: "ucode",  },
-
      ]
 
+     const [domain, setDomain] = useState('');
+
+     const handleChangeDomain = (event: React.ChangeEvent<{ value: unknown }>) => {
+          if(event.target.value === "nullEmail") {
+               setDomain('')
+          }else setDomain(event.target.value as string);
+          
+     };
+
+     const domainList = [
+          { id: 1,name: "naver.com",   },
+          { id: 2, name: "gmail.com",  },
+          { id: 3, name: "daum.net",  },
+          { id: 4, name: "nate.com",  },
+          { id: 5, name: "yahoo.co.kr",  },
+     ]
      return (
-          <Container className={isMobile? classes.authContainerMobile : classes.authContainer} maxWidth="md">
+          <Container maxWidth="md" className={isMobile? classes.authContainerMobile : classes.authContainer}>
                <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
+
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
                     <p>매일이 행복한 투자<br/>
                     <b>데일리나우가</b> 함께 합니다</p>
+
                     <form className={classes.registerForm}>
                          {inputList.map((item, index) => {
                               return (
-                                   <div style={{display:'flex', flexDirection:'row'}}>
+                                   <div className={classes.inputBox} 
+                                   >
                                         <FormControl 
                                         key={index}
-                                        error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true : undefined } 
-                                        className={classes.input}
-                                        // {...(item.id === "emailInput") ? {style: {width: '250px'}} : {}}
-                                        >
+                                        error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true 
+                                             : checkError && item.id === "checkpasswordInput" ? true
+                                             : undefined } 
+                                             >
+                                             {/* 입력 필드 */}
                                              <InputLabel>{item.labelContent}</InputLabel>
                                              <Input 
+                                             className={(item.id === "emailInput") ? classes.emailInput : classes.input}
                                              id={item.id}
                                              type={item.type} 
                                              onChange={onChange}
                                              {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
                                              />
+
+                                             {/* Error 및 check Error 처리 */}
                                              <FormHelperText>
-                                                  {error && item.errorId && error.hasOwnProperty(item.errorId) 
-                                                  ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
-                                                  : `Enter your ${item.description}`}
+                                                  {!isEmptyObject(error) ?
+                                                       (item.errorId && error.hasOwnProperty(item.errorId) 
+                                                       ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
+                                                       : `Enter your ${item.description}`)
+                                                  :
+                                                       ( item.id === "checkpasswordInput" && checkPw.length !== 0 && 
+                                                            (checkError ? "일치하지 않습니다." : '일치합니다.'))
+                                                  }
                                              </FormHelperText>
                                         </FormControl>
-{/* 
-                                        { item.id === "emailInput" && <Button color="primary" style={{minWidth: '100px', padding: 0}} onClick={handleVerifyEmail} >인증코드 받기</Button> }
-                                                  */}
+                                        {
+                                             item.id === "emailInput" &&
+                                             ( 
+                                                  <>
+                                                       <span style={{width: '5%', display: 'inline-block'}}>@</span>
+                                                       <FormControl style={{width: '65%',minWidth: 170}}>
+                                        
+                                                            {/* 직접 입력 필드 */}
+                                                            <FormControl
+                                                            {...open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}                                                            
+                                                            >
+                                                                 <Input
+                                                                 value={domain}
+                                                                 onChange={handleChangeDomain}
+                                                                 endAdornment={
+                                                                      <InputAdornment position="end">
+                                                                           <IconButton
+                                                                           style={{padding: 0}}
+                                                                           onClick={handleOpen}
+                                                                           >
+                                                                                <ArrowDropDownIcon />
+                                                                           </IconButton>
+                                                                      </InputAdornment>
+                                                                 }
+                                                                 />
+                                                            </FormControl>
+                                                            {/* 이메일 select 필드 */}
+                                                            <Select
+                                                                 value={domain}
+                                                                 onChange={handleChangeDomain}
+                                                                 displayEmpty
+                                                                 open={selectOpen}
+                                                                 onOpen={handleOpenSelect}
+                                                                 onClose={handleOpenSelect}
+                                                            {...!open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}
+                                                            >
+                                                                 <MenuItem value="">
+                                                                 <em>선택해 주세요</em>
+                                                                 </MenuItem>
+                                                                 {domainList.map( domain => {
+                                                                     return (
+                                                                           <MenuItem key={domain.id} value={domain.name}>{domain.name}</MenuItem>
+                                                                     )
+                                                                })}
+                                                                 <MenuItem value="nullEmail" onClick={handleOpen}>직접 입력</MenuItem>
+                                                            </Select>
+                                                       </FormControl>
+                                                  </>
+                                             )
+                                        }
                                    </div>
                               )
                          })}
@@ -196,3 +302,7 @@ export default function Registration() {
           </Container>
      )
 }
+
+function isEmptyObject(param: Object) {
+     return Object.keys(param).length === 0 && param.constructor === Object;
+   }

@@ -1,6 +1,10 @@
 /** @format */
 import React, {useState,useEffect} from 'react'
-import { IconButton, Avatar  } from "@material-ui/core";
+import { IconButton, Avatar,FormControlLabel,Switch ,TextField,List,ListItem,ListItemText,
+	Dialog,DialogTitle,DialogContent,DialogContentText } from "@material-ui/core";
+import {Autocomplete } from '@material-ui/lab';
+import axios from 'axios'
+
 import { makeStyles  } from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from "@material-ui/icons/Home";
@@ -11,7 +15,7 @@ import Stepper from 'Components/Stepper';
 // TODO: 투자 P2P 회사 리스트 
 const useStyles = makeStyles({
 	fundListContainer: {
-
+		clear: "both"
 	},
 	fundList: {
 		margin: "10px 0",
@@ -27,6 +31,10 @@ const useStyles = makeStyles({
 		width: '83px',
 		maxHeight:'80px'
 	},
+	allSwitch: {
+		float: 'right',
+		paddingTop: '10px'
+	}
 });
 
 interface FundListProps {
@@ -63,6 +71,7 @@ export default function FundList(props: FundListProps) {
 
 	// 연동 회사 폼 여닫이 핸들러 
 	const handleClickAdd = () => {
+		setOpen(true);
 		getAllCompany()
 	}
 	const handleClose = () => {
@@ -89,6 +98,7 @@ export default function FundList(props: FundListProps) {
 
 	const [allCompany, setAllCompany] = useState<companyInfo[]>([])
 	const getAllCompany = () => {
+		console.log('getallcompany')
 		fetch(`${process.env.REACT_APP_SERVER}/api/register/company`, {
 			method: "GET",
 			headers: {
@@ -97,8 +107,8 @@ export default function FundList(props: FundListProps) {
 		}).then(res => {
 			if(res.ok) {
 				res.json().then( companies => {
+					console.log(companies)
 					setAllCompany(companies)
-					setOpen(true);
 				})
 			}
 		})
@@ -114,42 +124,146 @@ export default function FundList(props: FundListProps) {
           })
 	}
 
+	// 모아보기 switch 상태 
+	const [currentMode, setCurrentMode] = useState(false);
+	const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setCurrentMode(event.target.checked);
+		getRegisteredP2P(null)
+	};
+
+	const getRegisteredP2P = (keyword: string | null) => {
+
+		if(userObj !== null){
+			axios.post(`${process.env.REACT_APP_SERVER}/api/register/registered_company`, 
+				{search_keyword : keyword},{
+					headers: {
+						"Content-Type": "application/json; charset=utf-8",
+						"Authorization": "Token " + userObj.auth_token
+					}
+				},
+			).then((res) =>{
+				if(keyword === null){
+					setRegisteredCompany(res.data)
+				}else {
+					setFilteredCompany(res.data)
+				}
+			}
+			).catch(error =>  console.log(error));
+		}
+	}
+
+     // 회사 검색 결과 핸들러 함수
+	const [value, setValue] = useState<string | null>(null);
+     const [inputValue, setInputValue] = useState('');
+
+	const [registeredCompany, setRegisteredCompany] = useState<p2pInfo[]>([])
+     const [filteredCompany, setFilteredCompany] = useState<p2pInfo[]>([])
+    
+	const handleFilteredP2P = (company: p2pInfo) => {
+		onP2PClick(company) // 선택한 p2p 계정으로 이동
+		setCurrentMode(false) // 모아보기 모드 끄기
+
+		setValue(null)
+		setInputValue('')
+	}
+
+	useEffect(() => {
+		if( value !== null ){
+			getRegisteredP2P(value)
+		}
+     }
+     , [value])
+
+
 	return (
 		<div>
 		{ P2PList.length !== undefined && 
 			<>
-			<div className={classes.fundListContainer}>
-				<div className={classes.fundList}>
-					<IconButton 
-					onClick={(e) => onP2PClick(e.currentTarget.textContent)} 
-					className={classes.iconBody}>
-						<div><HomeIcon style={{fontSize:'40px'}}/><p>HOME</p></div>
-					</IconButton>
+				<FormControlLabel
+				className={classes.allSwitch}
+						control={
+							<Switch
+							checked={currentMode}
+							onChange={handleSwitch}
+							name="checkedB"
+							color="primary"
+							/>
+						}
+						label="All"
+					/>
+				<div className={classes.fundListContainer}>
+					<div className={classes.fundList}>
+						<IconButton 
+						onClick={(e) => onP2PClick(e.currentTarget.textContent)} 
+						className={classes.iconBody}>
+							<div><HomeIcon style={{fontSize:'40px'}}/><p>HOME</p></div>
+						</IconButton>
 
-					{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
-						return (
-							<IconButton style={{padding: 0}} key={index} onClick={() => onP2PClick(company)}>
-								<div className={classes.iconBody}>
-									<Avatar/>
-									<p>{company.company_name}</p>
-								</div>
-							</IconButton>)
-					})}
-					<IconButton onClick={handleClickAdd} >
-						<AddIcon style={{fontSize: "40px"}}/>
-					</IconButton>
+						{ P2PList.slice(P2PIndex.start,P2PIndex.end).map( (company,index) => {
+							return (
+								<IconButton style={{padding: 0}} key={index} onClick={() => onP2PClick(company)}>
+									<div className={classes.iconBody}>
+										<Avatar/>
+										<p>{company.company_name}</p>
+									</div>
+								</IconButton>)
+						})}
+						<IconButton onClick={handleClickAdd} >
+							<AddIcon style={{fontSize: "40px"}}/>
+						</IconButton>
+					</div>
+
+					<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
 				</div>
+				<P2PRegister 
+				getUserDataOfCompany = {getUserDataOfCompany}
+				allCompany ={allCompany}
+				handleChangeAllCompany={handleChangeAllCompany}
+				handleP2PUpdated={handleP2PUpdated}
+				userObj={userObj} open={open} 
+				getAllCompany={getAllCompany} 
+				handleClose={handleClose}/>
 
-				<Stepper index={P2PIndex} steps={P2PList.length / 5 + 1} handleP2PIndex={handleP2PIndex}/>
-			</div>
-			<P2PRegister 
-			getUserDataOfCompany = {getUserDataOfCompany}
-			allCompany ={allCompany}
-			handleChangeAllCompany={handleChangeAllCompany}
-			handleP2PUpdated={handleP2PUpdated}
-			userObj={userObj} open={open} 
-			getAllCompany={getAllCompany} 
-			handleClose={handleClose}/>
+				<Dialog
+					open={currentMode}
+					onClose={handleSwitch}
+					>
+					<DialogTitle>{"모아보기 👀"}</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							연동하신 회사의 이름을 입력해 검색하실 수 있습니다.
+						</DialogContentText>
+
+						<Autocomplete
+							id="company-search"
+							value={value}
+							onChange={(event: any, newValue: string | null) => {
+								setValue(newValue);
+							}}
+							options={(value === null ? registeredCompany : filteredCompany).map((company) => company.company_name)}
+							renderInput={(params: any) => (
+								<TextField {...params} label="회사 이름" margin="normal" variant="outlined" />
+							)}
+							inputValue={inputValue}
+							onInputChange={(event, newInputValue) => {
+								setInputValue(newInputValue)
+							}}
+						/>
+
+						 <List>
+							
+						 {(value === null ? registeredCompany : filteredCompany).map((company) => {
+							return (
+								<ListItem key={company.company_id} style={{cursor:'pointer'}} onClick={() => handleFilteredP2P(company)}>
+									<ListItemText primary={company.company_name} />
+								</ListItem>
+							)
+
+						 })}
+	
+						</List>
+					</DialogContent>
+				</Dialog>
 			</>
 			}
 		</div>

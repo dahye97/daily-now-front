@@ -1,9 +1,9 @@
 /** @format */
 import {useState,useEffect} from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import queryString from 'query-string'
 import { makeStyles, } from "@material-ui/styles";
-import { Typography,Grid,IconButton,useMediaQuery,Container } from "@material-ui/core";
+import { Typography,IconButton,useMediaQuery,Container } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import axios from 'axios'
 
@@ -237,11 +237,14 @@ export default function Home(props: HomeProps) {
 	useEffect(() => {
 		if(userObj !== null){
 			fetch(`${process.env.REACT_APP_SERVER}/api/register/registered_company`, {
-				method: "GET",
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",
 					"Authorization": "Token " + userObj.auth_token
 				},
+				body: JSON.stringify({
+					search_keyword: null
+				   }),
 			}).then((res) => res.json())
 			.then((res) => {
 				// console.log('등록된 계정 리스트: ', res)
