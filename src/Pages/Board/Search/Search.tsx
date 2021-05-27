@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
 import SearchIcon from '@material-ui/icons/Search';
-import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect } from '@material-ui/core';
+import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect,useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { searchInfo } from 'Interface/Board';
-import { types } from 'node:util';
-import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,11 +10,27 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '2px 4px',
       display: 'flex',
       alignItems: 'center',
-      width: "auto",
+
+    },
+    rootMobile: {
+     flexDirection:'column'
+},
+    container: {
+     display:'flex',
+     flexDirection:'row',
+     justifyContent:'center',
+     width: '50%'
+    },
+    containerMobile : {
+     display:'flex',
+     flexDirection:'row',
+     justifyContent:'center',
+     width: '100%',
     },
     formControl: {
      margin: theme.spacing(1),
      minWidth: 120,
+     flex: 1,
    },
    selectEmpty: {
      marginTop: theme.spacing(2),
@@ -39,7 +53,7 @@ interface searchProps {
 export default function Search(props: searchProps ) {
      const classes = useStyles();
      const {getPostList, handleIsSearching} = props;
-     const history = useHistory()
+     const isMobile = useMediaQuery("(max-width: 380px)");
 
      // 카테고리
      const [category, setCategory] = useState<string | number>("all")
@@ -70,8 +84,9 @@ export default function Search(props: searchProps ) {
      }
 
      return (
-          <Paper className={classes.root}>
+          <Paper className={isMobile? classes.rootMobile: classes.root}>
 
+               <div className={isMobile? classes.containerMobile: classes.container}>
                <FormControl className={classes.formControl}>
                     <InputLabel>카테고리</InputLabel>
                     <NativeSelect
@@ -95,16 +110,19 @@ export default function Search(props: searchProps ) {
                          <option value={"content"}>내용</option>
                     </NativeSelect>
                </FormControl>
+               </div>
 
-               <InputBase
-               className={classes.input}
-               placeholder="검색어를 입력해주세요."
-               onChange={handleChangeKeyword}
-               value={keyword}
-               />
-               <IconButton className={classes.iconButton} onClick={handleSearch}>
-                    <SearchIcon />
-               </IconButton>
+               <div className={isMobile? classes.containerMobile: classes.container}>
+                    <InputBase
+                    className={classes.input}
+                    placeholder="검색어를 입력해주세요."
+                    onChange={handleChangeKeyword}
+                    value={keyword}
+                    />
+                    <IconButton className={classes.iconButton} onClick={handleSearch}>
+                         <SearchIcon />
+                    </IconButton>
+               </div>
           </Paper>
      )
 }
