@@ -128,9 +128,13 @@ export default function FundList(props: FundListProps) {
 	const [currentMode, setCurrentMode] = useState(false);
 	const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setCurrentMode(event.target.checked);
-		getRegisteredP2P(null)
 	};
-
+	useEffect(() => {
+		if(currentMode){
+			getRegisteredP2P(null)
+		}
+	}, [currentMode])
+	
 	const getRegisteredP2P = (keyword: string | null) => {
 
 		if(userObj !== null){

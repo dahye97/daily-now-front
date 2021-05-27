@@ -133,7 +133,10 @@ export default React.memo(function Board (props: BoardProps){
      }
 
      useEffect(() => {
-          getCategories()
+          // 커뮤니티 초기 접속 시에만 category list api 호출
+          if( typeNum === "01" && !category && !pageIndex) {
+               getCategories()
+          }
           // 이전에 선택한 카테고리가 있을 경우 categoryId 값을 업데이트
           if( category ) {
                setCategoryId(Number(category))
