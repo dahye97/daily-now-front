@@ -130,7 +130,11 @@ export default function Post(props: PostProps) {
                     setPage(pageIndex)
                }
                if( searchData) {
-                    history.push(`/board?category=${searchData.category_id}&keyword=${searchData.search_keyword}&sort=${searchData.sort}&type=${searchData.search_type}&page=${pageIndex}`
+                    let categoryId = searchData.category_id
+                    if(categoryId === "all") {
+                         categoryId = 1
+                    }
+                    history.push(`/board?category=${categoryId}&keyword=${searchData.search_keyword}&sort=${searchData.sort}&type=${searchData.search_type}&page=${pageIndex}`
                     ,{
                          postList : res.data
                     })
@@ -193,6 +197,7 @@ export default function Post(props: PostProps) {
                          return (
                               <Tab 
                                    key={index} 
+                                   value={category.category_id-1}
                                    onClick={() => onClickCategory(category.category_id)} 
                                    label={category.category_name} 
                                    icon={iconList[index]} {...a11yProps(index)} 
