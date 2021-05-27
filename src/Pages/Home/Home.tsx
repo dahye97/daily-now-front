@@ -28,12 +28,12 @@ const useStyles = makeStyles({
 		borderRadius: "50px",
 		background: "#ffffff",
 		boxShadow: "17px 17px 34px #b1b1b1, -17px -17px 34px #ffffff",
-		minWidth : "580px",
 		overflow: "hidden",
 	},
 	homeContainerMobile: {
 		margin: '0 auto',
 		width: '100%',
+		padding: 0,
 		paddingTop:'80px',
 	},
 		asideContainer : {
@@ -275,10 +275,10 @@ export default function Home(props: HomeProps) {
 
 	return (
 		<>
-			<Container className={classes.home}>
+			<Container className={classes.home} {...!isMobile && {style: {minWidth: '680px'}}}>
 
 				{/* 마이 페이지 */}
-					<div className={isMobile? classes.homeContainerMobile : classes.homeContainer}>
+					<Container maxWidth="md" className={isMobile? classes.homeContainerMobile : classes.homeContainer}>
 						<Profile myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj} handleLogOut={handleLogOut} 
 						companyID={companyID} getUserDataOfCompany={getUserDataOfCompany}/>
 
@@ -339,7 +339,7 @@ export default function Home(props: HomeProps) {
 						: tabName === "INVITE" ? 
 							<Share myPoint={myPoint} updatePoint={getMyPoint} userObj={userObj}/>
 						: null}
-						</div>
+						</Container>
 			</Container>
 			{( scrollY > 500) &&
 			<IconButton onClick={handleClickUpButton} className={classes.UpButton}>

@@ -11,13 +11,25 @@ const useStyles = makeStyles({
           padding: "100px"
      },
      userContainerMobile : {
-          padding: "50px",
+          padding: "50px 20px",
           marginTop: "70px"
      },
      editPWForm: {
           display: "flex",
           flexDirection: "column",
-          textAlign: "center"
+          textAlign: "center",
+          padding: '10px',
+          '& button': {
+               marginTop: '15px'
+          }
+     },
+     withDrawalContainer : {
+          display:"flex",
+          flexDirection:'column',
+          padding: '10px',
+          '& > button': {
+               marginBottom:'20px'
+          }
      }
 });
 
@@ -141,15 +153,13 @@ export default function MyPage( props: MyPageProps) {
                                         </FormControl>
                                    )
                               })}
-                                   <div>
-                                        <Button id="pwButton" type="submit" onClick={onSubmit}>변경하기</Button>
-                                   </div>
+                              <Button variant="contained" color="primary" id="pwButton" type="submit" onClick={onSubmit}>변경하기</Button>
                          </form>
                     </div>
 
                     {/* 회원 탈퇴 */}
-                    <div>
-                         <Button type="submit" onClick={() => setIsWithDrawal(true)}>회원 탈퇴</Button>
+                    <div className={classes.withDrawalContainer}>
+                         <Button variant="outlined" color="secondary" type="submit" onClick={() => setIsWithDrawal(true)}>회원 탈퇴</Button>
                          <Dialog
                               open={isWithDrawal}
                               aria-labelledby="alert-dialog-title"
@@ -162,15 +172,17 @@ export default function MyPage( props: MyPageProps) {
                                    </DialogContentText>
                               </DialogContent>
                               <DialogActions>
-                                   <Button id="withDrawButton" onClick={onSubmit} color="primary">
+                                   <Button color="secondary" id="withDrawButton" onClick={onSubmit}>
                                    탈퇴하기
                                    </Button>
-                                   <Button onClick={() => setIsWithDrawal(false)} color="primary" autoFocus>
+                                   <Button onClick={() => setIsWithDrawal(false)} autoFocus>
                                    돌아가기
                                    </Button>
                               </DialogActions>
                          </Dialog>
+                         <Button variant="outlined" onClick={() => setIsWithDrawal(true)}>돌아가기</Button>
                     </div>
+                    
 		     </Container>
           )
 }
