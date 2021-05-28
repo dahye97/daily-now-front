@@ -13,7 +13,8 @@ const useStyles = makeStyles({
      authContainer: {
           padding: "100px",
           width: "100%",
-          height: "20%"
+          height: "20%",
+          maxWidth: "md"
      },
      authContainerMobile : {
           width: "90%",
@@ -45,7 +46,10 @@ const useStyles = makeStyles({
           width: '350px'
      },
      button : {
-          marginTop: "20px"
+          marginTop: "20px",
+          '& button': {
+               margin:'10px'
+          }
      }
 });
 
@@ -120,7 +124,7 @@ export default function Auth (Props:AuthProps) {
           history.push('/auth/find_pw')
      }
      return (
-               <Container maxWidth="md" className={ isMobile? classes.authContainerMobile : classes.authContainer}>
+               <Container className={ isMobile? classes.authContainerMobile : classes.authContainer}>
                     <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
                          <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                          <h2>Daily Now 💙</h2>
@@ -151,8 +155,8 @@ export default function Auth (Props:AuthProps) {
                                         </FormHelperText>
                                    </FormControl>
                                    <div className={classes.button}>
-                                        <Button type="submit" onClick={handleSubmit}>로그인</Button>
-                                        <Button onClick={handleFindPw}>비밀번호 재발급</Button>
+                                        <Button variant="contained"  color="primary" type="submit" onClick={handleSubmit}>로그인</Button>
+                                        <Button variant="contained" color="primary" onClick={handleFindPw}>비밀번호 재발급</Button>
                                    </div>
                               </form>
                          : // 비밀번호 재발급

@@ -12,7 +12,8 @@ const useStyles = makeStyles({
      authContainer: {
           padding: "100px",
           width: "100%",
-          height: "20%"
+          height: "20%",
+          maxWidth: "md"
      },
      authContainerMobile : {
           width: "100%",
@@ -43,13 +44,16 @@ const useStyles = makeStyles({
           display:'flex', 
           flexDirection:'row', 
           flexWrap:'nowrap', 
-          alignItems:'baseline', 
-          maxWidth: "350px",
+          alignItems:'baseline',
+          width: '350px', 
           margin: '8px',
           justifyContent:'flex-start'
      },
      input: {
           width: '350px',
+          fontSize: '13px',
+          color: 'red',
+          fontWeight: 600
      },
      emailInput : {
           width: "100%",
@@ -177,8 +181,8 @@ export default function Registration() {
      const inputList = [
           { id: "userIdInput", type:"string", labelContent: "이름",  description: "name", errorId: "username", },
           { id: "emailInput", type:"string", labelContent: "이메일 *", width: '100%', description: "email", errorId: "email"},
-          { id: "passwordInput", type:"password", labelContent: "비밀번호 *",  description: "password", errorId: "password",  },
-          { id: "checkpasswordInput", type:"password", labelContent: "비밀번호 재확인 *",  description: "password"  },
+          { id: "passwordInput", type:"password", labelContent: "비밀번호 *",  description: "password", condition: "숫자와 문자를 포함한 8자 이상의 문자를 입력해주세요. ", errorId: "password",  },
+          { id: "checkpasswordInput", type:"password", labelContent: "비밀번호 재확인 *",  description: "password",condition: "비밀번호를 재입력해주세요.", },
           { id: "ucodeInput", type:"ucode", labelContent: "초대 코드",  description: "invited code", errorId: "ucode",  },
      ]
 
@@ -199,7 +203,7 @@ export default function Registration() {
           { id: 5, name: "yahoo.co.kr",  },
      ]
      return (
-          <Container maxWidth="md" className={isMobile? classes.authContainerMobile : classes.authContainer}>
+          <Container className={isMobile? classes.authContainerMobile : classes.authContainer}>
                <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
 
                     <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
@@ -221,6 +225,7 @@ export default function Registration() {
                                              {/* 입력 필드 */}
                                              <InputLabel>{item.labelContent}</InputLabel>
                                              <Input 
+                                             placeholder={item.condition}
                                              className={(item.id === "emailInput") ? classes.emailInput : classes.input}
                                              id={item.id}
                                              type={item.type} 
@@ -295,7 +300,7 @@ export default function Registration() {
                          })}
 
                          <div className={classes.button}>
-                              <Button type="submit" onClick={onSubmit}>함께하기</Button>
+                              <Button variant="contained" color="primary" type="submit" onClick={onSubmit}>함께하기</Button>
                          </div>
                     </form>
                </Container>
