@@ -1,5 +1,5 @@
-import React from 'react'
-import { Paper,IconButton } from "@material-ui/core";
+import React, {useState} from 'react'
+import { Paper,IconButton, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle, Button } from "@material-ui/core";
 import { p2pInfo, userInfo } from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
 import EditIcon from '@material-ui/icons/Edit';
@@ -47,6 +47,8 @@ export default function AccountItem(props: AccountItemProps) {
      const classes = useStyles()
      const { accountInfo, userObj, handleP2PUpdated, handleClickOpen } = props
  
+     const [isDeleteAccount, setIsDeleteAccount] = useState(false)
+
      const handleClickEdit = () => {
           handleClickOpen(accountInfo)
      }
@@ -77,8 +79,28 @@ export default function AccountItem(props: AccountItemProps) {
                </div>
                <div className={classes.managementButton}>
                     <IconButton onClick={handleClickEdit}><EditIcon /></IconButton>
-                    <IconButton onClick={handleDelete}><DeleteForeverIcon /></IconButton>
+                    <IconButton onClick={() => setIsDeleteAccount(true)}><DeleteForeverIcon /></IconButton>
                </div>
+               <Dialog
+                    open={isDeleteAccount}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                    <DialogTitle id="alert-dialog-title">{accountInfo.company_name} 계정 해지</DialogTitle>
+                    <DialogContent>
+                         <DialogContentText id="alert-dialog-description">
+                         정말 해지하시는 건가요? 해지 시, 포인트가 차감됩니다 😥
+                         </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                         <Button color="secondary" id="withDrawButton" onClick={handleDelete}>
+                         해지하기
+                         </Button>
+                         <Button onClick={() => setIsDeleteAccount(false)} autoFocus>
+                         돌아가기
+                         </Button>
+                    </DialogActions>
+               </Dialog>
           </Paper>
      )
 }
