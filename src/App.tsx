@@ -3,7 +3,11 @@ import AppRouter from "./Router";
 import { MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns'
 import { ThemeProvider, unstable_createMuiStrictModeTheme } from '@material-ui/core';
-const theme = unstable_createMuiStrictModeTheme();
+const theme = unstable_createMuiStrictModeTheme({
+  typography: {
+    fontFamily: 'Noto Sans KR'
+  }
+});
 function App() {
 
   const [isInit, setisInit] = useState(true)

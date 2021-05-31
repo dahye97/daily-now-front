@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		appbar: {
 			background: "#198BFB",
+			fontFamily: 'Noto Sans KR'
 		},
 		logo: {
 			maxWidth: "185px",
@@ -59,7 +60,6 @@ const useStyles = makeStyles((theme: Theme) =>
 			menuList: {
 				display:'none'
 			}
-
 		}
 	})
 	);
