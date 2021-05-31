@@ -53,7 +53,7 @@ const useStyles = makeStyles({
      input: {
           width: '350px',
           fontSize: '13px',
-          color: 'red',
+          // color: 'red',
           fontWeight: 600
      },
      emailInput : {
@@ -213,97 +213,97 @@ export default function Registration() {
                     <b>데일리나우가</b> 함께 합니다</p>
 
                     <form className={classes.registerForm}>
-                         {inputList.map((item, index) => {
-                              return (
-                                   <div className={classes.inputBox} 
-                                   >
-                                        <FormControl 
-                                        key={index}
-                                        error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true 
-                                             : checkError && item.id === "checkpasswordInput" ? true
-                                             : undefined } 
-                                             >
-                                             {/* 입력 필드 */}
-                                             <InputLabel>{item.labelContent}</InputLabel>
-                                             <Input 
-                                             placeholder={item.condition}
-                                             className={(item.id === "emailInput") ? classes.emailInput : classes.input}
-                                             id={item.id}
-                                             type={item.type} 
-                                             onChange={onChange}
-                                             {...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
-                                             />
+						{inputList.map((item, index) => {
+							return (
+								<div className={classes.inputBox} 
+								>
+									<FormControl 
+									key={index}
+									error={ error && item.errorId && error.hasOwnProperty(item.errorId) ? true 
+											: checkError && item.id === "checkpasswordInput" ? true
+											: undefined } 
+											>
+											{/* 입력 필드 */}
+											<InputLabel>{item.labelContent}</InputLabel>
+											<Input 
+												placeholder={item.condition}
+												className={(item.id === "emailInput") ? classes.emailInput : classes.input}
+												id={item.id}
+												type={item.type} 
+												onChange={onChange}
+												{...(item.id === "ucodeInput") && ucode ? {value: ucode} : {}}
+											/>
 
-                                             {/* Error 및 check Error 처리 */}
-                                             <FormHelperText>
-                                                  {!isEmptyObject(error) ?
-                                                       (item.errorId && error.hasOwnProperty(item.errorId) 
-                                                       ? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
-                                                       : `Enter your ${item.description}`)
-                                                  :
-                                                       ( item.id === "checkpasswordInput" && checkPw.length !== 0 && 
-                                                            (checkError ? "일치하지 않습니다." : '일치합니다.'))
-                                                  }
-                                             </FormHelperText>
-                                        </FormControl>
-                                        {
-                                             item.id === "emailInput" &&
-                                             ( 
-                                                  <>
-                                                       <span style={{width: '5%', display: 'inline-block'}}>@</span>
-                                                       <FormControl style={{width: '65%',minWidth: 170}}>
-                                        
-                                                            {/* 직접 입력 필드 */}
-                                                            <FormControl
-                                                            {...open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}                                                            
-                                                            >
-                                                                 <Input
-                                                                 value={domain}
-                                                                 onChange={handleChangeDomain}
-                                                                 endAdornment={
-                                                                      <InputAdornment position="end">
-                                                                           <IconButton
-                                                                           style={{padding: 0}}
-                                                                           onClick={handleOpen}
-                                                                           >
-                                                                                <ArrowDropDownIcon />
-                                                                           </IconButton>
-                                                                      </InputAdornment>
-                                                                 }
-                                                                 />
-                                                            </FormControl>
-                                                            {/* 이메일 select 필드 */}
-                                                            <Select
-                                                                 value={domain}
-                                                                 onChange={handleChangeDomain}
-                                                                 displayEmpty
-                                                                 open={selectOpen}
-                                                                 onOpen={handleOpenSelect}
-                                                                 onClose={handleOpenSelect}
-                                                            {...!open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}
-                                                            >
-                                                                 <MenuItem value="">
-                                                                 <em>선택해 주세요</em>
-                                                                 </MenuItem>
-                                                                 {domainList.map( domain => {
-                                                                     return (
-                                                                           <MenuItem key={domain.id} value={domain.name}>{domain.name}</MenuItem>
-                                                                     )
-                                                                })}
-                                                                 <MenuItem value="nullEmail" onClick={handleOpen}>직접 입력</MenuItem>
-                                                            </Select>
-                                                       </FormControl>
-                                                  </>
-                                             )
-                                        }
-                                   </div>
-                              )
-                         })}
+											{/* Error 및 check Error 처리 */}
+											<FormHelperText>
+												{!isEmptyObject(error) ?
+													(item.errorId && error.hasOwnProperty(item.errorId) 
+													? (item.errorId === "ucode" ? "유효한 초대코드가 아닙니다." : error[`${item.errorId}`])
+													: `Enter your ${item.description}`)
+												:
+													( item.id === "checkpasswordInput" && checkPw.length !== 0 && 
+														(checkError ? "일치하지 않습니다." : '일치합니다.'))
+												}
+											</FormHelperText>
+									</FormControl>
+									{
+											item.id === "emailInput" &&
+											( 
+												<>
+													<span style={{width: '5%', display: 'inline-block'}}>@</span>
+													<FormControl style={{width: '65%',minWidth: 170}}>
+									
+														{/* 직접 입력 필드 */}
+														<FormControl
+														{...open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}                                                            
+														>
+																<Input
+																value={domain}
+																onChange={handleChangeDomain}
+																endAdornment={
+																	<InputAdornment position="end">
+																		<IconButton
+																		style={{padding: 0}}
+																		onClick={handleOpen}
+																		>
+																			<ArrowDropDownIcon />
+																		</IconButton>
+																	</InputAdornment>
+																}
+																/>
+														</FormControl>
+														{/* 이메일 select 필드 */}
+														<Select
+																value={domain}
+																onChange={handleChangeDomain}
+																displayEmpty
+																open={selectOpen}
+																onOpen={handleOpenSelect}
+																onClose={handleOpenSelect}
+														{...!open ? {style: {display: 'inline-block'}}: {style: {display: 'none'}}}
+														>
+																<MenuItem value="">
+																<em>선택해 주세요</em>
+																</MenuItem>
+																{domainList.map( domain => {
+																	return (
+																		<MenuItem key={domain.id} value={domain.name}>{domain.name}</MenuItem>
+																	)
+															})}
+																<MenuItem value="nullEmail" onClick={handleOpen}>직접 입력</MenuItem>
+														</Select>
+													</FormControl>
+												</>
+											)
+									}
+								</div>
+							)
+						})}
 
-                         <div className={classes.button}>
-                              <Button variant="contained" color="primary" type="submit" onClick={onSubmit}>함께하기</Button>
-                         </div>
-                    </form>
+						<div className={classes.button}>
+							<Button variant="contained" color="primary" type="submit" onClick={onSubmit}>함께하기</Button>
+						</div>
+				</form>
                </Container>
           </Container>
      )

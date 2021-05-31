@@ -98,7 +98,6 @@ export default function Auth (Props:AuthProps) {
                .then(res => {
                     res.json().then( data => {
                          if(res.ok) {
-                              console.log(data)
                                    handleLogIn(data)
                                    setIsLoggedIn("true")
 
