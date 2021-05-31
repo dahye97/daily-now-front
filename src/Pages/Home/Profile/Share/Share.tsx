@@ -1,15 +1,19 @@
 import React , {useState,useEffect} from 'react'
-import { BottomNavigation,BottomNavigationAction } from '@material-ui/core'
+import { BottomNavigation,BottomNavigationAction,Card,CardHeader } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { useHistory, useLocation } from 'react-router';
 import { userInfo } from 'Interface/User';
-
+import ShareIcon from '@material-ui/icons/Share';
 const useStyles = makeStyles({
      root: {
        background: 'none',
        border: 'none',
        padding: "10px",
+     },
+     shareCard : {
+          margin: '20px 0',
+          borderRadius: '20px'
      },
      kakaoButton: {
           paddingRight: '12px',
@@ -108,7 +112,12 @@ export default function Share(props: ShareProps) {
           }
      }, [isInitialized])
      return (
-          <div>
+          <Card className={classes.shareCard}>
+               <CardHeader 
+                    style={{textAlign: 'center'}}
+                    title="공유"
+                    subheader="아래 버튼을 클릭해서 친구들과 공유할 수 있어요!"
+                    />
                <BottomNavigation
                     value={value}
                     onChange={(event, newValue) => {
@@ -123,6 +132,6 @@ export default function Share(props: ShareProps) {
                          id="plusfriend-addfriend-button">
                     </BottomNavigationAction>
                </BottomNavigation>
-          </div>
+          </Card>
      )
 }

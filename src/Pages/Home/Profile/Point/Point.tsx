@@ -140,7 +140,7 @@ export default function Point(props: PointProps) {
                <Card className={classes.pointCard}>
                     <CardHeader 
                     style={{textAlign: 'center'}}
-                    title="💰POINT💰"
+                    title="포인트"
                     action={
                          <IconButton onClick={handleClick} aria-label="helpMessage">
                            <HelpOutlineIcon color="disabled"/>
@@ -162,7 +162,7 @@ export default function Point(props: PointProps) {
                     }}
                     >
                     <Typography className={classes.helpMessage}>
-                         <h3>포인트 적립 방법 🎁</h3>
+                         <h3>🎁 포인트 적립 방법</h3>
                          <Typography color="textSecondary">다음을 통해 포인트를 획득할 수 있어요!</Typography>
                               <ul style={{textAlign:'left'}}>
                                    <li>로그인을 통해 <b>+10P</b> 지급 </li>
@@ -172,7 +172,7 @@ export default function Point(props: PointProps) {
                                    <li>공유 url을 통해 회원 가입 시 <b>+10000P</b> 지급 </li>
                                    <li>계정 연동 시 <b>+100P</b> 지급 </li>
                               </ul>
-                              <Typography color="error"><b>작성 게시물 삭제 or 연동 계정 해지 시 포인트가 차감될 수 있습니다!</b></Typography>
+                              <Typography color="error"><b>🙅🏻‍♂️ 작성 게시물, 댓글 삭제 or 연동 계정 해지 시 포인트가 차감될 수 있습니다!</b></Typography>
                     </Typography>
                     </Popover>
                     {/* 포인트 적립 방법 */}

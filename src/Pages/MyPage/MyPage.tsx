@@ -180,7 +180,7 @@ export default function MyPage( props: MyPageProps) {
                                    </Button>
                               </DialogActions>
                          </Dialog>
-                         <Button variant="outlined" onClick={() => setIsWithDrawal(true)}>돌아가기</Button>
+                         <Button variant="outlined" onClick={() => history.goBack()}>돌아가기</Button>
                     </div>
                     
 		     </Container>
