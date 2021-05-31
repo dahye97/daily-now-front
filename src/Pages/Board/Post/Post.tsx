@@ -7,6 +7,7 @@ import {Container, Tabs,Tab,Typography,Box, useMediaQuery, FormControl, Select} 
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import ForumIcon from '@material-ui/icons/Forum';
 
 import PostBox from 'Pages/Board/Post/Components/PostBox';
 import { postInfo,categoryInfo, searchInfo } from 'Interface/Board';
@@ -56,7 +57,7 @@ export default function Post(props: PostProps) {
      const location = useLocation<locationProps>()
 	const queryObj = queryString.parse(location.search);
 
-     const  iconList = [<ChatIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
+     const  iconList = [<ChatIcon />, <ForumIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
 
      const [isLoading, setIsLoading] = useState(true)
      const [value, setValue] = React.useState(0);
@@ -131,9 +132,6 @@ export default function Post(props: PostProps) {
                }
                if( searchData) {
                     let categoryId = searchData.category_id
-                    if(categoryId === "all") {
-                         categoryId = 1
-                    }
                     history.push(`/board?category=${categoryId}&keyword=${searchData.search_keyword}&sort=${searchData.sort}&type=${searchData.search_type}&page=${pageIndex}`
                     ,{
                          postList : res.data
@@ -147,20 +145,19 @@ export default function Post(props: PostProps) {
                })
      }
 
-     const onClickCategory = (categoryId : number) => {   
+     const onClickCategory = (categoryId : number) => {  
           history.push(`/board?category=${categoryId}&page=1`)
      }
 
      // 카테고리, rowsperpage, page index 가 변경되면 업데이트
      useEffect(() => {
-
           // 초기 렌더링
-          if( categoryId && !pageIndex && !keyword) {
+          if(!categoryId && !keyword){
                getPostList("") // 카테고리의 게시물 불러오기
-               setPage(1) // 페이지 값 초기화
           }
+
           // 페이지 이동할 때 
-          if( categoryId && pageIndex ){
+          if( categoryId >= 0 && pageIndex ){
                if( !keyword) {
                     getPostList("",pageIndex) // 카테고리의 선택 페이지 게시물 불러오기
                }else if( !isSearching ){ // 검색 기능 이용할 때
@@ -174,11 +171,13 @@ export default function Post(props: PostProps) {
                     getPostList("",pageIndex,data)
                }
           }
-          setValue(categoryId-1) // 현재 카테고리 위치 ui value 값 설정
+          setValue(categoryId) // 현재 카테고리 위치 ui value 값 설정
      }, [categoryId, rowsPerPage, pageIndex, sortInput])
 
      useEffect(() => {
          if(keyword){
+          //     console.log(keyword, location.state.postList)
+              setIsLoading(false)
               setpostList(location.state.postList)
          }
      }, [keyword])
@@ -197,7 +196,7 @@ export default function Post(props: PostProps) {
                          return (
                               <Tab 
                                    key={index} 
-                                   value={category.category_id-1}
+                                   value={category.category_id}
                                    onClick={() => onClickCategory(category.category_id)} 
                                    label={category.category_name} 
                                    icon={iconList[index]} {...a11yProps(index)} 
@@ -271,6 +270,16 @@ export default function Post(props: PostProps) {
                               handleIsSearching={handleIsSearching}/>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
+                         <PostBox 
+                              page={page} 
+                              rowsPerPage={rowsPerPage} 
+                              handleChangePage={handleChangePage} 
+                              postList={postList} 
+                              getPostList={getPostList}
+                              handleIsSearching={handleIsSearching}
+                         />
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
                          <PostBox 
                               page={page} 
                               rowsPerPage={rowsPerPage} 

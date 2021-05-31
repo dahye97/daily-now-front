@@ -89,7 +89,7 @@ export default React.memo(function Board (props: BoardProps){
 
      const { typeNum,userObj } = props;
      const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 리스트 
-     const [categoryId, setCategoryId] = useState(1) // 현재 카테고리 
+     const [categoryId, setCategoryId] = useState(0) // 현재 카테고리 
 
      const location = useLocation()
 	const queryObj = queryString.parse(location.search);
@@ -133,16 +133,17 @@ export default React.memo(function Board (props: BoardProps){
      }
 
      useEffect(() => {
-          // 커뮤니티 초기 접속 시에만 category list api 호출
-          if( typeNum === "01" && !category && !pageIndex) {
-               getCategories()
-          }
           // 이전에 선택한 카테고리가 있을 경우 categoryId 값을 업데이트
           if( category ) {
                setCategoryId(Number(category))
           }
      }, [categoryId])
 
+     useEffect(() => {
+          if( typeNum === "01") {
+               getCategories()
+          }
+     }, [])
      // 내 글 보기 처리 함수
      const [open, setOpen] = useState(false)
      const [myPostList, setMyPostList] = useState<detailPostInfo[]> ([])

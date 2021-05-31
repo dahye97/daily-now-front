@@ -56,9 +56,9 @@ export default function Search(props: searchProps ) {
      const isMobile = useMediaQuery("(max-width: 380px)");
 
      // 카테고리
-     const [category, setCategory] = useState<string | number>("all")
+     const [category, setCategory] = useState<number>(0)
      const handleChangeCat = (e: React.ChangeEvent<HTMLSelectElement>) => {
-          setCategory(e.target.value)
+          setCategory(Number(e.target.value))
      }
      // 검색 분류
      const [type, setType] = useState<string | null>("title_content")
@@ -93,7 +93,7 @@ export default function Search(props: searchProps ) {
                          value={category}
                          onChange={handleChangeCat}
                     >
-                         <option value={"all"}>전체</option>
+                         <option value={0}>전체</option>
                          <option value={1}>자유토론방</option>
                          <option value={2}>투자자후기</option>
                          <option value={3}>유머</option>
