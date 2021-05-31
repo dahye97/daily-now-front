@@ -1,10 +1,10 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import {Button,Card,CardContent,CardActions,CardHeader,Select,InputLabel, FormControl} from '@material-ui/core'
+import {Button,Card,CardContent,CardActions,CardHeader,Select,IconButton, FormControl,Typography,Popover} from '@material-ui/core'
 import { userInfo, pointInfo  } from 'Interface/User';
 import PointList from './PointList';
-
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import PetsIcon from '@material-ui/icons/Pets';
 import ShareIcon from '@material-ui/icons/Share';
 import CreateIcon from '@material-ui/icons/Create';
@@ -17,6 +17,10 @@ const useStyles= makeStyles( {
      pointCard: {
           margin: '20px 0',
           borderRadius: '20px'
+     },
+     helpMessage: {
+          padding: '20px',
+          textAlign:'center'
      },
      pointEvent: {
           listStyle: 'none',
@@ -117,14 +121,60 @@ export default function Point(props: PointProps) {
      const handleMorePoint = () => {
           handleSearch(null,nextUrl)
      }
+
+     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+       setAnchorEl(event.currentTarget);
+     };
+   
+     const handleClose = () => {
+       setAnchorEl(null);
+     };
+   
+     const open = Boolean(anchorEl);
+     const id = open ? 'simple-popover' : undefined;
+
      return (
           <>
                <Card className={classes.pointCard}>
                     <CardHeader 
                     style={{textAlign: 'center'}}
                     title="💰POINT💰"
+                    action={
+                         <IconButton onClick={handleClick} aria-label="helpMessage">
+                           <HelpOutlineIcon color="disabled"/>
+                         </IconButton>
+                       }
                     />
-                    
+                    <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                         vertical: 'top',
+                         horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                         vertical: 'top',
+                         horizontal: 'center',
+                    }}
+                    >
+                    <Typography className={classes.helpMessage}>
+                         <h3>포인트 적립 방법 🎁</h3>
+                         <Typography color="textSecondary">다음을 통해 포인트를 획득할 수 있어요!</Typography>
+                              <ul style={{textAlign:'left'}}>
+                                   <li>로그인을 통해 <b>+10P</b> 지급 </li>
+                                   <li>게시글 작성 시 <b>+5000P</b> 지급</li>
+                                   <li>댓글 및 답글 작성 시 <b>+5P</b> 지급</li>
+                                   <li>친구 초대 시 <b>+5000P</b> 지급</li>
+                                   <li>공유 url을 통해 회원 가입 시 <b>+10000P</b> 지급 </li>
+                                   <li>계정 연동 시 <b>+100P</b> 지급 </li>
+                              </ul>
+                              <Typography color="error"><b>작성 게시물 삭제 or 연동 계정 해지 시 포인트가 차감될 수 있습니다!</b></Typography>
+                    </Typography>
+                    </Popover>
                     {/* 포인트 적립 방법 */}
                     <CardContent>
                          <ul className={classes.pointEvent} >
