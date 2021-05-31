@@ -46,11 +46,6 @@ interface viewProps {
      handleAlertClose: () => void
 }
 
-type curCommentType = { 
-     like: number,
-     dislike : number,
-     num_child: number
-}
 function CommentView(props: viewProps) {
      const classes = useStyles();
      const isMobile = useMediaQuery("(max-width: 380px)");
@@ -74,11 +69,11 @@ function CommentView(props: viewProps) {
 
      useEffect(() => {
           if( item !== undefined ) {
-               if(item.like_dislike === 1) { 
-                    setPressableDislike(false)
+               if(item.like_dislike === 1) { // 공감 선택한 상태 
+                    setPressableLike(true)
                }
-               else if (item.like_dislike === 0) { 
-                    setPressableLike(false)
+               else if (item.like_dislike === 0) { // 비공감 선택한 상태
+                    setPressableDislike(true)
                }
           }
      }, [item])
@@ -147,8 +142,7 @@ function CommentView(props: viewProps) {
           }
      }
 
-      // fix 특정 댓글,답글 정보 불러오기 : 공감 비공감 처리시에만 유용함.
-      const getDetailComment = (commentId: number) => {
+     const getDetailComment = (commentId: number) => {
           if(userObj!==null){
                axios.post(`${process.env.REACT_APP_SERVER}/api/notice/detail_comment`, {
                     comment_id: commentId
@@ -174,7 +168,7 @@ function CommentView(props: viewProps) {
           {/* 작성자 */} <li style={{display:'flex', justifyContent:'space-between', alignItems: 'baseline'}}>
                               <span><b>{item.user.substr(0,4) + "****"}</b></span>
                                 
-          {/* 수정, 삭제 버튼 */}{console.log(item)}
+          {/* 수정, 삭제 버튼{console.log(item)} */}
                                    { item.editable &&
                                         <span>
                                              <IconButton onClick={() => {

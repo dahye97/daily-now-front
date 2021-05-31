@@ -243,12 +243,16 @@ export default function DetailPost(props: {userObj: userInfo | null,}) {
      // 게시물에 대해 유저가 선택한 공감/비공감 정보 데이터 업데이트
      useEffect(() => {
           if(detailPost.like_dislike === 1) { 
-               setPressableDislike(false)
+               setPressableLike(true)
           }
           else if (detailPost.like_dislike === 0) { 
-               setPressableLike(false)
+               setPressableDislike(true)
           }
      }, [detailPost])
+
+     useEffect(() => {
+         
+     }, [pressableLike, pressableDislike])
 
      // 댓글 추가 실시간 업데이트 처리 함수
      const handleUpdateComment = () => {
