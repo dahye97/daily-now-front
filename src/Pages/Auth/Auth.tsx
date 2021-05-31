@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button, useMediaQuery } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
@@ -72,6 +72,7 @@ export default function Auth (Props:AuthProps) {
      const [password, setPassword] = useState("")
      const [error, setError] = useState(Object)
 
+     const emailInput = useRef<HTMLInputElement>()
      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           if (e.target.id === "email") {
@@ -113,8 +114,12 @@ export default function Auth (Props:AuthProps) {
                               for( let elem in data ){
                                    document.getElementById(elem)?.setAttribute('error', "")
                               }
-                              setEmail('')
                               setPassword('')     
+                              setEmail('')
+
+                              if( emailInput.current ) {
+                                   emailInput.current.focus()
+                              }
                               setIsLoggedIn("false")   
                          }
                     })
@@ -143,7 +148,7 @@ export default function Auth (Props:AuthProps) {
                                    <FormControl className={classes.input} error={ error && error.hasOwnProperty("email") ? true : undefined } >
                                         {/* 이메일 */}
                                         <InputLabel htmlFor="email">Email(ID)</InputLabel>
-                                        <Input onChange={handleChange} value={email} id="email"aria-describedby="my-helper-text" type="email"/>
+                                        <Input autoFocus inputRef={emailInput} onChange={handleChange} value={email} id="email"aria-describedby="my-helper-text" type="email"/>
                                         <FormHelperText id="my-helper-text">
                                         {error && error.hasOwnProperty("email") ? "이메일(ID)을 입력해주세요.": "Enter your email."}
                                         </FormHelperText>

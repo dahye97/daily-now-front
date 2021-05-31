@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button,Select,MenuItem,Input } from "@material-ui/core";
+import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import {Autocomplete, Alert, AlertTitle } from '@material-ui/lab';
 import {userInfo}from 'Interface/User'
 import { makeStyles } from "@material-ui/core/styles";
@@ -127,32 +127,31 @@ export default function P2PRegister(props: P2PRegisterProps) {
      // 회원 정보 유효성 검사 함수 
      const handleAuth = () => {
           if( userObj !== null && userName && password ) {
-               axios.post(`${process.env.REACT_APP_SERVER}/api/${P2PName}/is_valid`, {
-                    id : userName,
-                    pwd: password
-               },{
-                    headers : {
-                    "Authorization": "Token " + userObj.auth_token,
-               }
-               }).then(res => {
-                      if( res.status === 200){
-
+                    axios.post(`${process.env.REACT_APP_SERVER}/api/${P2PName}/is_valid`, {
+                         id : userName,
+                         pwd: password
+                    },{
+                         headers : {
+                         "Authorization": "Token " + userObj.auth_token,
+                    }
+                    }).then(res => {
+                           if( res.status === 200){
+                              setAuthError({
+                                   open: true,
+                                   isTrue : false,
+                                   message: "인증되었습니다."
+                              })
+                              setIsAuthentic(true)
+                           } 
+                    })
+                    .catch(function(error) {
                          setAuthError({
                               open: true,
-                              isTrue : false,
-                              message: "인증되었습니다."
+                              isTrue : true,
+                              message: "유효하지 않은 회원입니다. 다시 시도해주세요."
                          })
-                         setIsAuthentic(true)
-                      } 
-               })
-               .catch(function(error) {
-                    setAuthError({
-                         open: true,
-                         isTrue : true,
-                         message: "유효하지 않은 회원입니다. 다시 시도해주세요."
+                         initializeForm()
                     })
-                    initializeForm()
-               })
           } else {
                alert('잘못된 입력입니다. 정확히 작성해주세요.')
           }
@@ -251,13 +250,13 @@ export default function P2PRegister(props: P2PRegisterProps) {
                          />
                     <TextField onChange={handleChange} value={userName} id="email" label="Email(ID)" type="email" fullWidth/>
                     <TextField onChange={handleChange} value={password} id="password" label="Password" type="password" fullWidth/>
-                    <Button style={{display:'block', margin:'0 auto'}} onClick={handleAuth} color="primary">회원 인증 (필수)</Button>
+                    <Button variant="contained" color="secondary" style={{display:'block', margin:'20px auto',}} onClick={handleAuth}>회원 인증 (필수)</Button>
                </DialogContent>
                <DialogActions>
-                    <Button type="submit" onClick={handleSubmit} color="primary">
+                    <Button variant="contained" type="submit" onClick={handleSubmit} color="primary">
                     등록
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button variant="contained" onClick={handleClose} color="default">
                     취소
                     </Button>
                </DialogActions>
