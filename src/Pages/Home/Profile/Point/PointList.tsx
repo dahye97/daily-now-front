@@ -42,12 +42,14 @@ export default function PointList(props : pointType) {
      const { action, point, total_point, detail_action, date, } = props.point
      // date 처리
      const realDate = date.split('T')[0].replaceAll('-','. ')
+     const realTime = date.split('T')[1].split('.')[0]
+     console.log(realTime)
      return (
           <Paper className={classes.pointItem}>
                <ul className={classes.ulTag} style={{listStyle: 'none'}}>
                {props.point && 
                <>
-                    <li className={classes.pointInfo}>{realDate}</li>
+                    <li className={classes.pointInfo}>{realDate} {realTime}</li>
                     <br />
                     <li>
                          <span className={classes.pointInfo}>포인트 유형</span>
