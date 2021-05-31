@@ -13,7 +13,8 @@ const useStyles = makeStyles({
           padding: "100px",
           width: "100%",
           height: "20%",
-          maxWidth: "md"
+          maxWidth: "md",
+          minWidth: "400px",
      },
      authContainerMobile : {
           width: "100%",
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
           textAlign: "center",
-          minWidth: "350px",
+          minWidth: "400px",
 	},
      authBoxMobile: {
           width: "90%",

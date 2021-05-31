@@ -14,11 +14,14 @@ const useStyles = makeStyles({
           padding: "100px",
           width: "100%",
           height: "20%",
-          maxWidth: "md"
+          maxWidth: "md",
+          minWidth: "400px"
      },
      authContainerMobile : {
-          width: "90%",
+          width: "100%",
           height: "10%",
+          padding: 0,
+          margin: 0,
           paddingTop: "100px",
      },
 	authBox: {
@@ -28,12 +31,13 @@ const useStyles = makeStyles({
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
           textAlign: "center",
-          minWidth: "350px"
+          minWidth: "400px"
      },
      authBoxMobile: {
           width: "100%",
           height: "10%",
-          padding: '20px',
+          padding:0,
+          paddingTop:'100px',
           textAlign: "center",
      },
      loginForm : {
@@ -131,12 +135,12 @@ export default function Auth (Props:AuthProps) {
                          <p>매일이 행복한 투자<br/>
                          <b>데일리나우가</b> 함께 합니다</p>
 
-                         {isLoggedIn === "true" ? (<Alert severity="success">로그인 되었습니다</Alert>) 
-                                   : (isLoggedIn === "false") ? (<Alert severity="error">로그인에 실패하였습니다. 다시 시도해주세요.</Alert>)
-                                   : null}
                          { typeNum === "01" 
                          ? // 로그인폼
                               <form className={classes.loginForm}>
+                              {isLoggedIn === "true" ? (<Alert severity="success">로그인 되었습니다</Alert>) 
+                                        : (isLoggedIn === "false") ? (<Alert severity="error">로그인에 실패하였습니다. 다시 시도해주세요.</Alert>)
+                                        : null}
                                    <FormControl className={classes.input} error={ error && error.hasOwnProperty("email") ? true : undefined } >
                                         {/* 이메일 */}
                                         <InputLabel htmlFor="email">Email(ID)</InputLabel>
@@ -159,7 +163,7 @@ export default function Auth (Props:AuthProps) {
                                         <Button variant="contained" color="primary" onClick={handleFindPw}>비밀번호 재발급</Button>
                                    </div>
                               </form>
-                         : // 비밀번호 재발급
+                         : /* 비밀번호 재발급 */
                               <FindPw />
                          }
                     </Container>
