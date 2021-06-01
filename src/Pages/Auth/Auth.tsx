@@ -183,7 +183,7 @@ export default function Auth (Props:AuthProps) {
                                    </FormControl>
                                    <div className={classes.button}>
                                         <Button variant="outlined"  color="primary" type="submit" onClick={handleSubmit}>로그인</Button>
-                                        <Button variant="outlined" color="primary" onClick={handleFindPw}>비밀번호 재발급</Button>
+                                        <Button variant="outlined" color="primary" onClick={handleFindPw}>비밀번호 찾기</Button>
                                    </div>
                               </form>
                          : /* 비밀번호 재발급 */

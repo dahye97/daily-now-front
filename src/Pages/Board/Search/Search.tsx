@@ -1,5 +1,8 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import SearchIcon from '@material-ui/icons/Search';
+import { useLocation, } from 'react-router';
+import queryString from 'query-string'
+
 import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect,useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { searchInfo } from 'Interface/Board';
@@ -55,18 +58,24 @@ export default function Search(props: searchProps ) {
      const {getPostList, handleIsSearching} = props;
      const isMobile = useMediaQuery("(max-width: 380px)");
 
+     const location = useLocation()
+	const queryObj = queryString.parse(location.search);
+	const categoryInUrl = queryObj.category; // url에서 현재 category id 받아오기 
+	const typeInUrl = queryObj.type; // url에서 현재 type 받아오기 
+	const keywordInUrl = queryObj.keyword; // url에서 현재 type 받아오기 
+
      // 카테고리
      const [category, setCategory] = useState<number>(0)
      const handleChangeCat = (e: React.ChangeEvent<HTMLSelectElement>) => {
           setCategory(Number(e.target.value))
      }
      // 검색 분류
-     const [type, setType] = useState<string | null>("title_content")
+     const [type, setType] = useState<string | string[] | null>("title_content")
      const handleChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
           setType(e.target.value)
      }
      // 검색어
-     const [keyword, setKeyword] = useState<string|null>("")
+     const [keyword, setKeyword] = useState<string| string[] | null>("")
      const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
           setKeyword(e.target.value)
      }
@@ -83,6 +92,17 @@ export default function Search(props: searchProps ) {
           handleIsSearching(true)
      }
 
+     useEffect(() => {
+          if( categoryInUrl ){
+               setCategory( Number(categoryInUrl))
+          }
+          if( typeInUrl ){
+               setType(typeInUrl)
+          }
+          if( keywordInUrl) {
+               setKeyword(keywordInUrl)
+          }
+     }, [])
      return (
           <Paper className={isMobile? classes.rootMobile: classes.root}>
 
