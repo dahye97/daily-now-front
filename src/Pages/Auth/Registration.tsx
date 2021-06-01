@@ -12,9 +12,8 @@ const useStyles = makeStyles({
      authContainer: {
           padding: "100px",
           width: "100%",
-          height: "20%",
-          maxWidth: "md",
           minWidth: "400px",
+          height: '100vh'
      },
      authContainerMobile : {
           width: "100%",
@@ -22,13 +21,18 @@ const useStyles = makeStyles({
           paddingTop: "100px",
      },
      authBox: {
-		padding: "20px",
+		padding: "50px 0",
 		borderRadius: "50px",
 		background: "#ffffff",
 		boxShadow: "13px 13px 34px #b1b1b1, -13px -13px 34px #ffffff",
 		overflow: "hidden",
           textAlign: "center",
           minWidth: "400px",
+          minHeight: '740px',
+          height:'100%',
+          display:'flex',
+          flexDirection:'column',
+          alignItems: "center"
 	},
      authBoxMobile: {
           width: "90%",
@@ -207,7 +211,7 @@ export default function Registration() {
           <Container className={isMobile? classes.authContainerMobile : classes.authContainer}>
                <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
 
-                    <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
+                    <img src={logo} width="100px" alt="데일리나우와 함께해요!"/>
                     <h2>Daily Now 💙</h2>
                     <p>매일이 행복한 투자<br/>
                     <b>데일리나우가</b> 함께 합니다</p>

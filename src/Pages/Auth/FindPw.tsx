@@ -39,13 +39,15 @@ const useStyles = makeStyles((theme: Theme) =>
      },
      sendButton: {
           width:'20%',
-          padding: 0
+          padding: 0,
+          zIndex: 2
      },
      nextButton: {
           width:'20%',
           display:'block',
           padding:'10px',
           margin:'15px auto',
+          zIndex: 2
      }
   }),
 );
@@ -125,6 +127,7 @@ export default function FindPw() {
           })
      }
      const [password, setPassword] = useState("")
+     const [isError, setIsError] = useState(false)
      const handleChangePW = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
           setPassword(value)
@@ -145,6 +148,7 @@ export default function FindPw() {
                history.push('/auth')
           })
           .catch(function(error) {
+               setIsError(true)
                console.log(error);
           })
      }
@@ -198,6 +202,8 @@ export default function FindPw() {
                                         variant="outlined"
                                         value={password}
                                         onChange={handleChangePW}
+                                        error={isError}
+                                        { ...isError? {helperText: "8자 이상의 비밀번호여야 합니다." } : {}}
                                    />
                                    <Button disabled={open} className={classes.sendButton} variant="contained" color="primary" onClick={handleSendPW}>변경하기</Button>
 
