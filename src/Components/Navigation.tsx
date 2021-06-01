@@ -13,7 +13,7 @@ import LockTwoToneIcon from '@material-ui/icons/LockTwoTone';
 import ForumTwoToneIcon from '@material-ui/icons/ForumTwoTone';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import AccountCircleTwoToneIcon from '@material-ui/icons/AccountCircleTwoTone';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => 
@@ -83,9 +83,9 @@ export default function Navigation(props: NavProps) {
 		{ name: '커뮤니티', url: '/board'},
 		{ name: 'FAQ', url: '/faq'},
 		{ id: '0', name: '마이페이지', url: '/home?tabName=MY_FUNDING'},
-		{ id: '0', name: '로그아웃'},
 		{ id: '1', name: '로그인', url: '/auth'},
 		{ id: '1', name: '회원가입', url: '/registration?share=FALSE'},
+		{ id: '0', name: '로그아웃'},
 	]
 
 	const iconList = [
@@ -94,6 +94,7 @@ export default function Navigation(props: NavProps) {
 		<AccountCircleTwoToneIcon/>,
 		<PermIdentityTwoToneIcon />,
 		<LockTwoToneIcon/>,
+		<ExitToAppIcon/>
 	]
 	const drawer = (
 	  <div>
