@@ -76,12 +76,21 @@ export default function Post(props: PostProps) {
           setIsSearching(value)
      }
      // 앞, 뒤 게시물 페이지 이동 
-     const handleChangePage = (event: React.ChangeEvent<unknown> , newPage: number) => {
+     const handleChangePage = (event: React.ChangeEvent<any> , newPage: number) => {
+         let label = event.currentTarget.getAttribute("aria-label")
           handleIsSearching(false)
-          setPage(newPage);
+          let nextPage = newPage;
+          if( label === "Go to next page") { // +10, -10 페이지 이동 
+               if( newPage > page ) {
+                    nextPage += 9
+               }else nextPage -= 9
+               if( nextPage > Math.floor(postList.count / rowsPerPage + 1)) 
+                    nextPage = Math.floor(postList.count / rowsPerPage + 1)
+          }
+          setPage(nextPage);
           if(keyword){
-               history.push(`/board?category=${categoryId}&keyword=${keyword}&sort=${sort}&type=${type}&page=${newPage}`)
-          }else history.push(`/board?category=${categoryId}&page=${newPage}`)
+               history.push(`/board?category=${categoryId}&keyword=${keyword}&sort=${sort}&type=${type}&page=${nextPage}`)
+          }else history.push(`/board?category=${categoryId}&page=${nextPage}`)
           window.scrollTo(0, 0);
      };
      // rowsperpage 인풋 핸들러
@@ -152,14 +161,18 @@ export default function Post(props: PostProps) {
      // 카테고리, rowsperpage, page index 가 변경되면 업데이트
      useEffect(() => {
           // 초기 렌더링
-          if(!categoryId && !keyword){
+          if(!categoryId && !page && !keyword){
                getPostList("") // 카테고리의 게시물 불러오기
           }
 
           // 페이지 이동할 때 
           if( categoryId >= 0 && pageIndex ){
+               let nextPage = pageIndex
+               if( pageIndex >= Math.floor(postList.count / rowsPerPage + 1)) {
+                    nextPage = Math.floor(postList.count / rowsPerPage + 1)
+               }
                if( !keyword) {
-                    getPostList("",pageIndex) // 카테고리의 선택 페이지 게시물 불러오기
+                    getPostList("",nextPage) // 카테고리의 선택 페이지 게시물 불러오기
                }else if( !isSearching ){ // 검색 기능 이용할 때
                     let data = {
                          category_id: categoryId,
@@ -168,10 +181,11 @@ export default function Post(props: PostProps) {
                          search_keyword: keyword,
                          sort: sortInput
                     }
-                    getPostList("",pageIndex,data)
+                    getPostList("",nextPage,data)
                }
           }
           setValue(categoryId) // 현재 카테고리 위치 ui value 값 설정
+          
      }, [categoryId, rowsPerPage, pageIndex, sortInput])
 
      useEffect(() => {
@@ -250,45 +264,20 @@ export default function Post(props: PostProps) {
                     <div>Loading...</div>
                :
                <>
-                    <TabPanel value={value} index={0}>
-                         <PostBox 
-                              page={page} 
-                              rowsPerPage={rowsPerPage} 
-                              handleChangePage={handleChangePage} 
-                              postList={postList}
-                              getPostList={getPostList}
-                              handleIsSearching={handleIsSearching}
-                         />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                         <PostBox 
-                              page={page} 
-                              rowsPerPage={rowsPerPage} 
-                              handleChangePage={handleChangePage} 
-                              postList={postList} 
-                              getPostList={getPostList}
-                              handleIsSearching={handleIsSearching}/>
-                    </TabPanel>
-                    <TabPanel value={value} index={2}>
-                         <PostBox 
-                              page={page} 
-                              rowsPerPage={rowsPerPage} 
-                              handleChangePage={handleChangePage} 
-                              postList={postList} 
-                              getPostList={getPostList}
-                              handleIsSearching={handleIsSearching}
-                         />
-                    </TabPanel>
-                    <TabPanel value={value} index={3}>
-                         <PostBox 
-                              page={page} 
-                              rowsPerPage={rowsPerPage} 
-                              handleChangePage={handleChangePage} 
-                              postList={postList} 
-                              getPostList={getPostList}
-                              handleIsSearching={handleIsSearching}
-                         />
-                    </TabPanel>
+               {categories.map( (cat) => {
+                    return (
+                         <TabPanel key={cat.category_id} value={value} index={cat.category_id}>
+                              <PostBox 
+                                   page={page} 
+                                   rowsPerPage={rowsPerPage} 
+                                   handleChangePage={handleChangePage} 
+                                   postList={postList}
+                                   getPostList={getPostList}
+                                   handleIsSearching={handleIsSearching}
+                              />
+                         </TabPanel>
+                    )
+               })}
                </>}
           </Container>
      )

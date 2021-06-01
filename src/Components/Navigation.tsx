@@ -80,7 +80,7 @@ export default function Navigation(props: NavProps) {
 	};
 
 	const menuList = [
-		{ name: '커뮤니티', url: '/board'},
+		{ name: '커뮤니티', url: '/board?category=0&page=1'},
 		{ name: 'FAQ', url: '/faq'},
 		{ id: '0', name: '마이페이지', url: '/home?tabName=MY_FUNDING'},
 		{ id: '1', name: '로그인', url: '/auth'},

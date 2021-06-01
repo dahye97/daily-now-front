@@ -204,6 +204,7 @@ export default function PostBox(props: PostBoxProps) {
                </TableContainer>
 
                <Pagination 
+                    showFirstButton showLastButton
                     className={classes.pagination}
                     count={Math.floor(count / rowsPerPage) + 1} 
                     variant="outlined" 

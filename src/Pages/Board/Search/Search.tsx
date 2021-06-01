@@ -134,6 +134,11 @@ export default function Search(props: searchProps ) {
 
                <div className={isMobile? classes.containerMobile: classes.container}>
                     <InputBase
+                    onKeyPress={ (event) => {
+                         if (event.key === 'Enter') {
+                              handleSearch()
+                         }
+                       }}
                     className={classes.input}
                     placeholder="검색어를 입력해주세요."
                     onChange={handleChangeKeyword}
