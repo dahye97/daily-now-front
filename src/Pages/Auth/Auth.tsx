@@ -6,6 +6,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useHistory } from 'react-router';
 import { userInfo } from 'Interface/User';
 import FindPw from './FindPw';
+import holyddung from 'asset/img/holyddung.png'
 
 // TODO: 로그인 페이지 
 
@@ -14,11 +15,11 @@ const useStyles = makeStyles({
           padding: "100px",
           width: "100%",
           minWidth: "400px",
-          height: '100vh'
+          height: '100vh',
      },
      authContainerMobile : {
           width: "100%",
-          height: "10%",
+          height: "100vh",
           padding: 0,
           margin: 0,
           paddingTop: "100px",
@@ -32,23 +33,24 @@ const useStyles = makeStyles({
           textAlign: "center",
           minWidth: "400px",
           height:'100%',
-          minHeight: '740px',
+          minHeight: '680px',
           display:'flex',
           flexDirection:'column',
-          alignItems: "center"
+          alignItems: "center",
+          position: 'relative'
      },
      authBoxMobile: {
           width: "100%",
-          height: "10%",
+          height: "100%",
           padding:0,
-          paddingTop:'100px',
+          paddingTop:'50px',
           textAlign: "center",
+          position: 'relative'
      },
      loginForm : {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          margin:'30px 0'
      },
      input: {
           margin: "8px",
@@ -58,8 +60,20 @@ const useStyles = makeStyles({
           marginTop: "20px",
           '& button': {
                margin:'10px'
-          }
-     }
+          },
+          marginBottom:'30px',
+     },
+     loginHoly: {
+          position: 'absolute',
+		right: "6%",
+		bottom: '-4%'
+     },
+     popover: {
+          pointerEvents: 'none',
+        },
+     paper: {
+          padding: '10px'
+     },
 });
 
 interface AuthProps {
@@ -139,7 +153,7 @@ export default function Auth (Props:AuthProps) {
      return (
                <Container className={ isMobile? classes.authContainerMobile : classes.authContainer}>
                     <Container className={isMobile? classes.authBoxMobile : classes.authBox}>
-                         <img src={logo} width="100px" alt="데일리나우와 함께해요!"/>
+                         <img src={logo} width="80px" alt="데일리나우와 함께해요!"/>
                          <h2>Daily Now 💙</h2>
                          <p>매일이 행복한 투자<br/>
                          <b>데일리나우가</b> 함께 합니다</p>
@@ -168,13 +182,18 @@ export default function Auth (Props:AuthProps) {
                                         </FormHelperText>
                                    </FormControl>
                                    <div className={classes.button}>
-                                        <Button variant="contained"  color="primary" type="submit" onClick={handleSubmit}>로그인</Button>
-                                        <Button variant="contained" color="primary" onClick={handleFindPw}>비밀번호 재발급</Button>
+                                        <Button variant="outlined"  color="primary" type="submit" onClick={handleSubmit}>로그인</Button>
+                                        <Button variant="outlined" color="primary" onClick={handleFindPw}>비밀번호 재발급</Button>
                                    </div>
                               </form>
                          : /* 비밀번호 재발급 */
                               <FindPw />
                          }
+                    <img 
+                         className={classes.loginHoly}
+                         src={holyddung} width= {isMobile? "180px": "220px"}
+                         alt="뚱이와 홀리"
+                         style={{zIndex: 1}}/> 
                     </Container>
                </Container>
           )
