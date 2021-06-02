@@ -57,11 +57,11 @@ export default function PointList(props : pointType) {
                     </li>
                     <li className={point.toString().slice(0,1) === '-' ? classes.minusPoint : classes.plusPoint }>
                          <span className={classes.pointInfo}>획득 포인트</span>
-                         <b>{point.toString().slice(0,1) !== '-' ? '+' + point : point}</b>
+                         <b>{point.toString().slice(0,1) !== '-' ? '+' + numberWithCommas(point) : numberWithCommas(point)}</b>
                     </li>
                     <li>
                          <span className={classes.pointInfo}>누적 포인트</span>
-                         <b>{total_point} P</b></li>
+                         <b>{numberWithCommas(total_point)} P</b></li>
                     <li>
                          <span className={classes.pointInfo}>포인트 정보</span>
                          {detail_action}
@@ -73,3 +73,11 @@ export default function PointList(props : pointType) {
           </Paper>
      )
 }
+
+function numberWithCommas(x:string | number) {
+     let number = x
+     if( typeof(x) !== "number"){
+          number = Number(x)
+     }
+     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ }

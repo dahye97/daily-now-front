@@ -25,10 +25,15 @@ export default function Balance(props: BalanceProps) {
           <div>
                <Typography  variant="h5">🔒 잔고</Typography>	
                <ul className={classes.ul}>
-                    <li><h3>누적 투자액</h3> <p>{total_investment} 원</p></li>
+                    <li><h3>누적 투자액</h3> <p>{numberWithCommas(total_investment)} 원</p></li>
                     <li><h3>투자 상품 수</h3> <p>{number_of_investing_products}</p></li>
-                    <li><h3>예정 상환금</h3> <p>{residual_investment_price} 원</p></li>
+                    <li><h3>예정 상환금</h3> <p>{numberWithCommas(residual_investment_price)} 원</p></li>
                </ul> 
           </div>
      )
 }
+
+function numberWithCommas(x:string) {
+     let number = Number(x)
+     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ }
