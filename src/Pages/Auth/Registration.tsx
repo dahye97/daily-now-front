@@ -79,8 +79,6 @@ export default function Registration() {
      const history = useHistory();
      const isMobile = useMediaQuery("(max-width: 380px)");
 
-     const [cookies, setCookie, removeCookie] = useCookies([]);
-
      const [id, setId] = useState("")
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
@@ -113,14 +111,14 @@ export default function Registration() {
           })
                .then(res => {
                     if( res.ok ){
-                         alert("회원가입 완료 :) 다시 로그인 해주세요.");
-                         history.push("/")
+                         alert("회원가입이 완료되었습니다 :) ");
                          res.json().then( data => {
-                              setCookie(
-                                       data.email, 
-                                       data.auth_token
-                              )
+                              window.sessionStorage.setItem('email', email);
+                              window.sessionStorage.setItem('username', data.username);
+                              window.sessionStorage.setItem('auth_token', data.auth_token);
                          })
+                         window.location.reload()
+                         history.push('/')
                     }else {
                          res.json().then( data => {
                               setError(data)

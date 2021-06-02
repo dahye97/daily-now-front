@@ -75,7 +75,7 @@ export default function AppRouter() {
 			}
 		}
 
-	}, [userObj])
+	}, [])
 
 	useEffect(() => {
 		if(P2PList.length !== 0) {
