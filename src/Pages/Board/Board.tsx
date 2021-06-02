@@ -15,6 +15,7 @@ import { detailPostInfo,categoryInfo } from 'Interface/Board';
 
 import board_holy from 'asset/img/board_holy.png'
 import WelcomeLoginAlert from 'Components/Alert/WelcomeLoginAlert';
+import Category from './Category';
 
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({
@@ -140,9 +141,7 @@ export default React.memo(function Board (props: BoardProps){
      }, [categoryId])
 
      useEffect(() => {
-          if( typeNum === "01") {
-               getCategories()
-          }
+          getCategories()
      }, [])
      // 내 글 보기 처리 함수
      const [open, setOpen] = useState(false)
@@ -172,8 +171,9 @@ export default React.memo(function Board (props: BoardProps){
      };
      // 선택한 내 글로 이동 
      const handleClickMyPostItem = (e: React.MouseEvent, postId : number) => {
-          history.push(`/board/detail/${postId}`, {
-                    post_id : postId
+          history.push(`/board/category=${categoryId}/detail/${postId}`, {
+                    post_id : postId,
+                    category_id: categoryId
           })
      }
      return (
@@ -182,6 +182,12 @@ export default React.memo(function Board (props: BoardProps){
                     <h2 style={{marginRight: '10px'}}>💬 토론해요 </h2>
                     <div><img src={board_holy} alt="종목토론" width="50px"/></div>
                </div>
+               <Category 
+                categories={categories} 
+                pageIndex={Number(pageIndex)} 
+                categoryId={ category ? Number(category) : categoryId} 
+                handleCategoryId={handleCategoryId}
+                />
                <div style={{height: 'auto'}}>
                          { typeNum === "01" ? // 게시판
                          <>

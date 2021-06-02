@@ -70,6 +70,7 @@ interface Column {
 }
 
 interface PostBoxProps {
+     categoryId: number
      postList : postInfo
      rowsPerPage: number
      page:number
@@ -83,7 +84,7 @@ export default function PostBox(props: PostBoxProps) {
      const isMobile = useMediaQuery("(max-width: 380px)");
 
      const history = useHistory();
-     const { postList, rowsPerPage, page, handleChangePage, getPostList,handleIsSearching } = props;
+     const { postList, rowsPerPage, page, handleChangePage, getPostList,handleIsSearching,categoryId } = props;
      const { count, results } = postList;
 
      const columns: Column[] = [
@@ -101,8 +102,9 @@ export default function PostBox(props: PostBoxProps) {
           axios.post(`${process.env.REACT_APP_SERVER}/api/notice/update_view`, {
                     post_id: postId
                }).then(res => {
-               history.push(`/board/detail/${postId}`, {
-                    post_id: postId
+               history.push(`/board/category=${categoryId}/detail/${postId}`, {
+                    post_id: postId,
+                    category_id: categoryId
                })
           })
           .catch(function(error) {

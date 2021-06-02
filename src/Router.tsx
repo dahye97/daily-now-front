@@ -124,7 +124,7 @@ export default function AppRouter() {
 						<Board userObj={userObj} typeNum={"03"} typeName="글수정"/>
 					)}/>
 					<Route
-					exact path="/board/detail/:postId" 
+					exact path="/board/category=:categoryId/detail/:postId" 
 					render={() => (
 						<Board userObj={userObj} typeNum={"04"} typeName="게시물"/>
 					)}/>

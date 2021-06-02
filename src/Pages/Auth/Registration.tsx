@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 		overflow: "hidden",
           textAlign: "center",
           minWidth: "400px",
-          minHeight: '680px',
+          minHeight: '800px',
           height:'100%',
           display:'flex',
           flexDirection:'column',
@@ -184,8 +184,8 @@ export default function Registration() {
           setSelectOpen(!selectOpen)
      }
      const inputList = [
-          { id: "userIdInput", type:"string", labelContent: "이름",  description: "name", errorId: "username", },
           { id: "emailInput", type:"string", labelContent: "이메일 *", width: '100%', description: "email", errorId: "email"},
+          { id: "userIdInput", type:"string", labelContent: "이름 *",  description: "name", errorId: "username", },
           { id: "passwordInput", type:"password", labelContent: "비밀번호 *",  description: "password", condition: "숫자와 문자를 포함한 8자 이상의 문자를 입력해주세요. ", errorId: "password",  },
           { id: "checkpasswordInput", type:"password", labelContent: "비밀번호 재확인 *",  description: "password",condition: "비밀번호를 재입력해주세요.", },
           { id: "ucodeInput", type:"ucode", labelContent: "초대 코드",  description: "invited code", errorId: "ucode",  },

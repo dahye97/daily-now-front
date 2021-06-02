@@ -59,7 +59,8 @@ interface Column {
 }
 
 interface stateType {
-     post_id : number
+     post_id : number,
+     category_id: number
 }
 
 // todo: 세부 게시물 컴포넌트 

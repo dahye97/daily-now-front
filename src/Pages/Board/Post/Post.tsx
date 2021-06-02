@@ -3,11 +3,7 @@ import axios from 'axios'
 import queryString from 'query-string'
 
 import { makeStyles, } from "@material-ui/core/styles";
-import {Container, Tabs,Tab,Typography,Box, useMediaQuery, FormControl, Select} from '@material-ui/core';
-import ChatIcon from '@material-ui/icons/Chat';
-import HearingIcon from '@material-ui/icons/Hearing';
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-import ForumIcon from '@material-ui/icons/Forum';
+import {Container,Typography,Box, useMediaQuery, FormControl, Select} from '@material-ui/core';
 
 import PostBox from 'Pages/Board/Post/Components/PostBox';
 import { postInfo,categoryInfo, searchInfo } from 'Interface/Board';
@@ -53,11 +49,9 @@ export default function Post(props: PostProps) {
      const history = useHistory()
      const isMobile = useMediaQuery("(max-width: 380px)");
 
-     const {categories ,handleCategoryId,categoryId, pageIndex} = props;
+     const {categories ,categoryId, pageIndex} = props;
      const location = useLocation<locationProps>()
 	const queryObj = queryString.parse(location.search);
-
-     const  iconList = [<ChatIcon />, <ForumIcon />, <HearingIcon />, < InsertEmoticonIcon/>]
 
      const [isLoading, setIsLoading] = useState(true)
      const [value, setValue] = React.useState(0);
@@ -97,11 +91,6 @@ export default function Post(props: PostProps) {
      const handleChangeRowsPerPage = (event: React.ChangeEvent<{value: unknown}>) => {
        setRowsPerPage(+(event.target.value as number));
        setPage(1);
-     };
-     // 게시판 탭 클릭 시, 카테고리 ID 변경
-     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-          handleCategoryId(newValue+1)
-          setValue(newValue);
      };
 
      // sort 인풋 핸들러
@@ -154,10 +143,6 @@ export default function Post(props: PostProps) {
                })
      }
 
-     const onClickCategory = (categoryId : number) => {  
-          history.push(`/board?category=${categoryId}&page=1`)
-     }
-
      // 카테고리, rowsperpage, page index 가 변경되면 업데이트
      useEffect(() => {
           // 초기 렌더링
@@ -198,26 +183,6 @@ export default function Post(props: PostProps) {
      return (
          
           <Container maxWidth="md" className={isMobile ? classes.postContainerMobile : classes.postContainer}>
-               <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    className={isMobile? classes.tabsMobile: classes.tabs}
-                    { ...isMobile? {} : {variant : "scrollable", scrollButtons : "on"}}
-               >
-                    {categories.map( (category,index) => {
-                         return (
-                              <Tab 
-                                   key={index} 
-                                   value={category.category_id}
-                                   onClick={() => onClickCategory(category.category_id)} 
-                                   label={category.category_name} 
-                                   icon={iconList[index]} {...a11yProps(index)} 
-                              />
-                         )
-                    })}
-               </Tabs>
                <div style={{display:'flex', justifyContent: 'space-between', paddingTop: '24px'}}>
                     {/* 정렬기준 */}
                     <FormControl className={classes.viewForm}>
@@ -268,6 +233,7 @@ export default function Post(props: PostProps) {
                     return (
                          <TabPanel key={cat.category_id} value={value} index={cat.category_id}>
                               <PostBox 
+                                   categoryId={categoryId}
                                    page={page} 
                                    rowsPerPage={rowsPerPage} 
                                    handleChangePage={handleChangePage} 
@@ -307,10 +273,4 @@ function TabPanel(props: TabPanelProps) {
             )}
           </div>
         );
-}
-function a11yProps(index: any) {
-     return {
-       id: `scrollable-auto-tab-${index}`,
-       'aria-controls': `scrollable-auto-tabpanel-${index}`,
-     };
 }
