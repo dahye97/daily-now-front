@@ -74,12 +74,15 @@ export default function Post(props: PostProps) {
          let label = event.currentTarget.getAttribute("aria-label")
           handleIsSearching(false)
           let nextPage = newPage;
-          if( label === "Go to next page") { // +10, -10 페이지 이동 
+          if( ["Go to next page", "Go to previous page"].includes(label) ) { // +10, -10 페이지 이동 
                if( newPage > page ) {
                     nextPage += 9
                }else nextPage -= 9
-               if( nextPage > Math.floor(postList.count / rowsPerPage + 1)) 
+               if( nextPage > Math.floor(postList.count / rowsPerPage + 1) ){
                     nextPage = Math.floor(postList.count / rowsPerPage + 1)
+               }else if(nextPage < 1){
+                    nextPage = 1
+               }           
           }
           setPage(nextPage);
           if(keyword){

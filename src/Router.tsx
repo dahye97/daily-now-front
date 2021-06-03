@@ -1,6 +1,6 @@
 /** @format */
 import { useState,useEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect, useLocation, useHistory } from "react-router-dom";
 import Home from "Pages/Home/Home";
 import Board from "Pages/Board/Board";
 import Randing from "Pages/Randing/Randing";
@@ -11,6 +11,9 @@ import MyPage from "Pages/MyPage/MyPage";
 import Navigation from "Components/Navigation";
 import {p2pInfo, userInfo} from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
+import Admin from "Pages/Admin/Admin";
+import { NOTFOUND } from "node:dns";
+import AdminNav from "Pages/Admin/AdminNav";
 
 const useStyles = makeStyles({
 	routeContainer : {
@@ -36,6 +39,11 @@ export default function AppRouter() {
 	const [userObj, setUserObj] = useState<userInfo | null>(null)
 	const [P2PList, setP2PList] = useState<p2pInfo[]>([])
 
+	const [isAdmin, setIsAdmin] = useState(false)
+
+	const handleIsAdmin = (value: boolean) => {
+		setIsAdmin(value)
+	}
 	// 로그인 함수 
 	const handleLogIn = ( data: userInfo) => {
 		// console.log(data)
@@ -46,12 +54,15 @@ export default function AppRouter() {
 			"auth_token" : data.auth_token
 		})	
 	}
+
 	// 로그아웃 함수 
 	const handleLogOut = () => {
 		setisLoggedIn(false);
 		setUserObj(null)
 		document.location.href="/";
 		window.sessionStorage.clear();
+
+		handleIsAdmin(false)
 	}
 	
 	// 연동 회사 리스트 저장 함수 
@@ -82,17 +93,26 @@ export default function AppRouter() {
 			setIsP2PReady(true)
 		}
 	}, [P2PList])
+
 	return (
 	
 	<BrowserRouter>
-			<Navigation isLoggedIn={isLoggedIn} handleLogOut={handleLogOut}/>
+			{/* 어드민 페이지로 가면 admin nav를 사용하도록한다.  */}
 			<Switch>
 				<>
-				<div className={classes.routeContainer}>
-					{isLoggedIn &&
+				{/* <div className={classes.routeContainer}> */}
+					{  window.location.pathname !== "/admin" &&
+						<Navigation 
+							isAdmin={isAdmin}
+							isLoggedIn={isLoggedIn} 
+							handleLogOut={handleLogOut} 
+						/>
+					}
+					{isLoggedIn ?
 						<>
-							<Route path="/home" render=
-								{() => <Home 
+							<Route path="/home" 
+							render={() => 
+								<Home 
 									isP2PReady={isP2PReady} 
 									handleLogOut={handleLogOut} 
 									handleAddP2P={handleAddP2P} 
@@ -100,11 +120,27 @@ export default function AppRouter() {
 									registeredP2PList={P2PList}/>}
 							/>
 						
-							<Route exact path="/mypage"render=
-								{() => <MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
+							<Route exact path="/mypage"
+							render={() => 
+								<MyPage handleWithdrawal={handleLogOut} userObj={userObj} />}
 							/>
-	{/* 동일 컴포넌트 내에서 페이지를 이동하고 싶을때, typeNum 과같은 props를 추가하여 board 내부에서 props 에 따라 렌더링해주도록 한다! */}
+							<Route 
+							exact path="/admin" 
+							render={() => (
+								<Admin isAdmin={isAdmin} userObj={userObj}/>
+							)}
+							/>
 						</>
+						:
+						<>
+							<Route exact path="/auth" render={
+								() => <Auth handleIsAdmin={handleIsAdmin} handleLogIn={handleLogIn} typeNum={"01"} typeName="로그인" /> }
+							/>
+							<Route exact path="/auth/find_pw" render={
+								() => <Auth handleIsAdmin={handleIsAdmin} handleLogIn={handleLogIn} typeNum={"02"} typeName="비밀번호 찾기" /> }
+							/>
+						</>
+
 					}
 					<Route exact path="/" component={Randing} />
 					<Route 
@@ -128,16 +164,9 @@ export default function AppRouter() {
 					render={() => (
 						<Board userObj={userObj} typeNum={"04"} typeName="게시물"/>
 					)}/>
-					
-					<Route exact path="/auth" render={
-						() => <Auth handleLogIn={handleLogIn} typeNum={"01"} typeName="로그인" /> }
-					/>
-					<Route exact path="/auth/find_pw" render={
-						() => <Auth handleLogIn={handleLogIn} typeNum={"02"} typeName="비밀번호 재발급" /> }
-					/>
 					<Route path="/registration" component={Registration} />
 					<Route exact path="/faq" component={FAQ} />
-				</div>
+				{/* </div> */}
 				</>
 			</Switch>
 		</BrowserRouter>

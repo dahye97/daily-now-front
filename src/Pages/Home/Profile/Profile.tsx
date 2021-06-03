@@ -1,7 +1,6 @@
 import {Card,CardHeader,CardMedia,CardContent,IconButton,Button,CardActions,Typography,Badge,Avatar,useMediaQuery,Dialog,DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
 import {  makeStyles,withStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SettingsIcon from '@material-ui/icons/Settings';
 import UpdateIcon from '@material-ui/icons/Update';
 import axios from 'axios'
 import { useHistory } from "react-router";
@@ -238,7 +237,6 @@ export default function Profile(props:ProfileProps) {
 						</Dialog>
 						<CardMedia className={classes.cardMedia}>
 			{/* 새로고침 */}	<IconButton onClick={handleClickRefresh}><UpdateIcon className={isMobile? classes.controlButtonMobile : classes.controlButton}/></IconButton>
-		{/* 회원 정보 수정 */}	<IconButton onClick={handleClickSetting}><SettingsIcon className={isMobile? classes.controlButtonMobile : classes.controlButton} /></IconButton>
 			{/* 로그아웃 */}	<IconButton onClick={handleLogOut}><ExitToAppIcon className={isMobile? classes.controlButtonMobile : classes.controlButton} /></IconButton>
 						</CardMedia>
 					</div>

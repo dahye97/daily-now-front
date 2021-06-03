@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import axios from 'axios';
+
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button, useMediaQuery } from "@material-ui/core";
 import logo from 'asset/img/logo.webp'
@@ -78,6 +80,7 @@ const useStyles = makeStyles({
 
 interface AuthProps {
      handleLogIn : ( data: userInfo ) => void
+     handleIsAdmin : ( value: boolean ) => void
      typeNum: string, 
      typeName: string
 }
@@ -86,7 +89,7 @@ export default function Auth (Props:AuthProps) {
      const isMobile = useMediaQuery("(max-width: 380px)");
      const history = useHistory();
 
-     const {handleLogIn,typeNum} = Props;
+     const {handleLogIn,typeNum,handleIsAdmin} = Props;
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
      const [error, setError] = useState(Object)
@@ -121,11 +124,13 @@ export default function Auth (Props:AuthProps) {
                                    handleLogIn(data)
                                    setIsLoggedIn("true")
 
+                                   // 관리자 권한인지 확인
+                                   handleCheckAdmin(data.auth_token)
+
                                    window.sessionStorage.setItem('email', email);
                                    window.sessionStorage.setItem('id', data.id);
                                    window.sessionStorage.setItem('username', data.username);
                                    window.sessionStorage.setItem('auth_token', data.auth_token);
-
                                    history.push("/")
                               
                          }else {
@@ -146,7 +151,23 @@ export default function Auth (Props:AuthProps) {
                .catch(error =>  console.log(error));
                
           }
-
+     
+     const handleCheckAdmin= (token: string) => {
+          axios.get(`${process.env.REACT_APP_SERVER}/api/admin/is_admin`, {
+               headers: {
+                    "Authorization": "Token " + token,
+               }
+          })
+          .then(res => {
+               window.sessionStorage.setItem('isAdmin', "true")
+               handleIsAdmin(true)
+          })
+          .catch(function(error) {
+               window.sessionStorage.setItem('isAdmin', "false")
+               handleIsAdmin(false)
+               console.log(error);
+          })
+     }
      const handleFindPw = () => {
           history.push('/auth/find_pw')
      }
