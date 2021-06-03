@@ -18,7 +18,6 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import AdminNav from "Pages/Admin/AdminNav";
 
 const drawerWidth = 240;
 

@@ -2,9 +2,13 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 
 import { createStyles, makeStyles, Theme,useTheme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,ListItemIcon,ListItemText,Hidden,Typography } from "@material-ui/core";
+import { AppBar, Collapse, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,ListItemIcon,ListItemText,Hidden,Typography } from "@material-ui/core";
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 import { userInfo } from 'Interface/User';
+import { menuInfo } from 'Interface/Admin/AdminMenu';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => 
@@ -36,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) =>
                flexGrow: 1,
                padding: theme.spacing(3),
              },
+             nested: {
+			paddingLeft: theme.spacing(4),
+		   },
          
 	})
 	);
@@ -48,11 +55,12 @@ export default function AdminNav(props: Props) {
      const classes = useStyles();
      const theme = useTheme();
      const [mobileOpen, setMobileOpen] = React.useState(false);
-   
+
+     const [menuList, setMenuList] = useState<menuInfo[]>([])
      const handleDrawerToggle = () => {
        setMobileOpen(!mobileOpen);
      };
-   
+    
      // 좌측 메뉴 리스트 받아오기 
      const getMenuList = () => {
           axios.get(`${process.env.REACT_APP_SERVER}/api/admin/admin_category`, {
@@ -61,7 +69,8 @@ export default function AdminNav(props: Props) {
                }
           })
           .then(res => {
-               console.log(res)
+               console.log(res.data)
+               setMenuList(res.data)
           })
           .catch(function(error) {
                console.log(error);
@@ -70,25 +79,44 @@ export default function AdminNav(props: Props) {
      useEffect(() => {
           getMenuList()
      }, [])
+
+     const [dropDownOpen, setDropDownOpen] = useState('');
+	const handleDropDown = (category_id : number) => {
+          console.log(category_id)
+          if(dropDownOpen === ('menu'+category_id)) setDropDownOpen('menu')
+		else setDropDownOpen('menu'+category_id); 
+	};
+
      const drawer = (
        <div>
          <div className={classes.toolbar} />
          <Divider />
-         <List>
-           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-             <ListItem button key={text}>
-               <ListItemText primary={text} />
-             </ListItem>
-           ))}
-         </List>
+               <List>
+                    {menuList.map((menu, index) => {
+                         return (
+                              <>
+                                   <ListItem 
+                                        button key={index} 
+                                        {...menu.child_category && { onClick: () => handleDropDown(menu.category_id)}}>
+                                        <ListItemText primary={menu.category_name} />
+                                        {dropDownOpen === ('menu'+menu.category_id) ? <ExpandLess /> : <ExpandMore />}
+                                   </ListItem>
+                                   { menu.child_category && 
+                                        <Collapse in={dropDownOpen === ('menu'+menu.category_id)} timeout="auto" unmountOnExit>
+                                             <List component="div" disablePadding>
+                                                  {menu.child_category.map( (detail,index) => {
+                                                       return (<ListItem button key={index} className={classes.nested}>
+                                                            <ListItemText primary={detail.category_name} />
+                                                       </ListItem>)
+                                                  })}
+                                             </List>
+                                        </Collapse>
+                                   }
+                              </>
+                         )
+                    })}
+               </List>
          <Divider />
-         <List>
-           {['All mail', 'Trash', 'Spam'].map((text, index) => (
-             <ListItem button key={text}>
-               <ListItemText primary={text} />
-             </ListItem>
-           ))}
-         </List>
        </div>
      );
    
@@ -110,40 +138,40 @@ export default function AdminNav(props: Props) {
                          <DnsRoundedIcon />
                          </IconButton>
                          <Typography variant="h6" noWrap>
-                         Admin Page
+                         Admin Now
                          </Typography>
                     </Toolbar>
                </AppBar>
                {/* 좌측 Bar */}
-               <nav className={classes.drawer} aria-label="mailbox folders">
-                    <Hidden smUp implementation="css">
-                         <Drawer
-                              container={container}
-                              variant="temporary"
-                              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                              open={mobileOpen}
-                              onClose={handleDrawerToggle}
-                              classes={{
-                              paper: classes.drawerPaper,
-                              }}
-                              ModalProps={{
-                              keepMounted: true, // Better open performance on mobile.
-                              }}
-                              >
-                              {drawer}
-                         </Drawer>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                         <Drawer
-                         classes={{
-                         paper: classes.drawerPaper,
-                         }}
-                         variant="permanent"
-                         open
-                         >
-                         {drawer}
-                         </Drawer>
-                    </Hidden>
+               <nav className={classes.drawer} aria-label="menu folders">
+               <Hidden smUp implementation="css">
+                    <Drawer
+                    container={container}
+                    variant="temporary"
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    classes={{
+                    paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                    }}
+                    >
+                    {drawer}
+                    </Drawer>
+               </Hidden>
+               <Hidden xsDown implementation="css">
+                    <Drawer
+                    classes={{
+                    paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                    >
+                    {drawer}
+                    </Drawer>
+               </Hidden>
                </nav>
           </>
      )

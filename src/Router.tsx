@@ -76,6 +76,7 @@ export default function AppRouter() {
 			const email = window.sessionStorage.getItem('email');
 			const auth_token = window.sessionStorage.getItem('auth_token');
 			const name = window.sessionStorage.getItem('username');
+			const isAdmin = window.sessionStorage.getItem('isAdmin');
 			if(email && auth_token ) {
 				const data = {
 					"email": email,
@@ -83,6 +84,8 @@ export default function AppRouter() {
 					"auth_token": auth_token
 				}
 				handleLogIn(data)
+				if(isAdmin === "true") handleIsAdmin(true)
+				else handleIsAdmin(false)
 			}
 		}
 
