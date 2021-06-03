@@ -12,8 +12,7 @@ import Navigation from "Components/Navigation";
 import {p2pInfo, userInfo} from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
 import Admin from "Pages/Admin/Admin";
-import { NOTFOUND } from "node:dns";
-import AdminNav from "Pages/Admin/AdminNav";
+import UserAdmin from "Pages/Admin/UserAdmin";
 
 const useStyles = makeStyles({
 	routeContainer : {
@@ -100,10 +99,8 @@ export default function AppRouter() {
 	return (
 	
 	<BrowserRouter>
-			{/* 어드민 페이지로 가면 admin nav를 사용하도록한다.  */}
 			<Switch>
 				<>
-				{/* <div className={classes.routeContainer}> */}
 					{  window.location.pathname !== "/admin" &&
 						<Navigation 
 							isAdmin={isAdmin}
@@ -111,8 +108,9 @@ export default function AppRouter() {
 							handleLogOut={handleLogOut} 
 						/>
 					}
-					{isLoggedIn ?
+					{isLoggedIn && userObj ?
 						<>
+						{/* 로그인한 사용자 권한 페이지 */}
 							<Route path="/home" 
 							render={() => 
 								<Home 
@@ -129,13 +127,16 @@ export default function AppRouter() {
 							/>
 							<Route 
 							exact path="/admin" 
-							render={() => (
-								<Admin isAdmin={isAdmin} userObj={userObj}/>
-							)}
-							/>
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"01"} typeName={"관리자 메인"}/> )}/>
+							<Route 
+							path="/admin/user_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"02"} typeName={"사용자 관리"}/>)}/>
+						
+							{/* ... 이후 추가 예정  */}
 						</>
 						:
 						<>
+						{/* 미로그인 사용자 권한 페이지 */}
 							<Route exact path="/auth" render={
 								() => <Auth handleIsAdmin={handleIsAdmin} handleLogIn={handleLogIn} typeNum={"01"} typeName="로그인" /> }
 							/>
@@ -143,7 +144,6 @@ export default function AppRouter() {
 								() => <Auth handleIsAdmin={handleIsAdmin} handleLogIn={handleLogIn} typeNum={"02"} typeName="비밀번호 찾기" /> }
 							/>
 						</>
-
 					}
 					<Route exact path="/" component={Randing} />
 					<Route 

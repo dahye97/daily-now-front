@@ -3,6 +3,7 @@ import React from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import AdminNav from './AdminNav';
+import UserAdmin from './UserAdmin';
 
 const useStyles = makeStyles((theme: Theme) => 
 	createStyles({
@@ -18,13 +19,15 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 	);
 interface AdminProps {
-     userObj: userInfo | null,
-     isAdmin: boolean
+     userObj: userInfo,
+     isAdmin: boolean,
+     typeNum: string, 
+     typeName: string
 }
 
 export default function Admin(props:AdminProps) {
      const classes = useStyles();
-     const { userObj, isAdmin } = props
+     const { userObj, isAdmin, typeNum } = props
      const checkAccess = () => {
           alert('권한이 주어진 사용자만 이용 가능합니다.')
           window.location.href="/"
@@ -40,7 +43,12 @@ export default function Admin(props:AdminProps) {
                          {/* 관리 컴포넌트 */}
                          <main className={classes.content}>
                               <div className={classes.toolbar} />
-                              <div>hello</div>
+                              { typeNum === "01"
+                                   ? <div>메인 페이지</div>
+                              : typeNum === "02"
+                              ? <UserAdmin isAdmin={isAdmin} userObj={userObj} />
+                              : null
+                              }
                          </main>
                     </div>
                </>

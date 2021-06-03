@@ -1,5 +1,7 @@
 export interface menuInfo {
     category_id: number,
     category_name: string,
-    child_category?: menuInfo[]
+    url: string,
+    child_category?: menuInfo[],
+    index?: number
 }

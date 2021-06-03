@@ -8,6 +8,7 @@ import { userInfo } from 'Interface/User';
 import { menuInfo } from 'Interface/Admin/AdminMenu';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { useHistory } from 'react-router';
 
 const drawerWidth = 240;
 
@@ -52,13 +53,15 @@ interface Props {
 }
 export default function AdminNav(props: Props) {
      const { window,userObj } = props;
+     const history= useHistory()
      const classes = useStyles();
      const theme = useTheme();
-     const [mobileOpen, setMobileOpen] = React.useState(false);
-
      const [menuList, setMenuList] = useState<menuInfo[]>([])
+     
+     // 좌측 메뉴 바 토글
+     const [drawerOpen, setDrawerOpen] = React.useState(false);
      const handleDrawerToggle = () => {
-       setMobileOpen(!mobileOpen);
+          setDrawerOpen(!drawerOpen);
      };
     
      // 좌측 메뉴 리스트 받아오기 
@@ -80,9 +83,9 @@ export default function AdminNav(props: Props) {
           getMenuList()
      }, [])
 
+     // 좌측 메뉴 드롭다운 토글
      const [dropDownOpen, setDropDownOpen] = useState('');
 	const handleDropDown = (category_id : number) => {
-          console.log(category_id)
           if(dropDownOpen === ('menu'+category_id)) setDropDownOpen('menu')
 		else setDropDownOpen('menu'+category_id); 
 	};
@@ -93,6 +96,7 @@ export default function AdminNav(props: Props) {
          <Divider />
                <List>
                     {menuList.map((menu, index) => {
+                         console.log(menu)
                          return (
                               <>
                                    <ListItem 
@@ -105,7 +109,14 @@ export default function AdminNav(props: Props) {
                                         <Collapse in={dropDownOpen === ('menu'+menu.category_id)} timeout="auto" unmountOnExit>
                                              <List component="div" disablePadding>
                                                   {menu.child_category.map( (detail,index) => {
-                                                       return (<ListItem button key={index} className={classes.nested}>
+                                                       return (
+                                                       <ListItem 
+                                                            button key={index} 
+                                                            className={classes.nested} 
+                                                            onClick={() => {
+                                                                 history.push('/admin'+detail.url, {index: index})
+                                                            }}
+                                                       >
                                                             <ListItemText primary={detail.category_name} />
                                                        </ListItem>)
                                                   })}
@@ -149,7 +160,7 @@ export default function AdminNav(props: Props) {
                     container={container}
                     variant="temporary"
                     anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                    open={mobileOpen}
+                    open={drawerOpen}
                     onClose={handleDrawerToggle}
                     classes={{
                     paper: classes.drawerPaper,
