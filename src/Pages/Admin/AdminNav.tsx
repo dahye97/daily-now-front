@@ -5,7 +5,7 @@ import { createStyles, makeStyles, Theme,useTheme } from '@material-ui/core/styl
 import { AppBar, Collapse, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,ListItemIcon,ListItemText,Hidden,Typography } from "@material-ui/core";
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 import { userInfo } from 'Interface/User';
-import { menuInfo } from 'Interface/Admin/AdminMenu';
+import { menuInfo } from 'Interface/Admin';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useHistory } from 'react-router';
@@ -96,7 +96,6 @@ export default function AdminNav(props: Props) {
          <Divider />
                <List>
                     {menuList.map((menu, index) => {
-                         console.log(menu)
                          return (
                               <>
                                    <ListItem 

@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 });
 
 interface MyPageProps {
-     userObj: userInfo | null
+     userObj: userInfo
      handleWithdrawal: () => void
 }
 // TODO: 탈퇴, 회원정보 수정
@@ -68,8 +68,7 @@ export default function MyPage( props: MyPageProps) {
      const onSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
           let button = e.currentTarget.id;
-          
-          if (props.userObj !== null) {
+
                // 회원 탈퇴 
                if (button === "withDrawButton") {
                     fetch(`${process.env.REACT_APP_SERVER}/api/auth/withdrawal`, {
@@ -119,7 +118,6 @@ export default function MyPage( props: MyPageProps) {
                          .catch(error =>  console.log(error));
                     }
           }
-     }
      const classes = useStyles()
 
      const inputList = [

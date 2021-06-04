@@ -3,7 +3,7 @@ import React from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import AdminNav from './AdminNav';
-import UserAdmin from './UserAdmin';
+import UserAdmin from './UserAdmin/UserAdmin';
 
 const useStyles = makeStyles((theme: Theme) => 
 	createStyles({

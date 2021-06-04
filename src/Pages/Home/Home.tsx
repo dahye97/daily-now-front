@@ -83,7 +83,7 @@ const useStyles = makeStyles({
 });
 
 interface HomeProps {
-	userObj: userInfo | null,
+	userObj: userInfo,
 	registeredP2PList: p2pInfo[]
 	handleLogOut: () => void,
 	handleAddP2P : (data: p2pInfo[]) => void,
