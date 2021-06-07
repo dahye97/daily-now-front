@@ -22,9 +22,16 @@ export default function Mail(props: MailProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
      
+     const [isUpdated, setIsUpdated] = useState(false)
+     const handleIsUpdate = () => {
+          setIsUpdated(!isUpdated)
+     }
      useEffect(() => {
-          setSelectedUser([])
-     }, [])
+         if(isUpdated) {
+              getUserList()
+              handleIsUpdate()
+         }
+     }, [isUpdated])
 
      useEffect(() => {
           console.log(tabName, history)
@@ -50,28 +57,30 @@ export default function Mail(props: MailProps) {
      const [selectedUser, setSelectedUser] = useState<memberInfo[]>([]);
 
      const handleSelect = (data: GridRowData) => {
-          setSelectedUser([...selectedUser, ...selectList.filter((r) => r.id === data.id )]);
+          setSelectedUser(
+               data.selectionModel.map( (ele:any) => {
+                    return (selectList.filter((r)=>  r.id === ele )[0])}
+               )
+          )
      }
+     useEffect(() => {
+          console.log('전송 하고 싶은 유저', selectedUser)
+     }, [selectedUser])
 
      const handleNewMail = () => {
-          console.log('전송하고 싶은 유저', selectedUser)
           if( selectedUser.length === 0) {
                alert('메일을 전송하려는 회원을 선택해주세요.')
           } else {
-               setSelectList(
-                    selectList.filter((r) => selectedUser.filter((sr) => sr.id === r.id).length < 1)
-               );
                history.push('/admin/user_admin/mail?tabName=NEW_MAIL', {
                     index: index
                })
           }
         };
 
-
      return (
           <>
                { tabName === "NEW_MAIL"
-               ? <MailForm userObj={userObj} selectedUser={selectedUser}/>
+               ? <MailForm userObj={userObj} selectedUser={selectedUser} handleIsUpdate={handleIsUpdate}/>
                : 
                     <>
                     <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
@@ -79,13 +88,13 @@ export default function Mail(props: MailProps) {
                          <Button color="primary" variant="contained" onClick={handleNewMail} >메일 작성</Button>    
                     </div>
                     { userList && 
-                              <div style={{ height: 400, width: '100%'}}>
+                              <div style={{ height: "100vh", width: '100%'}}>
                                    <DataGrid
                                    rows={userList}
                                    columns={columns}
-                                   pageSize={10}
+                                   pageSize={20}
                                    checkboxSelection
-                                   onRowSelected={(e) => handleSelect(e.data)}
+                                   onSelectionModelChange={itm => handleSelect({ selectionModel: itm.selectionModel})}
                                    />
                               </div>
                     }

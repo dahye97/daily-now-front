@@ -16,12 +16,13 @@ const useStyles = makeStyles({
    });
 interface MailFormProps {
      userObj: userInfo,
-     selectedUser: memberInfo[]
+     selectedUser: memberInfo[],
+     handleIsUpdate: () => void
 }
 export default function MailForm(props:MailFormProps) {
      const classes = useStyles()
      const history = useHistory()
-     const { userObj, selectedUser } = props
+     const { userObj, selectedUser, handleIsUpdate } = props
      const [title, setTitle] = useState("")
      const [content, setContent] = useState("")
 
@@ -38,7 +39,10 @@ export default function MailForm(props:MailFormProps) {
           })
           .then(res => {
                alert('메일 전송이 완료되었습니다.')
-               history.goBack()
+               history.push('/admin/user_admin/mail', {
+                    index : 2
+               })
+               handleIsUpdate()
           })
           .catch(function(error) {
                console.log(error);
