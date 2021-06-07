@@ -8,10 +8,11 @@ import { useHistory } from 'react-router';
 interface UserFormProps {
      selectedUser : memberInfo[],
      userObj: userInfo,
+     handleIsUpdated : () => void
 }
 
 export default function UserForm(props:UserFormProps) {
-     const {selectedUser,userObj} = props;
+     const {selectedUser,userObj,handleIsUpdated} = props;
      const history = useHistory()
 
      const [username, setUsername] = useState(selectedUser[0].username)
@@ -32,6 +33,7 @@ export default function UserForm(props:UserFormProps) {
                history.push('/admin/user_admin', {
                     index : 0
                })
+               handleIsUpdated()
           })
           .catch(function(error) {
                console.log(error);
@@ -41,6 +43,7 @@ export default function UserForm(props:UserFormProps) {
           history.push('/admin/user_admin', {
                index : 0
           })
+          handleIsUpdated()
     }
      return (
           <div>

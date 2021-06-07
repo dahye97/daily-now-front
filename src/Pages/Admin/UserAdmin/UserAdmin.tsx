@@ -9,6 +9,7 @@ import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import { Button } from '@material-ui/core'
 import queryString from 'query-string'
 import UserForm from './UserForm'
+import UserDelete from './UserDelete'
 
 interface UserAdminProps {
      userObj: userInfo,
@@ -26,6 +27,18 @@ export default function UserAdmin(props: UserAdminProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
+     // 회원 정보 업데이트를 위한 핸들러
+     const [isUpdated, setIsUpdated] = useState(false)
+     const handleIsUpdated = () => {
+          setIsUpdated(!isUpdated)
+     }
+
+     useEffect(() => {
+          if(isUpdated) {
+               getUserList()
+               handleIsUpdated()
+          }
+     }, [isUpdated])
      const columns: GridColDef[] = [
           { field: 'id', headerName: 'ID', width: 150, align:'center', headerAlign:'center'},
           { field: 'username', headerName: '이름', width: 150 ,align:'center',  headerAlign:'center'},
@@ -74,13 +87,10 @@ export default function UserAdmin(props: UserAdminProps) {
      }
 
      useEffect(() => {
-          console.log('수정하고 싶은 유저', selectedUser)
+          console.log('선택한 유저', selectedUser)
      }, [selectedUser])
 
      const handleUserToDelete = () => {
-          setSelectList(
-               selectList.filter((r) => selectedUser.filter((sr) => sr.id === r.id).length < 1)
-          );
           history.push('/admin/user_admin?tabName=DELETE_USER',{
                index: index
           })
@@ -106,12 +116,18 @@ export default function UserAdmin(props: UserAdminProps) {
                : (
                     tabName === "EDIT_USER" 
                     ?
-                         <UserForm userObj={userObj} selectedUser={selectedUser}/>
+                         <UserForm userObj={userObj} selectedUser={selectedUser} handleIsUpdated={handleIsUpdated}/>
+                    : tabName === "DELETE_USER"
+                    ?
+                         <UserDelete userObj={userObj} selectedUser={selectedUser} handleIsUpdated={handleIsUpdated}/>
                     :
                          <>
                               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                                    <h2>사용자 관리 페이지</h2>
-                                   <Button color="primary" variant="contained" onClick={handleUserToEdit} >선택 수정</Button>    
+                                   <div>
+                                        <Button color="primary" variant="contained" onClick={handleUserToEdit} >선택 회원 수정</Button>    
+                                        <Button color="primary" variant="contained" onClick={handleUserToDelete} >선택 회원 삭제</Button>    
+                                   </div>
                               </div>
                               { userList && 
                                    <div style={{ width: '100%', height:'100vh'}}>
@@ -120,7 +136,7 @@ export default function UserAdmin(props: UserAdminProps) {
                                         columns={columns}
                                         pageSize={20}
                                         checkboxSelection
-                                        onSelectionModelChange={itm => handleSelect({ selectionModel: itm.selectionModel})}
+                                        onSelectionModelChange={(itm:any) => handleSelect({ selectionModel: itm.selectionModel})}
                                    />
                                    </div>
                               }
