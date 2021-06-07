@@ -17,12 +17,12 @@ const useStyles = makeStyles({
 interface MailFormProps {
      userObj: userInfo,
      selectedUser: memberInfo[],
-     handleIsUpdate: () => void
+     handleIsUpdated: () => void
 }
 export default function MailForm(props:MailFormProps) {
      const classes = useStyles()
      const history = useHistory()
-     const { userObj, selectedUser, handleIsUpdate } = props
+     const { userObj, selectedUser, handleIsUpdated } = props
      const [title, setTitle] = useState("")
      const [content, setContent] = useState("")
 
@@ -42,20 +42,27 @@ export default function MailForm(props:MailFormProps) {
                history.push('/admin/user_admin/mail', {
                     index : 2
                })
-               handleIsUpdate()
+               handleIsUpdated()
           })
           .catch(function(error) {
                console.log(error);
           })
      }
-     useEffect(() => {
-          console.log(selectedUser)
-     }, [])
+
+     const handleCancel = () => {
+          history.push('/admin/user_admin/mail', {
+               index : 2
+          })
+          handleIsUpdated()
+    }
      return (
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                     <h2>새 메일 작성</h2>
-                    <Button color="primary" variant="contained" onClick={handleSubmit} >메일 전송</Button>    
+                    <div>
+                         <Button color="primary" variant="contained" onClick={handleSubmit} >메일 전송</Button>    
+                         <Button color="primary" variant="contained" onClick={handleCancel} >돌아가기</Button>    
+                    </div>
                </div>
 
                <form className={classes.mailForm}>

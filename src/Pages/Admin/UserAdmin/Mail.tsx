@@ -23,13 +23,13 @@ export default function Mail(props: MailProps) {
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
      
      const [isUpdated, setIsUpdated] = useState(false)
-     const handleIsUpdate = () => {
+     const handleIsUpdated = () => {
           setIsUpdated(!isUpdated)
      }
      useEffect(() => {
          if(isUpdated) {
               getUserList()
-              handleIsUpdate()
+              handleIsUpdated()
          }
      }, [isUpdated])
 
@@ -80,7 +80,7 @@ export default function Mail(props: MailProps) {
      return (
           <>
                { tabName === "NEW_MAIL"
-               ? <MailForm userObj={userObj} selectedUser={selectedUser} handleIsUpdate={handleIsUpdate}/>
+               ? <MailForm userObj={userObj} selectedUser={selectedUser} handleIsUpdated={handleIsUpdated}/>
                : 
                     <>
                     <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
