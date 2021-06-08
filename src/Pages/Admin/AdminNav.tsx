@@ -97,7 +97,7 @@ export default function AdminNav(props: Props) {
                <List>
                     {menuList.map((menu, index) => {
                          return (
-                              <>
+                              <div key={index}>
                                    <ListItem 
                                         button key={index} 
                                         {...menu.child_category && { onClick: () => handleDropDown(menu.category_id)}}>
@@ -110,7 +110,8 @@ export default function AdminNav(props: Props) {
                                                   {menu.child_category.map( (detail,index) => {
                                                        return (
                                                        <ListItem 
-                                                            button key={index} 
+                                                            button 
+                                                            key={index} 
                                                             className={classes.nested} 
                                                             onClick={() => {
                                                                  history.push('/admin'+detail.url, {index: index})
@@ -122,7 +123,7 @@ export default function AdminNav(props: Props) {
                                              </List>
                                         </Collapse>
                                    }
-                              </>
+                              </div>
                          )
                     })}
                </List>

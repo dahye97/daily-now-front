@@ -84,15 +84,17 @@ export default function Category(props: CategoryProps) {
                     { ...isMobile? {} : {variant : "scrollable", scrollButtons : "on"}}
                >
                     {categories.map( (category,index) => {
-                         return (
-                              <Tab 
-                                   key={index} 
-                                   value={category.category_id}
-                                   onClick={() => onClickCategory(category.category_id)} 
-                                   label={category.category_name} 
-                                   icon={iconList[index]} {...a11yProps(index)} 
-                              />
-                         )
+                         if(!category.flag){
+                              return (
+                                   <Tab 
+                                        key={index} 
+                                        value={category.category_id}
+                                        onClick={() => onClickCategory(category.category_id)} 
+                                        label={category.category_name} 
+                                        icon={iconList[index]} {...a11yProps(index)} 
+                                   />
+                              )
+                         }
                     })}
                </Tabs>    
 

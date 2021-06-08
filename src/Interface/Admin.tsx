@@ -18,8 +18,15 @@ export interface memberInfo {
     total_point: number // 총 포인트
 }
 
+// 일일 회원 통계 정보
 export interface statisticsInfo {
     new_user: number, // 신규 가입 수
     total_user: number, // 일일 누적 회원 수 
     withdrawal_user: number // 탈퇴 회원 수 
+}
+
+// 카테고리 업데이트 시 정보
+export interface categoryInfo {
+    category_id : number, // 변경할 카테고리 아이디
+    new_category_name: string // 변경할 새로운 카테고리 이름
 }

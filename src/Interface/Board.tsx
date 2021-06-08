@@ -1,7 +1,9 @@
 // 게시판: 게시판 카테고리, 게시글, 세부 게시글, 댓글
 export interface categoryInfo {
+     id?: number,
      category_id : number,
-     category_name: string
+     category_name: string,
+     flag: boolean
 }
 
 export interface postInfo {
