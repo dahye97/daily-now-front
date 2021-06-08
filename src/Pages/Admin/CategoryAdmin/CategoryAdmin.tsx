@@ -36,7 +36,7 @@ export default function CategoryAdmin(props:CatAdminProps) {
      const columns: GridColDef[] = [
           { field: 'category_id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
           { field: 'category_name', headerName: '제목', width: 150 ,align:'center',  headerAlign:'center'},
-          { field: 'flag', headerName: '비공개 여부', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'flag', headerName: '공개 여부', width: 150 ,align:'center',  headerAlign:'center'},
         ];
 
      const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
@@ -73,10 +73,15 @@ export default function CategoryAdmin(props:CatAdminProps) {
           let rowList:GridRowData[] = [];
          if(categoryList) {
               categoryList.map(cat => {
+                    let flagValue = '공개';
+                    if(cat.flag === true) {
+                         flagValue = '비공개'
+                    }
                    rowList.push(
                         {
                          id: cat.category_id,
-                         ...cat
+                         ...cat,
+                         flag : flagValue,
                         }
                    )
               })
