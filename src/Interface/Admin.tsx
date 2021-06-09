@@ -26,7 +26,18 @@ export interface statisticsInfo {
 }
 
 // 카테고리 업데이트 시 정보
-export interface categoryInfo {
+export interface categoryAdminInfo {
     category_id : number, // 변경할 카테고리 아이디
     new_category_name: string // 변경할 새로운 카테고리 이름
+}
+
+// 포인트 및 사용자 정보 
+export interface pointAdmin {
+    action: string,
+    date: string,
+    detail_action: string,
+    email: string,
+    id: number,
+    point: number,
+    total_point: number,
 }
