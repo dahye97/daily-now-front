@@ -35,7 +35,7 @@ const useStyles= makeStyles( {
           alignItems:'flex-end',
      }
 })
-function createDate(date: Date) : string { 
+export function createDate(date: Date) : string { 
      let d = new Date(date)
      let year = d.getFullYear().toString()
      let month = (d.getMonth() + 1).toString()
@@ -77,6 +77,7 @@ export default function Point(props: PointProps) {
           if(startDate && endDate) {
                firstData = createDate(startDate)
                secondData = createDate(endDate) 
+               console.log(firstData,secondData)
           }
           if( userObj !== null && url !== 'false') {
 

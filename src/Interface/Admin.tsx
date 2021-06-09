@@ -41,3 +41,11 @@ export interface pointAdmin {
     point: number,
     total_point: number,
 }
+
+// 포인트 및 사용자 정보 
+export interface pointCategoryInfo {
+    id: number,
+    action: string,
+    limit_number_of_day: number,
+    point_value: number,
+}

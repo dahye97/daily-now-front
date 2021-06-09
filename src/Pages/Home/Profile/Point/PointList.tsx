@@ -43,7 +43,6 @@ export default function PointList(props : pointType) {
      // date 처리
      const realDate = date.split('T')[0].replaceAll('-','. ')
      const realTime = date.split('T')[1].split('.')[0]
-     console.log(realTime)
      return (
           <Paper className={classes.pointItem}>
                <ul className={classes.ulTag} style={{listStyle: 'none'}}>

@@ -5,7 +5,7 @@ import { Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, T
 import axios from 'axios';
 import { Button, ListItem, List,ListItemText } from '@material-ui/core';
 
-import { memberInfo } from 'Interface/Admin';
+import { memberInfo, pointCategoryInfo } from 'Interface/Admin';
 import { userInfo } from 'Interface/User';
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -19,10 +19,16 @@ const columns: GridColDef[] = [
    
 interface PointProps {
      userObj: userInfo,
+     pointCategory: pointCategoryInfo[],
+     getPointCategory: () => void
 }
 const useStyles = makeStyles({
      rewardForm: {
-          maxWidth: '900px'
+          maxWidth: '900px',
+          display:'flex',
+          flexDirection:'column', 
+          padding: '30px', 
+          marginBottom:'30px'
      },
      inputForm: {
           margin:'0 20px',
@@ -32,11 +38,12 @@ const useStyles = makeStyles({
      },
      inputLabel : {
           width: "100px",
-          minWidth:'100px'
+          minWidth:'100px',
+          marginRight:'10px'
      }
 })
 export default function PointReward(props:PointProps) {
-     const {userObj} = props;
+     const {userObj,getPointCategory, pointCategory} = props;
      const [userList, setUserList] = useState<memberInfo[]>([])
      const classes = useStyles()
      
@@ -62,8 +69,14 @@ export default function PointReward(props:PointProps) {
 
      useEffect(() => {
           getUserList()
+          getPointCategory()
      }, [])
      
+     useEffect(() => {
+          if(pointCategory){
+               console.log(pointCategory.filter( point => point.id === 99))
+          }
+     }, [pointCategory])
      const [selectList, setSelectList] = useState<memberInfo[]>([])
      const [selectedUser, setSelectedUser] = useState<memberInfo[]>([]);
      const handleSelect = (data: { selectionModel: GridRowId[]}) => {
@@ -86,8 +99,26 @@ export default function PointReward(props:PointProps) {
      const [type, setType] = useState(1) // 적립 유형 , 1: 지급, 0: 차감
      const [value, setValue] = useState(0) // 적립 금액 
 
+     useEffect(() => {
+          if(pointCategory.length !== 0){
+               if( type === 1){
+                    setValue( (pointCategory.filter( point => point.id === 99))[0].point_value )
+               }else {
+                    setValue( (pointCategory.filter( point => point.id === 100))[0].point_value ) 
+               }
+          }
+     }, [type])
+
      const handleSubmit = () => {
-          
+          // 적립 포인트 
+          if( value !== 1 ) { // 포인트 값 변경 시
+               changePoint(type)
+          }else {
+               addPoint()
+          }
+     }
+
+     const addPoint = () => {
           let urlQuery;
           // 포인트 유형 
           if( type === 1) urlQuery = "add_point" // 1 : 지급
@@ -103,32 +134,60 @@ export default function PointReward(props:PointProps) {
           }
 
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/${urlQuery}`, {
-              all : toAllMember,
-              email : emailList 
-          },{
-               headers: {
-                    "Authorization": "Token " + userObj.auth_token,
-               }
-          })
-          .then(res => {
-               alert('포인트 등록이 완료되었습니다.')
-               handleClose()
-               initData()
-          })
-          .catch(function(error) {
-               console.log(error);
-          })
+               all : toAllMember,
+               email : emailList 
+           },{
+                headers: {
+                     "Authorization": "Token " + userObj.auth_token,
+                }
+           })
+           .then(res => {
+                alert('포인트 등록이 완료되었습니다.')
+                handleClose()
+                initData()
+           })
+           .catch(function(error) {
+                console.log(error);
+           })
      }
+     const changePoint = (type: number) => {
 
+          let action_id;
+          if( type === 1 ){ // 지급 
+               action_id = 99
+          } else if(  type === 0 ) { // 차감
+               action_id = 100
+          }
+          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/update_point_action`, {
+               "point_action_id":action_id,
+               "action":null,
+               "point_value": value,
+               "limit_number_of_day":null
+           },{
+                headers: {
+                     "Authorization": "Token " + userObj.auth_token,
+                }
+           })
+           .then(res => {
+                alert('포인트 변경이 완료되었습니다.')
+                getPointCategory()
+                addPoint()
+           })
+           .catch(function(error) {
+                console.log(error);
+           })
+     }
      const initData = () => {
           setToAllMember(0)
           setType(1)
-          setValue(0)
+          setValue(1)
           setSelectedUser([])
      }
      const [open, setOpen] = React.useState(false);
      const handleClickOpen = () => {
-       setOpen(true);
+          if(selectedUser.length === 0){
+               alert('포인트 조정을 원하는 회원을 선택해주세요.')
+          }else setOpen(true);
      };
      const handleClose = () => {
        setOpen(false);
@@ -140,10 +199,11 @@ export default function PointReward(props:PointProps) {
 
                <h3>포인트 지급/차감 설정</h3>
 
-                    <Paper className={classes.rewardForm} style={{display:'flex',flexDirection:'column', padding: '20px', marginBottom:'30px'}}>
+                    <Paper className={classes.rewardForm} >
                          <FormControl className={classes.inputForm} >
                               <FormLabel className={classes.inputLabel}>적립유형</FormLabel>
                               <Select
+                                   autoFocus
                                    id="type"
                                    value={type}
                                    onChange={(event: React.ChangeEvent<{ value: unknown }>) => 
@@ -160,10 +220,10 @@ export default function PointReward(props:PointProps) {
                                    <FormLabel className={classes.inputLabel}>조정 대상</FormLabel>
                                    <div>
                                         <Input 
+                                             disabled
                                              style={{margin: 0, marginTop: '16px'}}
                                              id="email"
                                              fullWidth
-                                             autoFocus
                                              multiline
                                              rowsMax="10"
                                              placeholder="회원 이메일"
@@ -176,12 +236,22 @@ export default function PointReward(props:PointProps) {
                          </FormControl>
                          <FormControl className={classes.inputForm} >
                               <FormLabel className={classes.inputLabel}>적립포인트</FormLabel>
-                              <Input 
-                              placeholder="적립 포인트 입력"
-                              id="value"
-                              onChange={(e:React.ChangeEvent<HTMLInputElement>) => 
-                                   setValue(Number(e.currentTarget.value))
-                              }/>
+                              <div>
+                                   <Input 
+                                   value={value}
+                                   id="value"
+                                   onChange={(e:React.ChangeEvent<HTMLInputElement>) => 
+                                        setValue(Number(e.currentTarget.value))
+                                   }/>
+                                   { pointCategory.length !== 0 && 
+                                        <FormHelperText id="value-helper-text">
+                                             <b>지급</b> 기본값은 { pointCategory && (pointCategory.filter( point => point.id === 99))[0].point_value } 포인트, 
+                                             <b> 차감</b> 기본값은 { pointCategory && (pointCategory.filter( point => point.id === 100))[0].point_value } 포인트가 적용됩니다.
+                                             <br />
+                                             <b>차감</b> 시, <b>-</b> 부호를 함께 입력해주세요.
+                                        </FormHelperText>
+                                   }
+                              </div>
                          </FormControl>
 
                          <div style={{display:'block', textAlign:'right'}}>
@@ -216,7 +286,7 @@ export default function PointReward(props:PointProps) {
                               <ListItem>
                                    <ListItemText 
                                    primary={ <div>조정 대상</div> } 
-                                   secondary={type === 1? selectedUser.map(user=> user.email + ", ") : "모든 회원"}/>
+                                   secondary={toAllMember === 1 ? selectedUser.map(user=> user.email + ", ") : "모든 회원"}/>
                               </ListItem>
                               <ListItem>
                                    <ListItemText 
@@ -226,7 +296,7 @@ export default function PointReward(props:PointProps) {
                               <ListItem>
                                    <ListItemText 
                                    primary={ <div>적립포인트</div> } 
-                                   secondary={value}/>
+                                   secondary={value + "P"}/>
                               </ListItem>
                          </List>
                          <DialogContentText>

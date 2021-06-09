@@ -8,6 +8,8 @@ import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import queryString from 'query-string'
 import PointCategory from './PointCategory';
 import PointReward from './PointReward';
+import { createDate } from 'Pages/Home/Profile/Point/Point';
+import { pointCategoryInfo } from 'Interface/Admin';
 
 
 interface UserAdminProps {
@@ -48,10 +50,17 @@ export default function PointAdmin(props: UserAdminProps) {
           { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
         ];
 
+     const [startDate, handleStartDate] = useState<Date | null>(new Date());
+     const [endDate, handleEndDate] = useState<Date | null>(new Date());
+     let firstData = createDate(new Date());
+     let secondData = createDate(new Date());
+
      const [pointList, setPointList] = useState<pointAdmin[]>([])
      const getPointList = () => {
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/point_list`, {
                page_size: 20,
+               start:"2021-06-09",
+               end: "2021-06-09",
                email:null
           },{
                headers: {
@@ -88,12 +97,29 @@ export default function PointAdmin(props: UserAdminProps) {
           console.log('선택한 유저', selectedUser)
      }, [selectedUser])
 
+     const [pointCategory, setPointCategory] = useState<pointCategoryInfo[]>([])
+     const getPointCategory = () =>{
+          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/point_action_list`, {
+               page_size: 20,
+          },{
+               headers: {
+                    "Authorization": "Token " + userObj.auth_token,
+               }
+          })
+          .then(res => {
+               console.log(res.data.results)
+               setPointCategory(res.data.results)
+          })
+          .catch(function(error) {
+               console.log(error);
+          })
+     }
      return (
           <>
           {index === 1
-               ? <PointCategory userObj={userObj} />
+               ? <PointCategory userObj={userObj} pointCategory={pointCategory} getPointCategory={getPointCategory}/>
           : index === 2
-               ? <PointReward userObj={userObj}/>
+               ? <PointReward userObj={userObj}  pointCategory={pointCategory} getPointCategory={getPointCategory} />
           :
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>

@@ -6,13 +6,16 @@ import { categoryInfo } from 'Interface/Board';
 import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
+import { pointCategoryInfo } from 'Interface/Admin';
 
 interface CatAdminProps {
      userObj: userInfo,
+     pointCategory: pointCategoryInfo[],
+     getPointCategory: () => void,
 }
 
 export default function PointCategory(props:CatAdminProps) {
-     const { userObj } = props;
+     const { userObj,getPointCategory, pointCategory } = props;
      const history= useHistory()
 
      const location = useLocation()
@@ -27,31 +30,19 @@ export default function PointCategory(props:CatAdminProps) {
   
        useEffect(() => {
             if(isUpdated) {
-               getCategoryList()
                handleIsUpdated()
             }
        }, [isUpdated])
 
      const columns: GridColDef[] = [
-          { field: 'category_id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
-          { field: 'category_name', headerName: '제목', width: 150 ,align:'center',  headerAlign:'center'},
-          { field: 'flag', headerName: '공개 여부', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'id', headerName: 'ID', width: 150, align:'center', headerAlign:'center'},
+          { field: 'action', headerName: '내용', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'point_value', headerName: '지급 포인트', type: 'number', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'limit_number_of_day', headerName: '지급 제한 수', width: 150 ,align:'center',  headerAlign:'center'},
         ];
 
-     const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
-     const getCategoryList = () => {
-          axios.get(`${process.env.REACT_APP_SERVER}/api/notice/category_list`)
-               .then(res => {
-                    setCategoryList(res.data)
-                    setSelectList(res.data)
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })  
-     }
-
      useEffect(() => {
-          getCategoryList()
+          getPointCategory()
      }, [])
 
      const [selectList, setSelectList] = useState<categoryInfo[]>([])
@@ -64,29 +55,10 @@ export default function PointCategory(props:CatAdminProps) {
           )
      }
      useEffect(() => {
-          console.log('선택한 카테고리', selectedCat)
+          console.log('선택한 포인트 종류', selectedCat)
      }, [selectedCat])
 
      const [rows, setRows] = useState<GridRowData[]>([])
-     useEffect(() => {
-          let rowList:GridRowData[] = [];
-         if(categoryList) {
-              categoryList.map(cat => {
-                    let flagValue = '공개';
-                    if(cat.flag === true) {
-                         flagValue = '비공개'
-                    }
-                   rowList.push(
-                        {
-                         id: cat.category_id,
-                         ...cat,
-                         flag : flagValue,
-                        }
-                   )
-              })
-         }
-         setRows(rowList)
-     }, [categoryList])
 
 
      const [newCatName, setNewCatName] = useState("")
@@ -101,7 +73,6 @@ export default function PointCategory(props:CatAdminProps) {
           })
           .then(res => {
                alert('카테고리 추가가 완료되었습니다.')
-               getCategoryList()
                handleClose()
           })
           .catch(function(error) {
@@ -111,11 +82,14 @@ export default function PointCategory(props:CatAdminProps) {
 
      const handleEditCategory = () => {
           if( selectedCat.length === 1) {
-               history.push('/admin/category_admin?tabName=EDIT_CAT')
-
+               history.push('/admin/point_admin/category?tabName=EDIT_POINT')
           }else {
-               alert('정보 수정을 원하는 카테고리 1개를 선택해주세요.')
+               alert('정보 수정을 원하는 포인트 1개를 선택해주세요.')
           }
+     }
+
+     const handleDeletePoint = () => {
+
      }
      const [open, setOpen] = useState(false);
      const handleClickOpen = () => {
@@ -129,14 +103,16 @@ export default function PointCategory(props:CatAdminProps) {
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                     <h2>포인트 종류 관리</h2>
                     <div>
-                         <Button color="primary" variant="contained" onClick={handleClickOpen}>새 카테고리 추가</Button>    
+                         <Button color="primary" variant="contained" onClick={handleClickOpen}>새 포인트 추가</Button>    
                          <Button color="primary" variant="contained" onClick={handleEditCategory} >선택 수정</Button>    
+                         <Button color="primary" variant="contained" onClick={handleDeletePoint} >선택 삭제</Button>    
                     </div>
+                    
                </div>       
                { rows && 
                     <div style={{ width: '100%', height:'100vh'}}>
                     <DataGrid
-                         rows={rows}
+                         rows={pointCategory}
                          columns={columns}
                          pageSize={20}
                          checkboxSelection
