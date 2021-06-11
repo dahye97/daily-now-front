@@ -7,6 +7,7 @@ import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
 import { pointCategoryInfo } from 'Interface/Admin';
+import PointForm from './PointForm';
 
 interface CatAdminProps {
      userObj: userInfo,
@@ -30,6 +31,7 @@ export default function PointCategory(props:CatAdminProps) {
   
        useEffect(() => {
             if(isUpdated) {
+               getPointCategory()
                handleIsUpdated()
             }
        }, [isUpdated])
@@ -45,26 +47,28 @@ export default function PointCategory(props:CatAdminProps) {
           getPointCategory()
      }, [])
 
-     const [selectList, setSelectList] = useState<categoryInfo[]>([])
-     const [selectedCat, setSelectedCat] = useState<categoryInfo[]>([]);
+     const [selectedAction, setSelectedAction] = useState<pointCategoryInfo[]>([]);
      const handleSelect = (data: { selectionModel: GridRowId[]}) => {
-          setSelectedCat(
+          setSelectedAction(
                data.selectionModel.map( (ele:any) => {
-                    return (selectList.filter((r)=>  r.category_id === ele)[0])}
+                    return (pointCategory.filter((r)=>  r.id === ele)[0])}
                )
           )
      }
      useEffect(() => {
-          console.log('선택한 포인트 종류', selectedCat)
-     }, [selectedCat])
+          console.log('선택한 포인트 종류', selectedAction)
+     }, [selectedAction])
 
      const [rows, setRows] = useState<GridRowData[]>([])
 
-
-     const [newCatName, setNewCatName] = useState("")
+     const [newAction, setNewAction] = useState("")
+     const [newValue, setNewValue] = useState(1)
+     const [newLimit, setNewLimit] = useState(1)
      const handleAddCategory = () => {
-          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/category/add_category`,{
-               category_name: newCatName
+          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/add_point_action`,{
+               "action": newAction,
+               "point_value": newValue,
+               "limit_number_of_day": newLimit
           },
           {
                headers: {
@@ -72,7 +76,8 @@ export default function PointCategory(props:CatAdminProps) {
                }
           })
           .then(res => {
-               alert('카테고리 추가가 완료되었습니다.')
+               alert('포인트 Action 추가가 완료되었습니다.')
+               getPointCategory()
                handleClose()
           })
           .catch(function(error) {
@@ -81,15 +86,32 @@ export default function PointCategory(props:CatAdminProps) {
      }
 
      const handleEditCategory = () => {
-          if( selectedCat.length === 1) {
-               history.push('/admin/point_admin/category?tabName=EDIT_POINT')
+          if( selectedAction.length === 1) {
+               history.push('/admin/point_admin/category?tabName=EDIT_POINT', {
+                    index: 1
+               })
           }else {
-               alert('정보 수정을 원하는 포인트 1개를 선택해주세요.')
+               alert('정보 수정을 원하는 포인트 종류를 선택해주세요.')
           }
      }
 
      const handleDeletePoint = () => {
-
+          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/delete_point_action`,{
+               "point_action_id":selectedAction.map( action => action.id),
+          },
+          {
+               headers: {
+                    "Authorization": "Token " + userObj.auth_token,
+               }
+          })
+          .then(res => {
+               alert('포인트 Action 삭제 완료되었습니다.')
+               getPointCategory()
+               handleClose()
+          })
+          .catch(function(error) {
+               console.log(error);
+          })
      }
      const [open, setOpen] = useState(false);
      const handleClickOpen = () => {
@@ -99,6 +121,11 @@ export default function PointCategory(props:CatAdminProps) {
        setOpen(false);
      };
      return (
+          <>
+          {tabName === "EDIT_POINT"
+          ?
+               <PointForm userObj={userObj} selectedAction={selectedAction} handleIsUpdated={handleIsUpdated}/>
+          :
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                     <h2>포인트 종류 관리</h2>
@@ -127,20 +154,38 @@ export default function PointCategory(props:CatAdminProps) {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                         새 카테고리 추가
+                         새 포인트 이벤트 추가
                     </DialogTitle>
                     <DialogContent>
                          <DialogContentText>
-                         새로 추가하실 카테고리 이름을 입력해주세요.
+                         새로 추가하실 포인트 이벤트 내용을 입력해주세요.
                          </DialogContentText>
                          <TextField
                          autoFocus
                          margin="dense"
                          id="name"
-                         label="카테고리 이름"
+                         label="이벤트 이름"
                          type="string"
                          fullWidth
-                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => setNewCatName(e.currentTarget.value)}
+                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => setNewAction(e.currentTarget.value)}
+                         />
+                         <TextField
+                         autoFocus
+                         margin="dense"
+                         id="value"
+                         label="지급할 포인트"
+                         type="number"
+                         fullWidth
+                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => setNewValue(e.currentTarget.value as unknown as number)}
+                         />
+                         <TextField
+                         autoFocus
+                         margin="dense"
+                         id="limit"
+                         label="일일 지급 제한 횟수"
+                         type="number"
+                         fullWidth
+                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => setNewLimit(e.currentTarget.value as unknown as number)}
                          />
                     </DialogContent>
                     <DialogActions>
@@ -152,6 +197,8 @@ export default function PointCategory(props:CatAdminProps) {
                          </Button>
                     </DialogActions>
                </Dialog>
+          </>              
+          }
           </>
      )
 }

@@ -72,11 +72,6 @@ export default function PointReward(props:PointProps) {
           getPointCategory()
      }, [])
      
-     useEffect(() => {
-          if(pointCategory){
-               console.log(pointCategory.filter( point => point.id === 99))
-          }
-     }, [pointCategory])
      const [selectList, setSelectList] = useState<memberInfo[]>([])
      const [selectedUser, setSelectedUser] = useState<memberInfo[]>([]);
      const handleSelect = (data: { selectionModel: GridRowId[]}) => {
@@ -107,7 +102,7 @@ export default function PointReward(props:PointProps) {
                     setValue( (pointCategory.filter( point => point.id === 100))[0].point_value ) 
                }
           }
-     }, [type])
+     }, [pointCategory,type])
 
      const handleSubmit = () => {
           // 적립 포인트 
@@ -127,7 +122,7 @@ export default function PointReward(props:PointProps) {
           let emailList: null | string[] = null
 
           // 조정 대상 
-          if( toAllMember ) { // all 
+          if( toAllMember === 0 ) { // all 
                emailList = null
           } else { // 특정 회원
                emailList = selectedUser.map( (user) => user.email )
@@ -169,7 +164,6 @@ export default function PointReward(props:PointProps) {
                 }
            })
            .then(res => {
-                alert('포인트 변경이 완료되었습니다.')
                 getPointCategory()
                 addPoint()
            })

@@ -22,7 +22,7 @@ interface locationProps {
 export default function PointAdmin(props: UserAdminProps) {
      const location = useLocation<locationProps>()
      const { userObj } = props
-     const index = location.state.index // 1: 일일 회원 통계, 2: 메일 전송
+     const index = location.state.index // 1: 포인트 종류 , 2: 포인트 등록
      const history =useHistory()
 
      const queryObj = queryString.parse(location.search);
