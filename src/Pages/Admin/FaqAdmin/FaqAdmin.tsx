@@ -144,7 +144,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
           :
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                    <h2>FAQ 관리 페이지</h2>
+                    <h2>FAQ 목록 조회</h2>
                     <div>
                          <Button color="primary" variant="contained" onClick={onOpenEdit}>새 FAQ 추가</Button>    
                          <Button color="primary" variant="contained" onClick={handleEditFaq} >선택 수정</Button>    

@@ -84,7 +84,7 @@ export default function Mail(props: MailProps) {
                : 
                     <>
                     <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                         <h2>메일 전송 페이지</h2>
+                         <h2>메일 전송 관리</h2>
                          <Button color="primary" variant="contained" onClick={handleNewMail} >메일 작성</Button>    
                     </div>
                     { userList && 

@@ -2,14 +2,14 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 
 import { createStyles, makeStyles, Theme,useTheme } from '@material-ui/core/styles';
-import { AppBar, Collapse, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,ListItemIcon,ListItemText,Hidden,Typography } from "@material-ui/core";
+import { AppBar, Collapse, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,Button,ListItemText,Hidden,Typography } from "@material-ui/core";
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 import { userInfo } from 'Interface/User';
 import { menuInfo } from 'Interface/Admin';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useHistory } from 'react-router';
-
+import HomeIcon from '@material-ui/icons/Home';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => 
@@ -138,7 +138,7 @@ export default function AdminNav(props: Props) {
           <CssBaseline />
                {/* 관리자 페이지 상단 Bar */}
                <AppBar position="fixed" className={classes.appBar}>
-                    <Toolbar>
+                    <Toolbar style={{display:'flex', justifyContent: 'space-between'}}>
                          <IconButton
                          color="inherit"
                          aria-label="open drawer"
@@ -148,9 +148,22 @@ export default function AdminNav(props: Props) {
                          >
                          <DnsRoundedIcon />
                          </IconButton>
-                         <Typography variant="h6" noWrap>
-                         Admin Now
-                         </Typography>
+                         <div style={{display:'flex', alignItems:'center'}}>
+                              <Typography variant="h6" noWrap>
+                              Admin Now
+                              </Typography>
+                              <IconButton 
+                              color="inherit"
+                              onClick={() => history.push('/admin')}>
+                                   <HomeIcon />
+                              </IconButton>
+                         </div>
+                         <div>
+                              <Button color="inherit" onClick={() => history.push('/board?category=0&page=1')}>커뮤니티 바로가기</Button>
+                              <Button color="inherit" onClick={() => history.push('/faq')}>FAQ 바로가기</Button>
+                              <Button color="inherit" onClick={() => history.push('/home?tabName=MY_FUNDING')}>마이페이지 바로가기</Button>
+                              <Button color="inherit" onClick={() => history.push('/')}>데일리나우 바로가기</Button>
+                         </div>
                     </Toolbar>
                </AppBar>
                {/* 좌측 Bar */}

@@ -160,7 +160,7 @@ export default function Navigation(props: NavProps) {
 					// 메뉴가 마이페이지 일 경우 드롭다운 형태 
 					if(menu.name === "마이페이지") {
 						link = (
-							<>
+							<div key={index}>
 							<ListItem button onClick={handleMobileMyPage}>
 								<ListItemIcon>{iconList[index]}</ListItemIcon>
 								<ListItemText primary="마이페이지" />
@@ -194,7 +194,7 @@ export default function Navigation(props: NavProps) {
 						
 								</List>
 							</Collapse>
-						</>
+						</div>
 						)
 					}
 					
@@ -282,9 +282,9 @@ export default function Navigation(props: NavProps) {
 							TransitionComponent={Fade}
 							>
 								{
-									myPageMenu.map( myMenu => {
+									myPageMenu.map( (myMenu,index) => {
 										let menuItem = (
-											<MenuItem onClick={() => handleClick(myMenu.url)}>{myMenu.name}</MenuItem>
+											<MenuItem key={index} onClick={() => handleClick(myMenu.url)}>{myMenu.name}</MenuItem>
 										)
 										if( myMenu.access === "admin" ) { // 관리자 권한 메뉴
 											if(isAdmin) {

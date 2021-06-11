@@ -12,11 +12,9 @@ import Navigation from "Components/Navigation";
 import {p2pInfo, userInfo} from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
 import Admin from "Pages/Admin/Admin";
-import UserAdmin from "Pages/Admin/UserAdmin";
 
 const useStyles = makeStyles({
 	routeContainer : {
-		// display:"flex"
 		height: '100%'
 	},
 	boardContainer : {
@@ -131,7 +129,18 @@ export default function AppRouter() {
 							<Route 
 							path="/admin/user_admin" 
 							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"02"} typeName={"사용자 관리"}/>)}/>
-						
+							<Route 
+							path="/admin/category_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"03"} typeName={"카테고리 관리"}/>)}/>
+							<Route 
+							path="/admin/faq_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"04"} typeName={"FAQ 관리"}/>)}/>
+							<Route 
+							path="/admin/point_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"05"} typeName={"포인트 관리"}/>)}/>
+							<Route 
+							path="/admin/company_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"06"} typeName={"P2P 회사 관리"}/>)}/>
 							{/* ... 이후 추가 예정  */}
 						</>
 						:

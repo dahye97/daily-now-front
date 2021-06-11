@@ -123,7 +123,7 @@ export default function UserAdmin(props: UserAdminProps) {
                     :
                          <>
                               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                                   <h2>사용자 관리 페이지</h2>
+                                   <h2>회원 목록 조회</h2>
                                    <div>
                                         <Button color="primary" variant="contained" onClick={handleUserToEdit} >선택 회원 수정</Button>    
                                         <Button color="primary" variant="contained" onClick={handleUserToDelete} >선택 회원 삭제</Button>    

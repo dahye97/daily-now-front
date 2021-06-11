@@ -88,6 +88,9 @@ export default React.memo(function Board (props: BoardProps){
      const history = useHistory();
      const isMobile = useMediaQuery("(max-width: 380px)");
 
+     useEffect(() => {
+         console.log(userObj)
+     }, [])
      const { typeNum,userObj } = props;
      const [categories, setCategories] = useState<categoryInfo[]>([]) // 카테고리 리스트 
      const [categoryId, setCategoryId] = useState(0) // 현재 카테고리 
