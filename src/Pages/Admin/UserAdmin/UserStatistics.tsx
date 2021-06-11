@@ -67,23 +67,26 @@ export default function UserStatistics(props: UserStatisticsProps) {
                <h2>일일 회원 통계 페이지</h2>
               
               { dataList &&
-                    <Paper>
+                    <Paper style={{maxWidth: '1000px'}}>
                          <Chart
                               data={dataList}
                          >
-                              <ValueAxis />
+                              <ValueAxis/>
                               <ArgumentAxis />
                               <BarSeries
+                              barWidth={0.5}
                               valueField="value"
                               argumentField="newUser"
                               name="new user"
                               />
                               <BarSeries
+                              barWidth={0.5}
                               valueField="value"
                               argumentField="totalUser"
                               name="total user"
                               />
                               <BarSeries
+                              barWidth={0.5}
                               valueField="value"
                               argumentField="withdrawalUser"
                               name="withdrawal user"
@@ -91,12 +94,6 @@ export default function UserStatistics(props: UserStatisticsProps) {
                          </Chart>
                     </Paper>
                }
-
-
-
-
-
-
           </div>
      )
 }
