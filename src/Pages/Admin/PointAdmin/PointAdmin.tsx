@@ -28,6 +28,12 @@ export default function PointAdmin(props: UserAdminProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
+      // 표시할 글 수
+      const [rowsPerPage, setRowsPerPage] = useState(10)
+      const handleChangeRowsPerPage = (event: React.ChangeEvent<{value: unknown}>) => {
+           setRowsPerPage(+(event.target.value as number));
+      };
+
      // 포인트 정보 업데이트를 위한 핸들러
      const [isUpdated, setIsUpdated] = useState(false)
      const handleIsUpdated = () => {
@@ -119,7 +125,13 @@ export default function PointAdmin(props: UserAdminProps) {
           {index === 1
                ? <PointCategory userObj={userObj} pointCategory={pointCategory} getPointCategory={getPointCategory}/>
           : index === 2
-               ? <PointReward userObj={userObj}  pointCategory={pointCategory} getPointCategory={getPointCategory} />
+               ? <PointReward 
+               userObj={userObj}  
+               pointCategory={pointCategory} 
+               getPointCategory={getPointCategory} 
+               rowsPerPage={rowsPerPage} 
+               handleChangeRowsPerPage={handleChangeRowsPerPage}
+               />
           :
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
