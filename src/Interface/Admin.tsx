@@ -49,3 +49,11 @@ export interface pointCategoryInfo {
     limit_number_of_day: number,
     point_value: number,
 }
+
+// 등록가능한 p2p 회사 정보
+export interface companyInfo {
+    company_name: string,
+    homepage_url: string,
+    id: number,
+    nickname: string,
+}
