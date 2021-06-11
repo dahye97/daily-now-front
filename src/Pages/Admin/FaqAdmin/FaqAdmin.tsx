@@ -27,7 +27,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
           { field: 'order', headerName: '순서', width: 150 ,align:'center',  headerAlign:'center'},
           { field: 'question', headerName: '질문', width: 500 ,align:'center',  headerAlign:'center'},
           { field: 'answer', headerName: '답변', width: 600 ,align:'center',  headerAlign:'center'},
-          { field: 'view', headerName: '조회 수', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'view', headerName: '조회 수', type: 'number', width: 150 ,align:'center',  headerAlign:'center'},
         ];
 
           // FAQ 정보 업데이트를 위한 핸들러

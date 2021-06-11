@@ -50,7 +50,7 @@ export default function Mail(props: MailProps) {
           { field: 'date_joined', headerName: '가입일자', width: 300, align:'center',  headerAlign:'center'},
           { field: 'num_post', headerName: '게시글 수', type: 'number', width: 150, align:'right',  headerAlign:'center'},
           { field: 'num_comment', headerName: '댓글 수', type: 'number', width: 150, align:'right',  headerAlign:'center'},
-          { field: 'total_point', headerName: '누적 포인트', width: 150, align:'right',  headerAlign:'center'},
+          { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
         ];
 
      const [selectList, setSelectList] = useState<memberInfo[]>(userList)

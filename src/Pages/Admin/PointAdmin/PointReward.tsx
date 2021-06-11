@@ -14,7 +14,7 @@ const columns: GridColDef[] = [
      { field: 'username', headerName: '이름', width: 150 ,align:'center',  headerAlign:'center'},
      { field: 'email', headerName: 'Email', sortable: false, type: 'email', width: 300 ,align:'center',  headerAlign:'center'},
      { field: 'date_joined', headerName: '가입일자', width: 300, align:'center',  headerAlign:'center'},
-     { field: 'total_point', headerName: '누적 포인트', width: 150, align:'right',  headerAlign:'center'},
+     { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
    ];
    
 interface PointProps {

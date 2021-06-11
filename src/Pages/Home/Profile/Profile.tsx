@@ -197,7 +197,7 @@ export default function Profile(props:ProfileProps) {
 						<CardHeader 
 						title={ (props.userObj?.username && isMobile &&
 							(props.userObj.username.length > 3) ? (props.userObj?.username.substring(0,3) + "..." )
-							: props.userObj?.username) + " 님의"}
+							: props.userObj?.username) + ` (${userObj?.email})` + " 님의"}
 						component="span"
 						avatar={
 							<IconButton style={{padding: 0}} onClick={()=> setOpen(true)}>

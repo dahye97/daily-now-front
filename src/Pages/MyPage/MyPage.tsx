@@ -128,7 +128,7 @@ export default function MyPage( props: MyPageProps) {
           return (
                <Container className={isMobile? classes.userContainerMobile : classes.userContainer} maxWidth="md">
                     <div> <Typography variant="h5">🔐 회원 정보 수정</Typography> </div>
-
+                    
                     {/* 비밀번호 변경 박스 */}
                     <div className="editBox">
                          <form className={classes.editPWForm}>
