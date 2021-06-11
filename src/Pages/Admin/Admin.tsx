@@ -58,7 +58,7 @@ export default function Admin(props:AdminProps) {
                }
           })
           .then(res => {
-               console.log(res.data)
+               // console.log(res.data)
                setStatList(res.data)
           })
           .catch(function(error) {
@@ -67,7 +67,6 @@ export default function Admin(props:AdminProps) {
      }
 
      useEffect(() => {
-          console.log(window.location)
           getDailyStatistics()
      }, [])
      return (

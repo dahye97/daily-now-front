@@ -6,17 +6,21 @@ import { Button } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
 import MailForm from './MailForm';
+import UserSearch from './UserSearch';
 
 interface MailProps {
      userObj: userInfo,
      index: number,
 
      userList: memberInfo[],
-     getUserList: () => void
+     getUserList: (size: number, type: string | string[] | null, keyword: string | string[] | null) => void,
+
+     rowsPerPage: number, 
+     handleChangeRowsPerPage: (event: React.ChangeEvent<{value: unknown}>) => void,
 }
 
 export default function Mail(props: MailProps) {
-     const { userObj, userList, getUserList, index } = props
+     const { userObj, userList, getUserList, index,rowsPerPage, handleChangeRowsPerPage} = props
      const history =useHistory()
      const location = useLocation()
      const queryObj = queryString.parse(location.search);
@@ -28,7 +32,7 @@ export default function Mail(props: MailProps) {
      }
      useEffect(() => {
          if(isUpdated) {
-              getUserList()
+              getUserList(rowsPerPage, null, null)
               handleIsUpdated()
          }
      }, [isUpdated])
@@ -39,7 +43,7 @@ export default function Mail(props: MailProps) {
                setSelectList(userList)
                setSelectedUser([])
           } else {
-               getUserList()
+               getUserList(rowsPerPage, null, null)
           }
      }, [userList])
 
@@ -87,6 +91,13 @@ export default function Mail(props: MailProps) {
                          <h2>메일 전송 관리</h2>
                          <Button color="primary" variant="contained" onClick={handleNewMail} >메일 작성</Button>    
                     </div>
+
+                    {/* 회원 검색 컴포넌트 */}
+                    <UserSearch 
+                         getUserList={getUserList} 
+                         rowsPerPage={rowsPerPage} 
+                         handleChangeRowsPerPage={handleChangeRowsPerPage}
+                         />
                     { userList && 
                               <div style={{ height: "100vh", width: '100%'}}>
                                    <DataGrid
