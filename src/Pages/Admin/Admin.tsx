@@ -11,6 +11,7 @@ import PointAdmin from './PointAdmin/PointAdmin';
 import { statisticsInfo } from 'Interface/Admin';
 import { Card } from '@material-ui/core';
 import P2PAdmin from './P2PAdmin/P2PAdmin';
+import BoardAdmin from './BoardAdmin/BoardAdmin';
 
 const useStyles = makeStyles((theme: Theme) => 
 	createStyles({
@@ -107,7 +108,10 @@ export default function Admin(props:AdminProps) {
                                    ? <PointAdmin userObj={userObj} />
                               :  typeNum === "06"
                                    ? <P2PAdmin userObj={userObj} />
+                              :  typeNum === "07"
+                                   ? <BoardAdmin userObj={userObj} />
                               :    null
+                              
                               }
                          </main>
                     </div>

@@ -141,6 +141,10 @@ export default function AppRouter() {
 							<Route 
 							path="/admin/company_admin" 
 							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"06"} typeName={"P2P 회사 관리"}/>)}/>
+							<Route 
+							path="/admin/board_admin" 
+							render={() => ( <Admin isAdmin={isAdmin} userObj={userObj} typeNum={"07"} typeName={"게시판 관리"}/>)}/>
+						
 							{/* ... 이후 추가 예정  */}
 						</>
 						:
