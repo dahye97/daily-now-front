@@ -1,10 +1,13 @@
 import { userInfo } from 'Interface/User'
-import React, {useEffect,useState,useMemo} from 'react'
+import React, {useEffect,useState} from 'react'
 import { useHistory, useLocation } from 'react-router'
+import Pagination from '@material-ui/lab/Pagination';
+import { makeStyles } from '@material-ui/styles';
+
 import Mail from './Mail'
 import UserStatistics from './UserStatistics'
 import axios from 'axios';
-import { memberInfo } from 'Interface/Admin'
+import { memberDataInfo, memberInfo } from 'Interface/Admin'
 import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import { Button,IconButton } from '@material-ui/core'
 import queryString from 'query-string'
@@ -20,7 +23,19 @@ interface locationProps {
      index: number
 }
 
+const useStyles = makeStyles({
+     pagination : {
+          display:'flex', 
+          justifyContent: 'center',
+           margin: '20px',
+          '& > ul': {
+               flexWrap: "nowrap",
+          }
+     }
+   });
 export default function UserAdmin(props: UserAdminProps) {
+     const classes = useStyles();
+
      const location = useLocation<locationProps>()
      const { userObj } = props
      const index = location.state.index // 1: 일일 회원 통계, 2: 메일 전송
@@ -29,6 +44,10 @@ export default function UserAdmin(props: UserAdminProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
      
+     const keyword = queryObj.keyword;
+     const type = queryObj.type;
+     const pageIndex = queryObj.page;
+
      // 표시할 글 수
      const [rowsPerPage, setRowsPerPage] = useState(10)
      const handleChangeRowsPerPage = (event: React.ChangeEvent<{value: unknown}>) => {
@@ -56,25 +75,84 @@ export default function UserAdmin(props: UserAdminProps) {
           { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
         ];
 
-     const [userList, setUserList] = useState<memberInfo[]>([])
-     const getUserList = (size: number, type: string | string[] | null, keyword: string | string[] | null) => {
-               axios.post(`${process.env.REACT_APP_SERVER}/api/admin/user/user_list`, {
-                    page_size: size,
-                    search_type: type === "" ? null : type,
-                    search_keyword: keyword === "" ? null : keyword
-               },{
-                    headers: {
-                         "Authorization": "Token " + userObj.auth_token,
-                    }
+     const [userList, setUserList] = useState<memberDataInfo>(Object)
+     const [previousUrl, setPreviousUrl] = useState("")
+     const [nextUrl, setNextUrl] = useState("")
+     
+     const { count, results } = userList
+     const [isSearching, setIsSearching] = useState(false)
+     const handleIsSearching = (value: boolean) => {
+          setIsSearching(value)
+     }
+
+     const [page, setPage] = React.useState(0);
+
+       // 앞, 뒤 게시물 페이지 이동 
+       const handleChangePage = (event: React.ChangeEvent<any> , newPage: number) => {
+          let label = event.currentTarget.getAttribute("aria-label")
+          let nextPage = newPage;
+          
+          if(keyword) handleIsSearching(true)
+          else handleIsSearching(false)
+
+           if( newPage > page) { // 다음페이지로 이동
+               getUserList(rowsPerPage, type, keyword, nextUrl, newPage) 
+           }else if(newPage < page) {  // 이전 페이지로 이동
+               getUserList(rowsPerPage, type, keyword, previousUrl, newPage)
+           }
+
+           if( ["Go to next page", "Go to previous page"].includes(label) ) { // +10, -10 페이지 이동 
+                if( newPage > page ) {
+                     nextPage += 9
+                }else nextPage -= 9
+                if( nextPage > Math.floor(count / rowsPerPage + 1) ){
+                     nextPage = Math.floor(count/ rowsPerPage + 1)
+                }else if(nextPage < 1){
+                     nextPage = 1
+                }           
+           }
+           setPage(nextPage);
+
+          console.log(keyword, type, nextPage, isSearching)
+
+          history.push(`/admin/user_admin?keyword=${keyword}&type=${type}&page=${nextPage}`, {
+               index: 0
+          })
+          window.scrollTo(0, 0);
+
+      };
+
+     const getUserList = (size: number, type: string | string[] | null, keyword: string | string[] | null, url?: string, pageIndex? : number) => {
+               
+          let baseurl = `${process.env.REACT_APP_SERVER}/api/admin/user/user_list`
+          if ( url ) baseurl = baseurl + `?page=${pageIndex}`
+              
+          
+          axios.post(baseurl, {
+               page_size: size,
+               search_type: type === "" ? null : type,
+               search_keyword: keyword === "" ? null : keyword
+          },{
+               headers: {
+                    "Authorization": "Token " + userObj.auth_token,
+               }
+          })
+          .then(res => {
+               // console.log(res.data.results)
+               setUserList(res.data)
+
+               setNextUrl(res.data.next)
+               setPreviousUrl(res.data.previous)
+
+               setSelectList(res.data.results)
+
+               history.push(`/admin/user_admin?keyword=${keyword}&type=${type}&page=${pageIndex}`, {
+                    index: 0
                })
-               .then(res => {
-                    console.log(res.data.results)
-                    setUserList(res.data.results)
-                    setSelectList(res.data.results)
-               })
-               .catch(function(error) {
-                    console.log(error);
-               })
+          })
+          .catch(function(error) {
+               console.log(error);
+          })
      }
 
      useEffect(() => {
@@ -154,18 +232,31 @@ export default function UserAdmin(props: UserAdminProps) {
                               getUserList={getUserList} 
                               rowsPerPage={rowsPerPage} 
                               handleChangeRowsPerPage={handleChangeRowsPerPage}
+                              handleIsSearching={handleIsSearching}
                               />
 
 
-                              { userList && 
+                              { results && 
                                    <div style={{ width: '100%', height:'100vh'}}>
-                                   <DataGrid
-                                        rows={userList}
-                                        columns={columns}
-                                        pageSize={20}
-                                        checkboxSelection
-                                        onSelectionModelChange={(itm:any) => handleSelect({ selectionModel: itm.selectionModel})}
-                                   />
+                                        <DataGrid
+                                             rows={results}
+                                             columns={columns}
+                                             pageSize={rowsPerPage}
+                                             checkboxSelection
+                                             hideFooterPagination
+                                             onSelectionModelChange={(itm:any) => handleSelect({ selectionModel: itm.selectionModel})}
+                                        />
+
+                                        <Pagination 
+                                             showFirstButton showLastButton
+                                             className={classes.pagination}
+                                             count={Math.floor(count / rowsPerPage) + 1} 
+                                             variant="outlined" 
+                                             color="primary" 
+                                             page={page}
+                                             onChange={handleChangePage}
+                                             defaultPage={1}
+                                        />
                                    </div>
                               }
                          </>

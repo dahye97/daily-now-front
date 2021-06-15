@@ -18,6 +18,12 @@ export interface memberInfo {
     total_point: number // 총 포인트
 }
 
+export interface memberDataInfo {
+    count: number,
+    next: string,
+    previous: string,
+    results: Array<memberInfo>
+}
 // 일일 회원 통계 정보
 export interface statisticsInfo {
     new_user: number, // 신규 가입 수

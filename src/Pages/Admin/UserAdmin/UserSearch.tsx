@@ -52,28 +52,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface searchProps {
-     getUserList: (size: number, type: string | string[] | null, keyword: string | string[] | null) => void
+     getUserList: (size: number, type: string | string[] | null, keyword: string | string[] | null, url?:string, pageIndex?: number) => void
      rowsPerPage: number, 
      handleChangeRowsPerPage: (event: React.ChangeEvent<{value: unknown}>) => void,
+
+     handleIsSearching : (value: boolean) => void
 }
 
 
 export default function UserSearch(props: searchProps ) {
-     const { getUserList,rowsPerPage, handleChangeRowsPerPage} = props
+     const { getUserList,rowsPerPage, handleChangeRowsPerPage, handleIsSearching} = props
      const classes = useStyles();
      const isMobile = useMediaQuery("(max-width: 380px)");
 
      const location = useLocation()
 	const queryObj = queryString.parse(location.search);
-	const categoryInUrl = queryObj.category; // url에서 현재 category id 받아오기 
-	const typeInUrl = queryObj.type; // url에서 현재 type 받아오기 
-	const keywordInUrl = queryObj.keyword; // url에서 현재 type 받아오기 
 
-     // // 표시할 글 수
-     // const [rowsPerPage, setRowsPerPage] = useState(10)
-     // const handleChangeRowsPerPage = (event: React.ChangeEvent<{value: unknown}>) => {
-     //      setRowsPerPage(+(event.target.value as number));
-     // };
 
      // 검색 분류
      const [type, setType] = useState<string | string[] | null>("username")
@@ -87,7 +81,8 @@ export default function UserSearch(props: searchProps ) {
      }
 
      const handleSearch = () => {
-          getUserList(rowsPerPage, type, keyword)
+          handleIsSearching(true)
+          getUserList(rowsPerPage, type, keyword, undefined, 1)
      }
 
      return (

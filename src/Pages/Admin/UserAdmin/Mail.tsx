@@ -1,4 +1,4 @@
-import { memberInfo } from 'Interface/Admin'
+import { memberDataInfo, memberInfo } from 'Interface/Admin'
 import { userInfo } from 'Interface/User'
 import React, {useEffect,useState} from 'react'
 import { DataGrid, GridColDef, GridRowData } from '@material-ui/data-grid';
@@ -12,7 +12,7 @@ interface MailProps {
      userObj: userInfo,
      index: number,
 
-     userList: memberInfo[],
+     userList: memberDataInfo,
      getUserList: (size: number, type: string | string[] | null, keyword: string | string[] | null) => void,
 
      rowsPerPage: number, 
@@ -26,6 +26,7 @@ export default function Mail(props: MailProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
      
+     const { count, results } = userList
      const [isUpdated, setIsUpdated] = useState(false)
      const handleIsUpdated = () => {
           setIsUpdated(!isUpdated)
@@ -39,8 +40,8 @@ export default function Mail(props: MailProps) {
 
      useEffect(() => {
           console.log(tabName, history)
-          if(userList.length !== 0) {
-               setSelectList(userList)
+          if(count !== 0) {
+               setSelectList(results)
                setSelectedUser([])
           } else {
                getUserList(rowsPerPage, null, null)
@@ -57,7 +58,7 @@ export default function Mail(props: MailProps) {
           { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
         ];
 
-     const [selectList, setSelectList] = useState<memberInfo[]>(userList)
+     const [selectList, setSelectList] = useState<memberInfo[]>(results)
      const [selectedUser, setSelectedUser] = useState<memberInfo[]>([]);
 
      const handleSelect = (data: GridRowData) => {
@@ -81,6 +82,11 @@ export default function Mail(props: MailProps) {
           }
         };
 
+        const [isSearching, setIsSearching] = useState(false)
+        const handleIsSearching = (value: boolean) => {
+             setIsSearching(value)
+        }
+
      return (
           <>
                { tabName === "NEW_MAIL"
@@ -97,11 +103,12 @@ export default function Mail(props: MailProps) {
                          getUserList={getUserList} 
                          rowsPerPage={rowsPerPage} 
                          handleChangeRowsPerPage={handleChangeRowsPerPage}
+                         handleIsSearching={handleIsSearching}
                          />
-                    { userList && 
+                    { results && 
                               <div style={{ height: "100vh", width: '100%'}}>
                                    <DataGrid
-                                   rows={userList}
+                                   rows={results}
                                    columns={columns}
                                    pageSize={20}
                                    checkboxSelection

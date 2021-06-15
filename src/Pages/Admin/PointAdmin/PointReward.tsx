@@ -203,6 +203,13 @@ export default function PointReward(props:PointProps) {
        setOpen(false);
      };
 
+     
+     const [isSearching, setIsSearching] = useState(false)
+     const handleIsSearching = (value: boolean) => {
+          setIsSearching(value)
+     }
+
+     
      return (
           <>
                <h2>포인트 지급 관리</h2>
@@ -278,7 +285,8 @@ export default function PointReward(props:PointProps) {
                <UserSearch 
                getUserList={getUserList} 
                rowsPerPage={rowsPerPage} 
-               handleChangeRowsPerPage={handleChangeRowsPerPage}/>
+               handleChangeRowsPerPage={handleChangeRowsPerPage}
+               handleIsSearching={handleIsSearching}/>
                { userList && 
                     <div style={{ width: '100%', height:'100vh'}}>
                     <DataGrid
