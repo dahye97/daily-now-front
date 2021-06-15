@@ -1,11 +1,12 @@
 import React,{useState,useEffect} from 'react'
-import { DataGrid, GridColDef,GridRowId, GridRowData } from '@material-ui/data-grid';
-import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField } from '@material-ui/core'
 import axios from 'axios';
-import { categoryInfo } from 'Interface/Board';
-import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
+
+import { DataGrid, GridColDef,GridRowId, GridRowData } from '@material-ui/data-grid';
+import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField } from '@material-ui/core'
+
+import { userInfo } from 'Interface/User';
 import { pointCategoryInfo } from 'Interface/Admin';
 import PointForm from './PointForm';
 
@@ -42,7 +43,6 @@ export default function PointCategory(props:CatAdminProps) {
           { field: 'point_value', headerName: '지급 포인트', type: 'number', width: 150 ,align:'center',  headerAlign:'center'},
           { field: 'limit_number_of_day', headerName: '지급 제한 수', width: 150 ,align:'center',  headerAlign:'center'},
         ];
-
      useEffect(() => {
           getPointCategory()
      }, [])
@@ -64,6 +64,7 @@ export default function PointCategory(props:CatAdminProps) {
      const [newAction, setNewAction] = useState("")
      const [newValue, setNewValue] = useState(1)
      const [newLimit, setNewLimit] = useState(1)
+     // 새로운 포인트 종류 추가 함수
      const handleAddCategory = () => {
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/add_point_action`,{
                "action": newAction,

@@ -1,7 +1,7 @@
-import React from 'react'
 import {Typography,Accordion,AccordionSummary,AccordionDetails  } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { faqInfo } from 'Interface/FAQ';
+
 interface FAQItemProps {
      faq: faqInfo
 }

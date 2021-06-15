@@ -1,12 +1,13 @@
+import React, {useState,useEffect} from "react";
+import { useHistory, useLocation } from "react-router";
+import queryString from 'query-string'
+
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button,useMediaQuery,
      Select,MenuItem,InputAdornment,IconButton } from "@material-ui/core";
+     import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import logo from 'asset/img/logo.webp'
-import React, {useState,useEffect} from "react";
-import { useCookies} from 'react-cookie';
-import { useHistory, useLocation } from "react-router";
-import queryString from 'query-string'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+
 // 회원가입 페이지
 const useStyles = makeStyles({
      authContainer: {
@@ -190,14 +191,12 @@ export default function Registration() {
      ]
 
      const [domain, setDomain] = useState('');
-
      const handleChangeDomain = (event: React.ChangeEvent<{ value: unknown }>) => {
           if(event.target.value === "nullEmail") {
                setDomain('')
           }else setDomain(event.target.value as string);
           
      };
-
      const domainList = [
           { id: 1,name: "naver.com",   },
           { id: 2, name: "gmail.com",  },

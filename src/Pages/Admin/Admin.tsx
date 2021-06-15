@@ -1,15 +1,17 @@
-import { userInfo } from 'Interface/User'
-import React,{useState,useEffect} from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {useState,useEffect} from 'react'
 import axios from 'axios';
+
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Card } from '@material-ui/core';
+
+import { userInfo } from 'Interface/User'
+import { statisticsInfo } from 'Interface/Admin';
 
 import AdminNav from './AdminNav';
 import UserAdmin from './UserAdmin/UserAdmin';
 import CategoryAdmin from './CategoryAdmin/CategoryAdmin';
 import FaqAdmin from './FaqAdmin/FaqAdmin';
 import PointAdmin from './PointAdmin/PointAdmin';
-import { statisticsInfo } from 'Interface/Admin';
-import { Card } from '@material-ui/core';
 import P2PAdmin from './P2PAdmin/P2PAdmin';
 import BoardAdmin from './BoardAdmin/BoardAdmin';
 
@@ -42,7 +44,6 @@ interface AdminProps {
      typeNum: string, 
      typeName: string
 }
-
 export default function Admin(props:AdminProps) {
      const classes = useStyles();
      const { userObj, isAdmin, typeNum } = props
@@ -71,6 +72,9 @@ export default function Admin(props:AdminProps) {
           getDailyStatistics()
      }, [])
      return (
+          // 1. props로 받아온 typeNum 을 통해 페이지 라우팅 설계
+          // 2. 각 페이지 컴포넌트들(UserAdmin, CategoryAdmin, .. ) 은 index를 통해 내부 라우팅 설계
+          // + 그외 기능 컴포넌트는(DELETE, EDIT, ..) querystring을 이용하여 설계
           <>
           { userObj && isAdmin && window.location.pathname.includes("/admin")? 
                <>

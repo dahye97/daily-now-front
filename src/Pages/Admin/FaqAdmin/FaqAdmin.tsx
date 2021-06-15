@@ -1,12 +1,14 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios';
-import { faqInfo } from 'Interface/FAQ';
-import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField,Paper
-, ListItem, List,ListItemText } from '@material-ui/core'
-import { DataGrid, GridColDef,GridRowId, GridRowData } from '@material-ui/data-grid';
-import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
+
+import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField,Paper
+     , ListItem, List,ListItemText } from '@material-ui/core'
+import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
+
+import { faqInfo } from 'Interface/FAQ';
+import { userInfo } from 'Interface/User';
 import FaqForm from './FaqForm';
 
 interface FaqAdminProps {
@@ -21,28 +23,19 @@ export default function FaqAdmin(props:FaqAdminProps) {
      const location = useLocation()
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
-
-     const columns: GridColDef[] = [
-          { field: 'id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
-          { field: 'order', headerName: '순서', width: 150 ,align:'center',  headerAlign:'center'},
-          { field: 'question', headerName: '질문', width: 500 ,align:'center',  headerAlign:'center'},
-          { field: 'answer', headerName: '답변', width: 600 ,align:'center',  headerAlign:'center'},
-          { field: 'view', headerName: '조회 수', type: 'number', width: 150 ,align:'center',  headerAlign:'center'},
-        ];
-
-          // FAQ 정보 업데이트를 위한 핸들러
-       const [isUpdated, setIsUpdated] = useState(false)
-       const handleIsUpdated = () => {
-            setIsUpdated(!isUpdated)
-       }
-  
-       useEffect(() => {
-            if(isUpdated) {
-               getFAQData()
-               handleIsUpdated()
-            }
-       }, [isUpdated])
-
+     
+     // FAQ 정보 업데이트를 위한 핸들러
+     const [isUpdated, setIsUpdated] = useState(false)
+     const handleIsUpdated = () => {
+          setIsUpdated(!isUpdated)
+     }
+     useEffect(() => {
+          if(isUpdated) {
+          getFAQData()
+          handleIsUpdated()
+          }
+     }, [isUpdated])
+     
      const getFAQData = () => {
           axios.post(`${process.env.REACT_APP_SERVER}/api/notice/faq_list`, {
                page_size: 10
@@ -58,6 +51,16 @@ export default function FaqAdmin(props:FaqAdminProps) {
           getFAQData()
      }, [])
 
+     // FAQ 테이블 column
+     const columns: GridColDef[] = [
+          { field: 'id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
+          { field: 'order', headerName: '순서', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'question', headerName: '질문', width: 500 ,align:'center',  headerAlign:'center'},
+          { field: 'answer', headerName: '답변', width: 600 ,align:'center',  headerAlign:'center'},
+          { field: 'view', headerName: '조회 수', type: 'number', width: 150 ,align:'center',  headerAlign:'center'},
+        ];
+
+     // FAQ 선택 핸들러
      const [selectList, setSelectList] = useState<faqInfo[]>([])
      const [selectedFaq, setSelectedFaq] = useState<faqInfo[]>([]);
      const handleSelect = (data: { selectionModel: GridRowId[]}) => {
@@ -71,6 +74,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
           console.log('선택한 faq', selectedFaq)
      }, [selectedFaq])
 
+     // 새로운 faq 추가 함수
      const [question, setQuestion] = useState("")
      const [answer, setAnswer] = useState("")
      const handleAddFaq = () => {
@@ -93,6 +97,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
           })
      }
 
+     // faq 변경 함수
      const handleEditFaq = () => {
           if( selectedFaq.length === 1) {
                history.push('/admin/faq_admin?tabName=EDIT_FAQ')
@@ -102,6 +107,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
           }
      }
 
+     // faq 삭제 함수
      const handleDeleteFaq = () => {
           let faqlist = selectedFaq.map( faq => faq.id)
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/faq/delete_faq`, {
@@ -121,6 +127,7 @@ export default function FaqAdmin(props:FaqAdminProps) {
            })
      }
 
+     // faq 수정 및 삭제 모달 토글러
      const [openEdit, setOpenEdit] = React.useState(false);
      const onOpenEdit = () => {
        setOpenEdit(true);

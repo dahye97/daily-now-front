@@ -1,9 +1,10 @@
-import { memberInfo } from 'Interface/Admin'
-import React,{useEffect,useState} from 'react'
-import { Button, TextField } from '@material-ui/core';
+import React,{useState} from 'react'
 import axios from 'axios';
-import { userInfo } from 'Interface/User';
 import { useHistory } from 'react-router';
+
+import { Button, TextField } from '@material-ui/core';
+import { memberInfo } from 'Interface/Admin'
+import { userInfo } from 'Interface/User';
 
 interface UserFormProps {
      selectedUser : memberInfo[],

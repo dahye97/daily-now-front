@@ -1,8 +1,8 @@
 import React, {useState,useEffect} from 'react'
-import SearchIcon from '@material-ui/icons/Search';
 import { useLocation, } from 'react-router';
 import queryString from 'query-string'
 
+import SearchIcon from '@material-ui/icons/Search';
 import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect,useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { searchInfo } from 'Interface/Board';
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface searchProps {
-     getPostList: (url: string, pageIndex?:number, searchData?: searchInfo) => void
+     getPostList: (pageIndex?:number, searchData?: searchInfo) => void
      handleIsSearching: (value: boolean) => void
 }
 
@@ -88,7 +88,7 @@ export default function Search(props: searchProps ) {
                "search_keyword": keyword,
                "sort":"date"
           }
-          getPostList("",1,data)
+          getPostList(1,data)
           handleIsSearching(true)
      }
 

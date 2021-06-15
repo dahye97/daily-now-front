@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
-import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
-import { userInfo } from 'Interface/User'
 import { useHistory } from 'react-router';
 import axios from 'axios';
+
+import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
+
+import { userInfo } from 'Interface/User'
 import { pointCategoryInfo } from 'Interface/Admin';
 
 interface CatFormProps {

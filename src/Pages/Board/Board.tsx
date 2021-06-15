@@ -6,16 +6,16 @@ import queryString from 'query-string'
 import {Container, Button,List ,ListItem,ListItemText,ListSubheader,Dialog ,DialogTitle ,useMediaQuery} from '@material-ui/core';
 import { makeStyles, createStyles, Theme} from "@material-ui/core/styles";
 
-import Post from 'Pages/Board/Post/Post';
-import DetailPost from 'Pages/Board/Post/DetailPost';
-import NewPost from 'Pages/Board/NewPost';
-
 import { userInfo } from 'Interface/User';
 import { detailPostInfo,categoryInfo } from 'Interface/Board';
 
-import board_holy from 'asset/img/board_holy.png'
+import Post from 'Pages/Board/Post/Post';
+import DetailPost from 'Pages/Board/Post/DetailPost';
+import NewPost from 'Pages/Board/NewPost';
 import WelcomeLoginAlert from 'Components/Alert/WelcomeLoginAlert';
 import Category from './Category';
+
+import board_holy from 'asset/img/board_holy.png'
 
 const useStyles = makeStyles((theme: Theme) => 
      createStyles({

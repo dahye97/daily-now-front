@@ -1,15 +1,16 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios';
+import { useHistory } from 'react-router';
 
 import { createStyles, makeStyles, Theme,useTheme } from '@material-ui/core/styles';
 import { AppBar, Collapse, Toolbar, IconButton, Drawer,CssBaseline ,List,Divider,ListItem,Button,ListItemText,Hidden,Typography } from "@material-ui/core";
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
-import { userInfo } from 'Interface/User';
-import { menuInfo } from 'Interface/Admin';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { useHistory } from 'react-router';
 import HomeIcon from '@material-ui/icons/Home';
+
+import { userInfo } from 'Interface/User';
+import { menuInfo } from 'Interface/Admin';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => 
@@ -32,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
                  display: 'none',
                },
              },
-             // necessary for content to be below app bar
              toolbar: theme.mixins.toolbar,
              drawerPaper: {
                width: drawerWidth,
@@ -72,7 +72,7 @@ export default function AdminNav(props: Props) {
                }
           })
           .then(res => {
-               console.log(res.data)
+               // console.log(res.data)
                setMenuList(res.data)
           })
           .catch(function(error) {

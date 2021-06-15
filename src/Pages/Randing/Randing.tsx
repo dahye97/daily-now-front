@@ -1,5 +1,4 @@
-import {useState} from 'react'
-import {makeStyles, Card, Typography, Button} from "@material-ui/core";
+import {makeStyles, Card, Typography} from "@material-ui/core";
 import randingImage from 'asset/img/randing_img.jpg'
 
 const useStyles = makeStyles({

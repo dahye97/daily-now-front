@@ -1,9 +1,11 @@
 import React,{useState} from 'react'
-import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
-import { userInfo } from 'Interface/User'
-import { faqInfo } from 'Interface/FAQ'
 import axios from 'axios';
 import { useHistory } from 'react-router';
+
+import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
+
+import { userInfo } from 'Interface/User'
+import { faqInfo } from 'Interface/FAQ'
 
 interface FaqFormProps {
      userObj: userInfo,

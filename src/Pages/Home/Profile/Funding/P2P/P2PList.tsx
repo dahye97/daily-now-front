@@ -1,13 +1,14 @@
 /** @format */
 import React, {useState,useEffect} from 'react'
+import axios from 'axios'
+
 import { IconButton, Avatar,FormControlLabel,Switch ,TextField,List,ListItem,ListItemText,
 	Dialog,DialogTitle,DialogContent,DialogContentText } from "@material-ui/core";
 import {Autocomplete } from '@material-ui/lab';
-import axios from 'axios'
-
 import { makeStyles  } from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from "@material-ui/icons/Home";
+
 import { p2pInfo, userInfo } from 'Interface/User'
 import P2PRegister from './P2PRegister';
 import Stepper from 'Components/Stepper';
@@ -60,7 +61,6 @@ export default function FundList(props: FundListProps) {
 	const {handleCompanyID, handleCompany, handleNickName, handleP2PUpdated, userObj, P2PList, getUserDataOfCompany} = props;
 	// STATE
 	const [open, setOpen] = useState(false)
-
      const [isExist, setIsExist] = useState(false)
 
 	// INDEX
@@ -96,9 +96,9 @@ export default function FundList(props: FundListProps) {
 		}
 	}
 
+	// 연동 가능한 모든 회사 불러오기
 	const [allCompany, setAllCompany] = useState<companyInfo[]>([])
 	const getAllCompany = () => {
-		console.log('getallcompany')
 		fetch(`${process.env.REACT_APP_SERVER}/api/register/company`, {
 			method: "GET",
 			headers: {
@@ -135,6 +135,7 @@ export default function FundList(props: FundListProps) {
 		}
 	}, [currentMode])
 	
+	// 연동된 회사 목록 불러오기
 	const getRegisteredP2P = (keyword: string | null) => {
 
 		if(userObj !== null){

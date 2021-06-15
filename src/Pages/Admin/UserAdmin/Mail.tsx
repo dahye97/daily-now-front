@@ -1,10 +1,12 @@
-import { memberDataInfo, memberInfo } from 'Interface/Admin'
-import { userInfo } from 'Interface/User'
 import React, {useEffect,useState} from 'react'
-import { DataGrid, GridColDef, GridRowData } from '@material-ui/data-grid';
-import { Button } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
+
+import { DataGrid, GridColDef, GridRowData } from '@material-ui/data-grid';
+import { Button } from '@material-ui/core';
+
+import { memberDataInfo, memberInfo } from 'Interface/Admin'
+import { userInfo } from 'Interface/User'
 import MailForm from './MailForm';
 import UserSearch from './UserSearch';
 
@@ -39,7 +41,6 @@ export default function Mail(props: MailProps) {
      }, [isUpdated])
 
      useEffect(() => {
-          console.log(tabName, history)
           if(count !== 0) {
                setSelectList(results)
                setSelectedUser([])
@@ -60,7 +61,6 @@ export default function Mail(props: MailProps) {
 
      const [selectList, setSelectList] = useState<memberInfo[]>(results)
      const [selectedUser, setSelectedUser] = useState<memberInfo[]>([]);
-
      const handleSelect = (data: GridRowData) => {
           setSelectedUser(
                data.selectionModel.map( (ele:any) => {

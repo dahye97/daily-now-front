@@ -1,9 +1,9 @@
-import React, {useState,useEffect} from 'react'
-import SearchIcon from '@material-ui/icons/Search';
+import React, {useState} from 'react'
 import { useLocation, } from 'react-router';
 import queryString from 'query-string'
 
-import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect,useMediaQuery,Select } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+import { IconButton,InputBase,Paper,FormControl,InputLabel, NativeSelect,useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -2,10 +2,6 @@ import React , {useState,useEffect} from 'react'
 import { useHistory, useLocation } from 'react-router';
 import axios from 'axios';
 
-import { commentInfo, detailPostInfo } from 'Interface/Board'
-import { userInfo } from 'Interface/User';
-import Comment from '../Comment/Comment';
-
 import { makeStyles } from '@material-ui/core/styles';
 import {Paper,IconButton,Typography,
      Table, TableCell, TableContainer, TableBody, TableRow,useMediaQuery
@@ -16,6 +12,10 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+
+import { commentInfo, detailPostInfo } from 'Interface/Board'
+import { userInfo } from 'Interface/User';
+import Comment from '../Comment/Comment';
 import WelcomeLoginAlert from 'Components/Alert/WelcomeLoginAlert';
 
 const useStyles = makeStyles({

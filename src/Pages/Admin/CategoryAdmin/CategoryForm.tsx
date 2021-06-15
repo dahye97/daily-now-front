@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react'
-import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
-import { userInfo } from 'Interface/User'
-import { categoryInfo } from 'Interface/Board';
+import React, {useState} from 'react'
 import { useHistory } from 'react-router';
 import axios from 'axios';
+
+import { Button,FormControl, InputLabel, Input, FormHelperText,Select,MenuItem } from '@material-ui/core'
+
+import { userInfo } from 'Interface/User'
+import { categoryInfo } from 'Interface/Board';
 
 interface CatFormProps {
      userObj: userInfo,

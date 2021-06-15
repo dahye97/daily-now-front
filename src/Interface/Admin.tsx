@@ -18,6 +18,7 @@ export interface memberInfo {
     total_point: number // 총 포인트
 }
 
+// 서버에서 받아오는 회원 관련 데이터 정보 
 export interface memberDataInfo {
     count: number,
     next: string,

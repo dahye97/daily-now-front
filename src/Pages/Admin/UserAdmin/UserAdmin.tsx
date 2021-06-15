@@ -1,20 +1,21 @@
-import { userInfo } from 'Interface/User'
 import React, {useEffect,useState} from 'react'
 import { useHistory, useLocation } from 'react-router'
+import axios from 'axios';
+import queryString from 'query-string'
+
 import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/styles';
-
-import Mail from './Mail'
-import UserStatistics from './UserStatistics'
-import axios from 'axios';
-import { memberDataInfo, memberInfo } from 'Interface/Admin'
 import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import { Button,IconButton } from '@material-ui/core'
-import queryString from 'query-string'
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
+
+import { userInfo } from 'Interface/User'
+import { memberDataInfo, memberInfo } from 'Interface/Admin'
+import Mail from './Mail'
+import UserStatistics from './UserStatistics'
 import UserForm from './UserForm'
 import UserDelete from './UserDelete'
 import UserSearch from './UserSearch'
-import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 
 interface UserAdminProps {
      userObj: userInfo,
@@ -76,51 +77,50 @@ export default function UserAdmin(props: UserAdminProps) {
         ];
 
      const [userList, setUserList] = useState<memberDataInfo>(Object)
-     const [previousUrl, setPreviousUrl] = useState("")
-     const [nextUrl, setNextUrl] = useState("")
+     const [previousUrl, setPreviousUrl] = useState("") // 이전 페이지 URL
+     const [nextUrl, setNextUrl] = useState("") // 다음 페이지 URL
      
      const { count, results } = userList
+
+     const [page, setPage] = React.useState(0);
      const [isSearching, setIsSearching] = useState(false)
      const handleIsSearching = (value: boolean) => {
           setIsSearching(value)
      }
 
-     const [page, setPage] = React.useState(0);
-
-       // 앞, 뒤 게시물 페이지 이동 
-       const handleChangePage = (event: React.ChangeEvent<any> , newPage: number) => {
+     // 앞, 뒤 게시물 페이지 이동 
+     const handleChangePage = (event: React.ChangeEvent<any> , newPage: number) => {
           let label = event.currentTarget.getAttribute("aria-label")
           let nextPage = newPage;
           
+          // 검색 중인지 페이지 이동중인지 구분
           if(keyword) handleIsSearching(true)
           else handleIsSearching(false)
 
-           if( newPage > page) { // 다음페이지로 이동
-               getUserList(rowsPerPage, type, keyword, nextUrl, newPage) 
-           }else if(newPage < page) {  // 이전 페이지로 이동
-               getUserList(rowsPerPage, type, keyword, previousUrl, newPage)
-           }
+          if( newPage > page) { // 다음페이지로 이동
+          getUserList(rowsPerPage, type, keyword, nextUrl, newPage) 
+          }else if(newPage < page) {  // 이전 페이지로 이동
+          getUserList(rowsPerPage, type, keyword, previousUrl, newPage)
+          }
 
-           if( ["Go to next page", "Go to previous page"].includes(label) ) { // +10, -10 페이지 이동 
-                if( newPage > page ) {
-                     nextPage += 9
-                }else nextPage -= 9
-                if( nextPage > Math.floor(count / rowsPerPage + 1) ){
-                     nextPage = Math.floor(count/ rowsPerPage + 1)
-                }else if(nextPage < 1){
-                     nextPage = 1
-                }           
-           }
-           setPage(nextPage);
-
-          console.log(keyword, type, nextPage, isSearching)
+          // '>, <' 버튼 선택 시 URL 및 10페이지 씩 이동 처리하기 위한 코드 
+          if( ["Go to next page", "Go to previous page"].includes(label) ) {
+               if( newPage > page ) {
+                    nextPage += 9
+               }else nextPage -= 9
+               if( nextPage > Math.floor(count / rowsPerPage + 1) ){
+                    nextPage = Math.floor(count/ rowsPerPage + 1)
+               }else if(nextPage < 1){
+                    nextPage = 1
+               }           
+          }
+          setPage(nextPage);
 
           history.push(`/admin/user_admin?keyword=${keyword}&type=${type}&page=${nextPage}`, {
                index: 0
           })
           window.scrollTo(0, 0);
-
-      };
+     };
 
      const getUserList = (size: number, type: string | string[] | null, keyword: string | string[] | null, url?: string, pageIndex? : number) => {
                
@@ -154,7 +154,6 @@ export default function UserAdmin(props: UserAdminProps) {
                console.log(error);
           })
      }
-
      useEffect(() => {
           if(index === 0) {
                getUserList(rowsPerPage, null, null)
@@ -170,7 +169,6 @@ export default function UserAdmin(props: UserAdminProps) {
                )
           )
      }
-
      useEffect(() => {
           console.log('선택한 유저', selectedUser)
      }, [selectedUser])

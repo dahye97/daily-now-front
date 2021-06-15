@@ -2,10 +2,11 @@
 import {useState,useEffect} from 'react';
 import { useLocation } from 'react-router';
 import queryString from 'query-string'
+import axios from 'axios'
+
 import { makeStyles, } from "@material-ui/styles";
 import { Typography,IconButton,useMediaQuery,Container } from "@material-ui/core";
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
-import axios from 'axios'
 
 import { p2pInfo, userInfo, accountInfo, fundInfo } from "Interface/User";
 import Share from 'Pages/Home/Profile/Share/Share';
@@ -218,7 +219,6 @@ export default function Home(props: HomeProps) {
 	const handleClickUpButton = () => {
 		window.scrollTo(0, 0);
 	}
-
 	const [scrollY, setScrollY] = useState(0)
 	const handleScroll = () => {
 		setScrollY(window.pageYOffset)

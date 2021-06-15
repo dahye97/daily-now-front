@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
+import axios from 'axios';
 import {Typography ,TextField,Button} from '@material-ui/core/';
 import { userInfo } from 'Interface/User';
-import axios from 'axios';
 import { commentInfo } from 'Interface/Board';
 
 interface formProps {

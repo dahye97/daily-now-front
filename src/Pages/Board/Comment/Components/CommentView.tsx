@@ -142,6 +142,7 @@ function CommentView(props: viewProps) {
           }
      }
 
+     // 댓글 or 답글 정보 불러오기
      const getDetailComment = (commentId: number) => {
           if(userObj!==null){
                axios.post(`${process.env.REACT_APP_SERVER}/api/notice/detail_comment`, {

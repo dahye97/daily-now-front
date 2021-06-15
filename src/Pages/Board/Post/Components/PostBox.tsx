@@ -76,9 +76,9 @@ interface PostBoxProps {
      page:number
      handleChangePage: (event: React.ChangeEvent<unknown> , newPage: number) => void,
      handleIsSearching: (value: boolean) => void,
-     getPostList: (url: string, pageIndex?:number) => void
+     getPostList: (pageIndex?:number) => void
 }
-// todo: 실제 탭 컨테이너 내부 컴포넌트 
+// todo: 실제 컨테이너 내부 컴포넌트 
 export default function PostBox(props: PostBoxProps) {
      const classes = useStyles();
      const isMobile = useMediaQuery("(max-width: 380px)");

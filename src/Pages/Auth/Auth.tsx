@@ -1,13 +1,14 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Container,FormControl,InputLabel,Input,FormHelperText,Button, useMediaQuery } from "@material-ui/core";
-import logo from 'asset/img/logo.webp'
 import Alert from '@material-ui/lab/Alert';
-import { useHistory } from 'react-router';
+
 import { userInfo } from 'Interface/User';
 import FindPw from './FindPw';
+import logo from 'asset/img/logo.webp'
 import holyddung from 'asset/img/holyddung.png'
 
 // TODO: 로그인 페이지 
@@ -90,6 +91,7 @@ export default function Auth (Props:AuthProps) {
      const history = useHistory();
 
      const {handleLogIn,typeNum,handleIsAdmin} = Props;
+
      const [email, setEmail] = useState("")
      const [password, setPassword] = useState("")
      const [error, setError] = useState(Object)
@@ -103,6 +105,8 @@ export default function Auth (Props:AuthProps) {
      }
      
      const [isLoggedIn, setIsLoggedIn] = useState('')
+
+     // 로그인 처리 함수
      const handleSubmit = (e: React.MouseEvent) => {
           e.preventDefault();
      
@@ -151,7 +155,7 @@ export default function Auth (Props:AuthProps) {
                .catch(error =>  console.log(error));
                
           }
-     
+     // 관리자 권한 확인 함수
      const handleCheckAdmin= (token: string) => {
           axios.get(`${process.env.REACT_APP_SERVER}/api/admin/is_admin`, {
                headers: {
@@ -168,6 +172,7 @@ export default function Auth (Props:AuthProps) {
                console.log(error);
           })
      }
+     // 비밀번호 발급 페이지 이동 
      const handleFindPw = () => {
           history.push('/auth/find_pw')
      }

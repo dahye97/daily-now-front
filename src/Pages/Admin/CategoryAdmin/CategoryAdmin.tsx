@@ -1,11 +1,13 @@
 import React,{useState,useEffect} from 'react'
-import { DataGrid, GridColDef,GridRowId, GridRowData } from '@material-ui/data-grid';
-import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField } from '@material-ui/core'
 import axios from 'axios';
-import { categoryInfo } from 'Interface/Board';
-import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string'
+
+import { DataGrid, GridColDef,GridRowId, GridRowData } from '@material-ui/data-grid';
+import { Button, Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, TextField } from '@material-ui/core'
+
+import { categoryInfo } from 'Interface/Board';
+import { userInfo } from 'Interface/User';
 import CategoryForm from './CategoryForm';
 
 interface CatAdminProps {
@@ -20,25 +22,19 @@ export default function CategoryAdmin(props:CatAdminProps) {
      const queryObj = queryString.parse(location.search);
      const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
-       // 카테고리 정보 업데이트를 위한 핸들러
-       const [isUpdated, setIsUpdated] = useState(false)
-       const handleIsUpdated = () => {
-            setIsUpdated(!isUpdated)
-       }
-  
-       useEffect(() => {
-            if(isUpdated) {
+     // 카테고리 정보 업데이트를 위한 핸들러
+     const [isUpdated, setIsUpdated] = useState(false)
+     const handleIsUpdated = () => {
+          setIsUpdated(!isUpdated)
+     }
+     useEffect(() => {
+          if(isUpdated) {
                getCategoryList()
                handleIsUpdated()
-            }
-       }, [isUpdated])
-
-     const columns: GridColDef[] = [
-          { field: 'category_id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
-          { field: 'category_name', headerName: '제목', width: 150 ,align:'center',  headerAlign:'center'},
-          { field: 'flag', headerName: '공개 여부', width: 150 ,align:'center',  headerAlign:'center'},
-        ];
-
+          }
+     }, [isUpdated])
+ 
+     // 카테고리 가져오기 
      const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
      const getCategoryList = () => {
           axios.get(`${process.env.REACT_APP_SERVER}/api/notice/category_list`)
@@ -50,24 +46,18 @@ export default function CategoryAdmin(props:CatAdminProps) {
                     console.log(error);
                })  
      }
-
      useEffect(() => {
           getCategoryList()
      }, [])
 
-     const [selectList, setSelectList] = useState<categoryInfo[]>([])
-     const [selectedCat, setSelectedCat] = useState<categoryInfo[]>([]);
-     const handleSelect = (data: { selectionModel: GridRowId[]}) => {
-          setSelectedCat(
-               data.selectionModel.map( (ele:any) => {
-                    return (selectList.filter((r)=>  r.category_id === ele)[0])}
-               )
-          )
-     }
-     useEffect(() => {
-          console.log('선택한 카테고리', selectedCat)
-     }, [selectedCat])
+     // 카테고리 테이블 Column
+     const columns: GridColDef[] = [
+          { field: 'category_id', headerName: '번호', width: 150, align:'center', headerAlign:'center'},
+          { field: 'category_name', headerName: '제목', width: 150 ,align:'center',  headerAlign:'center'},
+          { field: 'flag', headerName: '공개 여부', width: 150 ,align:'center',  headerAlign:'center'},
+        ];
 
+     // 카테고리 테이블 Row
      const [rows, setRows] = useState<GridRowData[]>([])
      useEffect(() => {
           let rowList:GridRowData[] = [];
@@ -89,7 +79,21 @@ export default function CategoryAdmin(props:CatAdminProps) {
          setRows(rowList)
      }, [categoryList])
 
+     // 카테고리 선택 핸들러
+     const [selectList, setSelectList] = useState<categoryInfo[]>([])
+     const [selectedCat, setSelectedCat] = useState<categoryInfo[]>([]);
+     const handleSelect = (data: { selectionModel: GridRowId[]}) => {
+          setSelectedCat(
+               data.selectionModel.map( (ele:any) => {
+                    return (selectList.filter((r)=>  r.category_id === ele)[0])}
+               )
+          )
+     }
+     useEffect(() => {
+          console.log('선택한 카테고리', selectedCat)
+     }, [selectedCat])
 
+     // 새로운 카테고리 추가 함수 
      const [newCatName, setNewCatName] = useState("")
      const handleAddCategory = () => {
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/category/add_category`,{
@@ -110,6 +114,7 @@ export default function CategoryAdmin(props:CatAdminProps) {
           })
      }
 
+     // 카테고리 수정 함수
      const handleEditCategory = () => {
           if( selectedCat.length === 1) {
                history.push('/admin/category_admin?tabName=EDIT_CAT')
@@ -118,6 +123,8 @@ export default function CategoryAdmin(props:CatAdminProps) {
                alert('정보 수정을 원하는 카테고리 1개를 선택해주세요.')
           }
      }
+     
+     // 수정 모달 토글러
      const [open, setOpen] = React.useState(false);
      const handleClickOpen = () => {
        setOpen(true);

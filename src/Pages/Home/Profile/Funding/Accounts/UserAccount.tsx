@@ -1,9 +1,11 @@
-import { p2pInfo, userInfo } from 'Interface/User'
 import axios from 'axios'
 import React, {useState,useEffect} from 'react'
-import AccountItem from './Components/AccountItem';
+
 import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button} from "@material-ui/core";
 import {Autocomplete, Alert, AlertTitle } from '@material-ui/lab';
+
+import { p2pInfo, userInfo } from 'Interface/User'
+import AccountItem from './Components/AccountItem';
 
 interface AccountItemProps {
      allAccounts: p2pInfo[]

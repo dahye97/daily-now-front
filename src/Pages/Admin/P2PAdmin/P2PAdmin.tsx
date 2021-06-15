@@ -3,12 +3,13 @@ import {useEffect,useState} from 'react'
 import { useHistory, useLocation } from 'react-router'
 
 import axios from 'axios';
-import { companyInfo, memberInfo, pointAdmin } from 'Interface/Admin'
-import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import queryString from 'query-string'
 
-import { createDate } from 'Pages/Home/Profile/Point/Point';
+import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
+
+import { companyInfo } from 'Interface/Admin'
 import { pointCategoryInfo } from 'Interface/Admin';
+import { createDate } from 'Pages/Home/Profile/Point/Point';
 
 
 interface P2PAdminProps {
@@ -20,12 +21,7 @@ interface locationProps {
 
 export default function P2PAdmin(props: P2PAdminProps) {
      const location = useLocation<locationProps>()
-     const { userObj } = props
-     const history =useHistory()
-
-     const queryObj = queryString.parse(location.search);
-     const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
-
+ 
      // 정보 업데이트를 위한 핸들러
      const [isUpdated, setIsUpdated] = useState(false)
      const handleIsUpdated = () => {
@@ -38,6 +34,8 @@ export default function P2PAdmin(props: P2PAdminProps) {
                handleIsUpdated()
           }
      }, [isUpdated])
+
+     // 회사 테이블 columns
      const columns: GridColDef[] = [
           { field: 'id', headerName: 'ID', width: 150, align:'center', headerAlign:'center'},
           { field: 'company_name', headerName: '회사명', sortable: false, type: 'string', width: 300 ,align:'center',  headerAlign:'center'},
@@ -45,11 +43,7 @@ export default function P2PAdmin(props: P2PAdminProps) {
           { field: 'homepage_url', headerName: 'URL', sortable: false, type: 'string', width: 700 ,align:'center',  headerAlign:'center'},
           ];
 
-     const [startDate, handleStartDate] = useState<Date | null>(new Date());
-     const [endDate, handleEndDate] = useState<Date | null>(new Date());
-     let firstData = createDate(new Date());
-     let secondData = createDate(new Date());
-
+     // 회사 정보 불러오기
      const [p2pList, setP2PList] = useState<companyInfo[]>([])
      const getP2PList = () => {
           axios.get(`${process.env.REACT_APP_SERVER}/api/register/company`)
@@ -63,6 +57,7 @@ export default function P2PAdmin(props: P2PAdminProps) {
           })
      }
      
+     // 선택 p2p 처리 함수
      const [selectList, setSelectList] = useState<companyInfo[]>([])
      const [selectedUser, setSelectedUser] = useState<companyInfo[]>([]);
      const handleSelect = (data: { selectionModel: GridRowId[]}) => {
@@ -80,23 +75,7 @@ export default function P2PAdmin(props: P2PAdminProps) {
      useEffect(() => {
           getP2PList()
      }, [])
-     const [pointCategory, setPointCategory] = useState<pointCategoryInfo[]>([])
-     const getPointCategory = () =>{
-          axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/point_action_list`, {
-               page_size: 20,
-          },{
-               headers: {
-                    "Authorization": "Token " + userObj.auth_token,
-               }
-          })
-          .then(res => {
-               console.log(res.data.results)
-               setPointCategory(res.data.results)
-          })
-          .catch(function(error) {
-               console.log(error);
-          })
-     }
+
      return (
           <>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>

@@ -1,10 +1,11 @@
 import React, {useState,useEffect} from 'react'
+import axios from 'axios'
+
 import { Collapse, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle,TextField, Button } from "@material-ui/core";
 import {Autocomplete, Alert, AlertTitle } from '@material-ui/lab';
 import {userInfo}from 'Interface/User'
 import { makeStyles } from "@material-ui/core/styles";
 import { companyInfo } from './P2PList';
-import axios from 'axios'
 
 interface P2PRegisterProps {
      userObj : userInfo | null,

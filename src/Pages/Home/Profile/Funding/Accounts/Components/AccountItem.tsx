@@ -1,10 +1,12 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
+import axios from 'axios'
+
 import { Paper,IconButton, Dialog ,DialogActions, DialogContent ,DialogContentText , DialogTitle, Button } from "@material-ui/core";
-import { p2pInfo, userInfo } from 'Interface/User';
 import { makeStyles, } from "@material-ui/styles";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import axios from 'axios'
+
+import { p2pInfo, userInfo } from 'Interface/User';
 
 const useStyles = makeStyles ({
      p2pItem: {

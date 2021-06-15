@@ -1,13 +1,13 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios'
 import queryString from 'query-string'
+import { useHistory, useLocation } from 'react-router';
 
 import { makeStyles, } from "@material-ui/core/styles";
 import {Container,Typography,Box, useMediaQuery, FormControl, Select} from '@material-ui/core';
 
 import PostBox from 'Pages/Board/Post/Components/PostBox';
 import { postInfo,categoryInfo, searchInfo } from 'Interface/Board';
-import { useHistory, useLocation } from 'react-router';
 // todo: 카테고리 탭 & 탭 컨테이너 컴포넌트
 const useStyles = makeStyles({
      postContainer : {
@@ -102,13 +102,12 @@ export default function Post(props: PostProps) {
         };
 
      // 카테고리 ID와 rowsPerPage 값에 따른 게시글 가져오기 
-     const getPostList = (url: string, pageIndex?:number, searchData?: searchInfo) => {
-          if(url.length === 0){
-               url = `${process.env.REACT_APP_SERVER}/api/notice/post_list`
-          }
+     const getPostList = (pageIndex?:number, searchData?: searchInfo) => {
+          let url = `${process.env.REACT_APP_SERVER}/api/notice/post_list`
           if( pageIndex ) {
                url = url + `?page=${pageIndex}`
           }
+
           let data;
           data = { // 검색 기능 X
                category_id: categoryId,
@@ -126,6 +125,7 @@ export default function Post(props: PostProps) {
                     sort: sortInput
                }
           }
+
           axios.post(url,data)
           .then(res => {
                if(pageIndex){
@@ -150,17 +150,17 @@ export default function Post(props: PostProps) {
      useEffect(() => {
           // 초기 렌더링
           if(!categoryId && !page && !keyword){
-               getPostList("") // 카테고리의 게시물 불러오기
+               getPostList() // 카테고리의 게시물 불러오기
           }
 
-          // 페이지 이동할 때 
+          // 페이지 이동 시
           if( categoryId >= 0 && pageIndex ){
                let nextPage = pageIndex
                if( pageIndex >= Math.floor(postList.count / rowsPerPage + 1)) {
                     nextPage = Math.floor(postList.count / rowsPerPage + 1)
                }
                if( !keyword) {
-                    getPostList("",nextPage) // 카테고리의 선택 페이지 게시물 불러오기
+                    getPostList(nextPage) // 카테고리의 선택 페이지 게시물 불러오기
                }else if( !isSearching ){ // 검색 기능 이용할 때
                     let data = {
                          category_id: categoryId,
@@ -169,7 +169,7 @@ export default function Post(props: PostProps) {
                          search_keyword: keyword,
                          sort: sortInput
                     }
-                    getPostList("",nextPage,data)
+                    getPostList(nextPage,data)
                }
           }
           setValue(categoryId) // 현재 카테고리 위치 ui value 값 설정
@@ -178,7 +178,6 @@ export default function Post(props: PostProps) {
 
      useEffect(() => {
          if(keyword){
-          //     console.log(keyword, location.state.postList)
               setIsLoading(false)
               setpostList(location.state.postList)
          }

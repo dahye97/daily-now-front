@@ -1,7 +1,6 @@
-import React from 'react'
-import { Button,IconButton } from '@material-ui/core'
-import { userInfo } from 'Interface/User';
 import { useHistory, useLocation } from 'react-router';
+
+import { userInfo } from 'Interface/User';
 import CommentAdmin from './CommentAdmin';
 import BoardStatistics from './BoardStatistics';
 
@@ -18,7 +17,6 @@ export default function BoardAdmin(props:BoardAdminProps) {
      const location = useLocation<locationProps>()
      const { userObj } = props
      const index = location.state.index // 1: 일일 회원 통계, 2: 메일 전송
-     const history =useHistory()
 
      return (
           <>

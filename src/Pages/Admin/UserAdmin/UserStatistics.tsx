@@ -1,16 +1,16 @@
-import { userInfo } from 'Interface/User'
 import React, {useEffect,useState} from 'react'
 import axios from 'axios';
-import { statisticsInfo } from 'Interface/Admin';
 import {Paper} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { userInfo } from 'Interface/User'
+import { statisticsInfo } from 'Interface/Admin';
 
-import {
-     ArgumentAxis,
-     ValueAxis,
-     Chart,
-     BarSeries,
-   } from '@devexpress/dx-react-chart-material-ui';
+// import {
+//      ArgumentAxis,
+//      ValueAxis,
+//      Chart,
+//      BarSeries,
+//    } from '@devexpress/dx-react-chart-material-ui';
    
 const useStyles = makeStyles({
      bar: {
@@ -28,6 +28,7 @@ interface dataProps {
      
      value: number
 }
+// FIX : dx-react-chart-material-ui 가 NCP 서버에서 인식이 안됨
 export default function UserStatistics(props: UserStatisticsProps) {
      const { userObj } = props
      const [statList, setStatList] = useState<statisticsInfo>()
@@ -39,7 +40,7 @@ export default function UserStatistics(props: UserStatisticsProps) {
                }
           })
           .then(res => {
-               console.log(res.data)
+               // console.log(res.data)
                setStatList(res.data)
           })
           .catch(function(error) {
@@ -66,7 +67,7 @@ export default function UserStatistics(props: UserStatisticsProps) {
           <div>
                <h2>일일 회원 통계 페이지</h2>
               
-              { dataList &&
+              {/* { dataList &&
                     <Paper style={{maxWidth: '1000px'}}>
                          <Chart
                               data={dataList}
@@ -93,7 +94,7 @@ export default function UserStatistics(props: UserStatisticsProps) {
                               />
                          </Chart>
                     </Paper>
-               }
+               } */}
           </div>
      )
 }

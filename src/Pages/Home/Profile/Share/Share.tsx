@@ -1,10 +1,11 @@
 import React , {useState,useEffect} from 'react'
+import { useHistory, useLocation } from 'react-router';
+import axios from 'axios'
+
 import { BottomNavigation,BottomNavigationAction,Card,CardHeader } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios'
-import { useHistory, useLocation } from 'react-router';
 import { userInfo } from 'Interface/User';
-import ShareIcon from '@material-ui/icons/Share';
+
 const useStyles = makeStyles({
      root: {
        background: 'none',

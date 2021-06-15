@@ -1,8 +1,8 @@
-import { memberInfo } from 'Interface/Admin'
-import { userInfo } from 'Interface/User'
-import { Button, ListItem, List,ListItemText } from '@material-ui/core';
 import axios from 'axios';
 import { useHistory } from 'react-router';
+import { Button, ListItem, List,ListItemText } from '@material-ui/core';
+import { memberInfo } from 'Interface/Admin'
+import { userInfo } from 'Interface/User'
 
 interface UserDeleteProps {
      selectedUser : memberInfo[],

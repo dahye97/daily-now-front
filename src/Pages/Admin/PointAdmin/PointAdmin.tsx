@@ -1,16 +1,17 @@
-import { userInfo } from 'Interface/User'
 import {useEffect,useState} from 'react'
 import { useHistory, useLocation } from 'react-router'
-
 import axios from 'axios';
-import { memberInfo, pointAdmin } from 'Interface/Admin'
-import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import queryString from 'query-string'
+
+import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
+
+import { userInfo } from 'Interface/User'
+import { memberInfo, pointAdmin } from 'Interface/Admin'
+import { pointCategoryInfo } from 'Interface/Admin';
+
 import PointCategory from './PointCategory';
 import PointReward from './PointReward';
 import { createDate } from 'Pages/Home/Profile/Point/Point';
-import { pointCategoryInfo } from 'Interface/Admin';
-
 
 interface UserAdminProps {
      userObj: userInfo,
@@ -23,10 +24,6 @@ export default function PointAdmin(props: UserAdminProps) {
      const location = useLocation<locationProps>()
      const { userObj } = props
      const index = location.state.index // 1: 포인트 종류 , 2: 포인트 등록
-     const history =useHistory()
-
-     const queryObj = queryString.parse(location.search);
-     const tabName = queryObj.tabName; // url에서 현재 tap name 받아오기 
 
       // 표시할 글 수
       const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -46,6 +43,7 @@ export default function PointAdmin(props: UserAdminProps) {
                handleIsUpdated()
           }
      }, [isUpdated])
+
      const columns: GridColDef[] = [
           { field: 'id', headerName: 'ID', width: 150, align:'center', headerAlign:'center'},
           { field: 'email', headerName: 'Email', sortable: false, type: 'email', width: 300 ,align:'center',  headerAlign:'center'},
@@ -56,16 +54,12 @@ export default function PointAdmin(props: UserAdminProps) {
           { field: 'total_point', headerName: '누적 포인트', type: 'number', width: 150, align:'right',  headerAlign:'center'},
         ];
 
-     const [startDate, handleStartDate] = useState<Date | null>(new Date());
-     const [endDate, handleEndDate] = useState<Date | null>(new Date());
-     let firstData = createDate(new Date());
-     let secondData = createDate(new Date());
-
+     // 포인트 목록 불러오기
      const [pointList, setPointList] = useState<pointAdmin[]>([])
      const getPointList = () => {
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/point_list`, {
                page_size: 20,
-               start:"2021-06-09",
+               start:"2021-06-09", // todo: start, end 날짜로 검색 기능 추가 필요
                end: "2021-06-09",
                email:null
           },{
@@ -82,7 +76,6 @@ export default function PointAdmin(props: UserAdminProps) {
                console.log(error);
           })
      }
-
      useEffect(() => {
           if(index === 0) {
                getPointList()
@@ -98,11 +91,11 @@ export default function PointAdmin(props: UserAdminProps) {
                )
           )
      }
-
      useEffect(() => {
           console.log('선택한 유저', selectedUser)
      }, [selectedUser])
 
+     // 포인트 카테고리 목록 불러오기
      const [pointCategory, setPointCategory] = useState<pointCategoryInfo[]>([])
      const getPointCategory = () =>{
           axios.post(`${process.env.REACT_APP_SERVER}/api/admin/point/point_action_list`, {

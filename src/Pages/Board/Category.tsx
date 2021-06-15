@@ -1,12 +1,14 @@
 import React ,{useEffect}from 'react'
+import { useHistory, useLocation } from 'react-router';
+
 import {Tabs,Tab,useMediaQuery} from '@material-ui/core';
-import { categoryInfo } from 'Interface/Board';
 import ChatIcon from '@material-ui/icons/Chat';
 import HearingIcon from '@material-ui/icons/Hearing';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import ForumIcon from '@material-ui/icons/Forum';
-import { useHistory, useLocation } from 'react-router';
 import { makeStyles, } from "@material-ui/core/styles";
+
+import { categoryInfo } from 'Interface/Board';
 
 const useStyles = makeStyles({
      postContainer : {

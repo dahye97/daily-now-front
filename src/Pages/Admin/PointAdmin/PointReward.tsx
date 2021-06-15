@@ -1,15 +1,16 @@
 import React, {useState,useEffect} from 'react'
+import axios from 'axios';
+
 import { DataGrid, GridColDef,GridRowId } from '@material-ui/data-grid';
 import { FormControl, Paper, Select,Input,MenuItem, FormLabel,FormHelperText } from '@material-ui/core'
 import { Dialog, DialogTitle, DialogContent,  DialogActions,DialogContentText, IconButton } from '@material-ui/core'
-import axios from 'axios';
 import { Button, ListItem, List,ListItemText } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 
 import { memberInfo, pointCategoryInfo } from 'Interface/Admin';
 import { userInfo } from 'Interface/User';
-import { makeStyles } from "@material-ui/core/styles";
 import UserSearch from '../UserAdmin/UserSearch';
-import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 
 const columns: GridColDef[] = [
      { field: 'id', headerName: 'ID', width: 150, align:'center', headerAlign:'center'},
@@ -203,7 +204,7 @@ export default function PointReward(props:PointProps) {
        setOpen(false);
      };
 
-     
+     // 검색 중인지 페이지 이동중인지 구분하기 위한 state
      const [isSearching, setIsSearching] = useState(false)
      const handleIsSearching = (value: boolean) => {
           setIsSearching(value)

@@ -1,15 +1,19 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
+
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import {Button,Card,CardContent,CardActions,CardHeader,Select,IconButton, FormControl,Typography,Popover} from '@material-ui/core'
-import { userInfo, pointInfo  } from 'Interface/User';
-import PointList from './PointList';
+
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import PetsIcon from '@material-ui/icons/Pets';
 import ShareIcon from '@material-ui/icons/Share';
 import CreateIcon from '@material-ui/icons/Create';
 import BusinessIcon from '@material-ui/icons/Business';
 import { makeStyles } from '@material-ui/styles';
+
+import { userInfo, pointInfo  } from 'Interface/User';
+import PointList from './PointList';
+
 interface PointProps {
 	userObj : userInfo | null,
 }
@@ -52,6 +56,7 @@ export default function Point(props: PointProps) {
      const { userObj } = props;
      const [pointList, setPointList] = useState<pointInfo[]>([])
      
+     // 검색 날짜 처리 
      const [startDate, handleStartDate] = React.useState<Date | null>(new Date());
      const [endDate, handleEndDate] = React.useState<Date | null>(new Date());
      let firstData = createDate(new Date());
@@ -64,6 +69,7 @@ export default function Point(props: PointProps) {
 
      const [nextUrl, setNextUrl] = useState('')
      const [isDisabled, setIsDisabled] = useState(false)
+     // 포인트 검색 함수
      const handleSearch = (event: React.MouseEvent<unknown> | null, nextUrl: string) => 
      {
           let url = `${process.env.REACT_APP_SERVER}/api/auth/my_point_list`
@@ -119,16 +125,15 @@ export default function Point(props: PointProps) {
           handleSearch(null,nextUrl)
      }, [page])
 
+     // 포인트 내역 '더보기' 처리
      const handleMorePoint = () => {
           handleSearch(null,nextUrl)
      }
 
      const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
      const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
        setAnchorEl(event.currentTarget);
      };
-   
      const handleClose = () => {
        setAnchorEl(null);
      };
