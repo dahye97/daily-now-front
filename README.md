@@ -38,6 +38,12 @@
 
 <br />
 
+# Manual & Service URL
+- [메뉴얼 문서 ](https://github.com/dahye97/daily-now-front/blob/main/MANUAL.md)
+- [서비스 사이트 바로가기](http://49.50.163.188:3000)
+
+------
+
 # 🌳 Structure & Description
 
 ## Structure
